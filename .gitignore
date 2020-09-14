@@ -1,0 +1,9 @@
+vendor/
+.vscode/
+.idea/
+.buildpath
+.settings/
+.project
+.DS_Store
+*.lock
+*.log

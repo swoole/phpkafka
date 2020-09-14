@@ -1,0 +1,12 @@
+version: '3.4'
+services:
+  swoole:
+    container_name: "swoole"
+    image: "phpswoole/swoole:${SWOOLE_VERSION}-php${PHP_VERSION}"
+    volumes:
+      - "${GITHUB_WORKSPACE}:/kafka-client:rw"
+    working_dir: /kafka-client
+    ulimits:
+      core: -1
+    privileged: true
+    command: tail -f /etc/group
