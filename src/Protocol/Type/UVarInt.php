@@ -6,11 +6,11 @@ namespace Longyan\Kafka\Protocol\Type;
 
 use InvalidArgumentException;
 
-class VarInt extends AbstractType
+class UVarInt extends AbstractType
 {
-    public const MIN_VALUE = -2147483648;
+    public const MIN_VALUE = 0;
 
-    public const MAX_VALUE = 2147483647;
+    public const MAX_VALUE = 4294967295;
 
     private function __construct()
     {
@@ -21,7 +21,7 @@ class VarInt extends AbstractType
         if ($value < self::MIN_VALUE || $value > self::MAX_VALUE) {
             throw new InvalidArgumentException(sprintf('%s is outside the range of VarInt', $value));
         }
-        $buffer = str_repeat("\0", self::size($value, false));
+        $buffer = str_repeat("\0", self::size($value, true));
         $current = 0;
 
         $high = 0;
@@ -42,15 +42,7 @@ class VarInt extends AbstractType
 
     public static function unpack(string $value, ?int &$size = null): int
     {
-        $intValue = VarLong::unpack($value, $size);
-        $intValue &= 0xFFFFFFFF;
-
-        // Convert large uint32 to int32.
-        if ($intValue > 0x7FFFFFFF) {
-            $intValue = $intValue | (0xFFFFFFFF << 32);
-        }
-
-        return (int) $intValue;
+        return VarLong::unpack($value, $size) & 0xFFFFFFFF;
     }
 
     public static function size(int $value, bool $signExtended = false): int

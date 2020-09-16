@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class UInt32 extends AbstractType
+use InvalidArgumentException;
+
+class UInt32 extends AbstractType
 {
     public const FORAMT = 'N';
+
+    public const MIN_VALUE = 0;
+
+    public const MAX_VALUE = 4294967295;
 
     private function __construct()
     {
@@ -14,6 +20,10 @@ final class UInt32 extends AbstractType
 
     public static function pack(int $value): string
     {
+        if ($value < self::MIN_VALUE || $value > self::MAX_VALUE) {
+            throw new InvalidArgumentException(sprintf('%s is outside the range of UInt32', $value));
+        }
+
         return pack(self::FORAMT, $value);
     }
 

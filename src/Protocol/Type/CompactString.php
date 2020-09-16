@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class CompactString extends AbstractType
+class CompactString extends AbstractType
 {
     private function __construct()
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class String16 extends AbstractType
+class String16 extends AbstractType
 {
     private function __construct()
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class Float64 extends AbstractType
+class Float64 extends AbstractType
 {
     public const FORAMT = 'E';
 

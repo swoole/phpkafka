@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class Boolean extends AbstractType
+class Boolean extends AbstractType
 {
     public const FORAMT = 'c';
 

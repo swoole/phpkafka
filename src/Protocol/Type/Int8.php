@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\Type;
 
-final class Int8 extends AbstractType
+use InvalidArgumentException;
+
+class Int8 extends AbstractType
 {
     public const FORAMT = 'c';
+
+    public const MIN_VALUE = -128;
+
+    public const MAX_VALUE = 127;
 
     private function __construct()
     {
@@ -14,6 +20,10 @@ final class Int8 extends AbstractType
 
     public static function pack(int $value): string
     {
+        if ($value < self::MIN_VALUE || $value > self::MAX_VALUE) {
+            throw new InvalidArgumentException(sprintf('%s is outside the range of Int8', $value));
+        }
+
         return pack(self::FORAMT, $value);
     }
 
