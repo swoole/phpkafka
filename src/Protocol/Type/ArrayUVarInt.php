@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\Type;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Protocol\AbstractProtocol;
+use Longyan\Kafka\Protocol\AbstractStruct;
 
 class ArrayUVarInt extends AbstractType
 {
@@ -13,18 +13,22 @@ class ArrayUVarInt extends AbstractType
     {
     }
 
-    public static function pack(array $array, ?string $elementType = null): string
+    public static function pack(array $array, ?string $elementType = null, int $apiVersion = 0): string
     {
         $length = \count($array);
         $result = UVarInt::pack($length);
         foreach ($array as $item) {
             if (null === $elementType) {
-                if ($item instanceof AbstractProtocol) {
-                    $result .= $item->pack();
+                if ($item instanceof AbstractStruct) {
+                    $result .= $item->pack($apiVersion);
                 } else {
                     throw new InvalidArgumentException('Unrecognized element type in array');
                 }
             } else {
+                if (is_subclass_of($elementType, AbstractStruct::class)) {
+                    $result .= $item->pack($apiVersion);
+                    continue;
+                }
                 $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
                 if (class_exists($typeClass)) {
                     $result .= $typeClass::pack($item);
@@ -37,7 +41,7 @@ class ArrayUVarInt extends AbstractType
         return $result;
     }
 
-    public static function unpack(string $value, ?int &$size, string $elementType): array
+    public static function unpack(string $value, ?int &$size, string $elementType, int $apiVersion = 0): array
     {
         $array = [];
         $length = UVarInt::unpack($value, $tmpSize);
@@ -46,10 +50,10 @@ class ArrayUVarInt extends AbstractType
             for ($i = 0; $i < $length; ++$i) {
                 $size += $tmpSize;
                 $value = substr($value, $tmpSize);
-                if (is_subclass_of($elementType, AbstractProtocol::class)) {
-                    /** @var AbstractProtocol $item */
-                    $item = new $elementType();
-                    $item->unpack($value, $tmpSize);
+                if (is_subclass_of($elementType, AbstractStruct::class)) {
+                    /* @var AbstractStruct $item */
+                    $array[] = $item = new $elementType();
+                    $item->unpack($value, $tmpSize, $apiVersion);
                     continue;
                 }
                 $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Protocol;
+namespace Longyan\Kafka\Test;
 
 use Longyan\Kafka\Protocol\Type\ArrayInt32;
 use Longyan\Kafka\Protocol\Type\ArrayUVarInt;
@@ -13,6 +13,7 @@ use Longyan\Kafka\Protocol\Type\Int16;
 use Longyan\Kafka\Protocol\Type\Int32;
 use Longyan\Kafka\Protocol\Type\Int64;
 use Longyan\Kafka\Protocol\Type\Int8;
+use Longyan\Kafka\Protocol\Type\NullableString;
 use Longyan\Kafka\Protocol\Type\String16;
 use Longyan\Kafka\Protocol\Type\UInt32;
 use Longyan\Kafka\Protocol\Type\UVarInt;
@@ -107,6 +108,19 @@ class TypeTest extends TestCase
         $this->assertEquals(8, $size);
     }
 
+    public function testNullableString()
+    {
+        $encodeResult = NullableString::pack(self::TEST_STRING);
+        $this->assertEquals('00315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals(self::TEST_STRING, NullableString::unpack($encodeResult, $size));
+        $this->assertEquals(2 + \strlen(self::TEST_STRING), $size);
+
+        $encodeResult = NullableString::pack(null);
+        $this->assertEquals('ffff', bin2hex($encodeResult));
+        $this->assertNull(NullableString::unpack($encodeResult, $size));
+        $this->assertEquals(2, $size);
+    }
+
     public function testString16()
     {
         $encodeResult = String16::pack(self::TEST_STRING);
@@ -189,9 +203,15 @@ class TypeTest extends TestCase
         $this->assertEquals('00000003000000010000000200000003', bin2hex($encodeResult));
         $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, 'Int32'));
         $this->assertEquals(16, $size);
+
+        $exceptedArray = null;
+        $encodeResult = ArrayInt32::pack($exceptedArray, 'Int32');
+        $this->assertEquals('ffffffff', bin2hex($encodeResult));
+        $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, 'Int32'));
+        $this->assertEquals(4, $size);
     }
 
-    public function testArrayUVarInt32()
+    public function testArrayUVarInt()
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = ArrayUVarInt::pack($exceptedArray, 'Int32');

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\Type;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Protocol\AbstractProtocol;
+use Longyan\Kafka\Protocol\AbstractStruct;
 
 class ArrayInt32 extends AbstractType
 {
@@ -13,56 +13,70 @@ class ArrayInt32 extends AbstractType
     {
     }
 
-    public static function pack(array $array, ?string $elementType = null): string
+    public static function pack(?array $array, ?string $elementType = null, int $apiVersion = 0): string
     {
-        $length = \count($array);
-        $result = Int32::pack($length);
-        foreach ($array as $item) {
-            if (null === $elementType) {
-                if ($item instanceof AbstractProtocol) {
-                    $result .= $item->pack();
+        if (null === $array) {
+            $result = Int32::pack(-1);
+        } else {
+            $length = \count($array);
+            $result = Int32::pack($length);
+            foreach ($array as $item) {
+                if (null === $elementType) {
+                    if ($item instanceof AbstractStruct) {
+                        $result .= $item->pack($apiVersion);
+                    } else {
+                        throw new InvalidArgumentException('Unrecognized element type in array');
+                    }
                 } else {
-                    throw new InvalidArgumentException('Unrecognized element type in array');
+                    if (is_subclass_of($elementType, AbstractStruct::class)) {
+                        $result .= $item->pack($apiVersion);
+                        continue;
+                    }
+                    $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
+                    if (class_exists($typeClass)) {
+                        $result .= $typeClass::pack($item);
+                        continue;
+                    }
+                    throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
                 }
-            } else {
-                $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
-                if (class_exists($typeClass)) {
-                    $result .= $typeClass::pack($item);
-                    continue;
-                }
-                throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
             }
         }
 
         return $result;
     }
 
-    public static function unpack(string $value, ?int &$size, string $elementType): array
+    public static function unpack(string $value, ?int &$size, string $elementType, int $apiVersion = 0): ?array
     {
-        $array = [];
         $length = Int32::unpack($value, $tmpSize);
-        if ($length > 0) {
-            $size = 0;
-            for ($i = 0; $i < $length; ++$i) {
-                $size += $tmpSize;
-                $value = substr($value, $tmpSize);
-                if (is_subclass_of($elementType, AbstractProtocol::class)) {
-                    /** @var AbstractProtocol $item */
-                    $item = new $elementType();
-                    $item->unpack($value, $tmpSize);
-                    continue;
-                }
-                $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
-                if (class_exists($typeClass)) {
-                    $array[] = $typeClass::unpack($value, $tmpSize);
-                    continue;
-                }
-
-                throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
-            }
-            $size += $tmpSize;
-        } else {
+        if (-1 === $length) {
+            $array = null;
             $size = $tmpSize;
+        } else {
+            $array = [];
+            if ($length > 0) {
+                $size = 0;
+                for ($i = 0; $i < $length; ++$i) {
+                    $size += $tmpSize;
+                    $value = substr($value, $tmpSize);
+                    if (is_subclass_of($elementType, AbstractStruct::class)) {
+                        /* @var AbstractStruct $item */
+                        $array[] = $item = new $elementType();
+                        $item->unpack($value, $tmpSize, $apiVersion);
+                        continue;
+                    }
+                    $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
+                    if (class_exists($typeClass)) {
+                        $array[] = $typeClass::unpack($value, $tmpSize);
+                        continue;
+                    }
+
+                    throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
+                }
+                $size += $tmpSize;
+            } else {
+                // 0 === length
+                $size = $tmpSize;
+            }
         }
 
         return $array;
