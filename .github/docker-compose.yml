@@ -1,8 +1,48 @@
 version: '3.4'
 services:
+  zookeeper:
+    image: zookeeper:3.4
+    ports:
+      - "2181:2181"
+
+  kafka-1.0.0:
+    image: wurstmeister/kafka:1.0.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      HOSTNAME_COMMAND: hostname -i
+    ports:
+      - "9092:9092"
+
+  kafka-1.1.1:
+    image: wurstmeister/kafka:2.11-1.1.1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      HOSTNAME_COMMAND: hostname -i
+    ports:
+      - "9092:9092"
+
+  kafka-2.6.0:
+    image: wurstmeister/kafka:2.13-2.6.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      HOSTNAME_COMMAND: hostname -i
+    ports:
+      - "9092:9092"
+
   swoole:
     container_name: "swoole"
     image: "phpswoole/swoole:${SWOOLE_VERSION}-php${PHP_VERSION}"
+    depends_on:
+      - zookeeper
     volumes:
       - "${GITHUB_WORKSPACE}:/kafka-client:rw"
     working_dir: /kafka-client

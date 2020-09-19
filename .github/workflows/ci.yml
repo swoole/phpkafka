@@ -11,6 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         php: [ 7.1, 7.2, 7.3, 7.4 ]
+        kafka: [ 1.0.0, 1.1.1, 2.6.0 ]
 
     steps:
     - uses: actions/checkout@v1
@@ -18,11 +19,21 @@ jobs:
     - name: start docker
       env:
         PHP_VERSION: ${{ matrix.php }}
+        KAFKA_VERSION: ${{ matrix.kafka }}
         SWOOLE_VERSION: 4.5.3
-      run: cd .github/ && docker-compose up -d && docker ps -a && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
+      run: |
+        cd .github
+        # kafka
+        docker-compose up -d kafka-$KAFKA_VERSION
+        # swoole
+        docker-compose up -d swoole && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
+        docker ps -a && docker ps
 
     - name: composer update
       run: docker exec swoole composer update
 
     - name: test
-      run: docker exec swoole composer test
+      env:
+        KAFKA_HOST: kafka-${{ matrix.kafka }}
+        KAFKA_PORT: 9092
+      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer test
