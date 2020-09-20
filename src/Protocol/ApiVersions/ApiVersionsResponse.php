@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol\ApiVersions;
 
+use Longyan\Kafka\Protocol\AbstractResponse;
 use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
-use Longyan\Kafka\Protocol\AbstractResponse;
 
 class ApiVersionsResponse extends AbstractResponse
 {
     /**
      * The top-level error code.
-     * 
+     *
      * @var int
      */
     protected $errorCode;
 
     /**
      * The APIs supported by the broker.
-     * 
+     *
      * @var \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[]
      */
     protected $apiKeys;

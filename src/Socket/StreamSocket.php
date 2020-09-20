@@ -156,9 +156,6 @@ class StreamSocket implements SocketInterface
         return $bytesWritten;
     }
 
-    /**
-     * @return string
-     */
     public function recv(int $length): string
     {
         if ($length > self::READ_MAX_LENGTH) {

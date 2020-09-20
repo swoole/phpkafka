@@ -384,6 +384,7 @@ class ErrorCode
         if (self::NONE !== $code) {
             throw new KafkaErrorException(sprintf('[%s] %s', $code, self::getMessage($code)));
         }
+
         return true;
     }
 }

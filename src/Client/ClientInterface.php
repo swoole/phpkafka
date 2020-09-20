@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Client;
 
 use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Socket\StreamSocket;
-use Longyan\Kafka\Protocol\RequestHeader;
-use Longyan\Kafka\Socket\SocketInterface;
-use Longyan\Kafka\Protocol\ResponseHeader;
 use Longyan\Kafka\Protocol\AbstractRequest;
 use Longyan\Kafka\Protocol\AbstractResponse;
+use Longyan\Kafka\Protocol\RequestHeader;
+use Longyan\Kafka\Protocol\ResponseHeader;
+use Longyan\Kafka\Socket\SocketInterface;
+use Longyan\Kafka\Socket\StreamSocket;
 
 interface ClientInterface
 {
@@ -41,13 +41,9 @@ interface ClientInterface
     public function getRequestApiVersion(AbstractRequest $request): int;
 
     /**
-     * Send message to kafka server
-     * 
-     * If successful, return the correlationId
+     * Send message to kafka server.
      *
-     * @param \Longyan\Kafka\Protocol\AbstractRequest $request
-     * @param \Longyan\Kafka\Protocol\RequestHeader|null $header
-     * @return integer
+     * If successful, return the correlationId
      */
     public function send(AbstractRequest $request, ?RequestHeader $header = null): int;
 

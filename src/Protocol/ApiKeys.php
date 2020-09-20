@@ -8,8 +8,11 @@ class ApiKeys
 {
     public const PROTOCOL_API_VERSIONS = 18;
 
+    public const PROTOCOL_CREATE_TOPICS = 19;
+
     public const PROTOCOL_MAP = [
-        self::PROTOCOL_API_VERSIONS => 'ApiVersions',
+        self::PROTOCOL_API_VERSIONS  => 'ApiVersions',
+        self::PROTOCOL_CREATE_TOPICS => 'CreateTopics',
     ];
 
     private function __construct()

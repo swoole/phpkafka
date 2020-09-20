@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\ApiVersions;
 
 use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ProtocolField;
 use Longyan\Kafka\Protocol\ApiKeys;
+use Longyan\Kafka\Protocol\ProtocolField;
 
 class ApiVersionsRequest extends AbstractRequest
 {

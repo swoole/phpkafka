@@ -15,7 +15,7 @@ class ResponseHeaderTest extends TestCase
 
     public function testPack()
     {
-        $header = new ResponseHeader;
+        $header = new ResponseHeader();
         $header->setCorrelationId(self::TEST_CORRELATION_ID);
         $this->assertEquals(self::ENCODE_RESULT, bin2hex($header->pack()));
     }

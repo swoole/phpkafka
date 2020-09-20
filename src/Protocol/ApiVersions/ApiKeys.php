@@ -11,21 +11,21 @@ class ApiKeys extends AbstractStruct
 {
     /**
      * The API index.
-     * 
+     *
      * @var int
      */
     protected $apiKey;
 
     /**
      * The minimum supported version, inclusive.
-     * 
+     *
      * @var int
      */
     protected $minVersion;
 
     /**
      * The maximum supported version, inclusive.
-     * 
+     *
      * @var int
      */
     protected $maxVersion;

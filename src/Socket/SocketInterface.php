@@ -22,8 +22,5 @@ interface SocketInterface
 
     public function send(string $data): int;
 
-    /**
-     * @return string
-     */
     public function recv(int $length): string;
 }

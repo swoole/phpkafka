@@ -44,7 +44,7 @@ class KafkaRequest
     {
         $apiVersion = $this->header->getRequestApiVersion();
         $this->data = $this->header->pack($apiVersion) . $this->request->pack($apiVersion);
-        $this->size = strlen($this->data);
+        $this->size = \strlen($this->data);
     }
 
     public function getSize(): int

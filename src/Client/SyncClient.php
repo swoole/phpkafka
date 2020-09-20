@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Client;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Protocol\Type\Int32;
-use Longyan\Kafka\Socket\StreamSocket;
-use Longyan\Kafka\Protocol\KafkaRequest;
-use Longyan\Kafka\Protocol\RequestHeader;
-use Longyan\Kafka\Socket\SocketInterface;
-use Longyan\Kafka\Protocol\ResponseHeader;
+use Longyan\Kafka\Exception\UnsupportedApiKeyException;
+use Longyan\Kafka\Exception\UnsupportedApiVersionException;
 use Longyan\Kafka\Protocol\AbstractRequest;
 use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Exception\UnsupportedApiKeyException;
+use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsRequest;
-use Longyan\Kafka\Exception\UnsupportedApiVersionException;
 use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponse;
 use Longyan\Kafka\Protocol\ErrorCode;
+use Longyan\Kafka\Protocol\KafkaRequest;
+use Longyan\Kafka\Protocol\RequestHeader;
+use Longyan\Kafka\Protocol\ResponseHeader;
+use Longyan\Kafka\Protocol\Type\Int32;
+use Longyan\Kafka\Socket\SocketInterface;
+use Longyan\Kafka\Socket\StreamSocket;
 
 class SyncClient implements ClientInterface
 {
@@ -73,6 +73,7 @@ class SyncClient implements ClientInterface
             $result[$item->getApiKey()] = $item;
         }
         $this->apiKeys = $result;
+
         return $this;
     }
 
@@ -119,13 +120,9 @@ class SyncClient implements ClientInterface
     }
 
     /**
-     * Send message to kafka server
-     * 
-     * If successful, return the correlationId
+     * Send message to kafka server.
      *
-     * @param \Longyan\Kafka\Protocol\AbstractRequest $request
-     * @param \Longyan\Kafka\Protocol\RequestHeader|null $header
-     * @return integer
+     * If successful, return the correlationId
      */
     public function send(AbstractRequest $request, ?RequestHeader $header = null): int
     {
@@ -139,6 +136,7 @@ class SyncClient implements ClientInterface
         $this->waitResponseMaps[$correlationId] = [
             'apiKey' => $apiKey,
         ];
+
         return $correlationId;
     }
 
@@ -147,18 +145,19 @@ class SyncClient implements ClientInterface
         $data = $this->socket->recv(4);
         $length = Int32::unpack($data);
         $data = $this->socket->recv($length);
-        $header = new ResponseHeader;
+        $header = new ResponseHeader();
         $header->unpack($data, $size);
         if (!isset($this->waitResponseMaps[$correlationId])) {
             throw new InvalidArgumentException(sprintf('Invalid correlationId %s', $correlationId));
         }
         $data = substr($data, $size);
+
         return ApiKeys::createResponse($this->waitResponseMaps[$correlationId]['apiKey'], $data);
     }
 
     protected function updateApiVersions()
     {
-        $request = new ApiVersionsRequest;
+        $request = new ApiVersionsRequest();
         $correlationId = $this->send($request);
         /** @var ApiVersionsResponse $response */
         $response = $this->recv($correlationId);

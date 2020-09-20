@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Test\Client;
 
-use PHPUnit\Framework\TestCase;
-use Longyan\Kafka\Client\SyncClient;
 use Longyan\Kafka\Client\ClientInterface;
+use Longyan\Kafka\Client\SyncClient;
+use PHPUnit\Framework\TestCase;
 
 class SyncClientTest extends TestCase
 {
@@ -24,7 +24,7 @@ class SyncClientTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         $this->host = getenv('KAFKA_HOST') ?: '127.0.0.1';
-        $this->port = (int)(getenv('KAFKA_PORT') ?: 9092);
+        $this->port = (int) (getenv('KAFKA_PORT') ?: 9092);
     }
 
     public function testClient()
@@ -32,6 +32,7 @@ class SyncClientTest extends TestCase
         $client = new SyncClient($this->host, $this->port);
         $this->assertEquals($this->host, $client->getHost());
         $this->assertEquals($this->port, $client->getPort());
+
         return $client;
     }
 
@@ -44,6 +45,7 @@ class SyncClientTest extends TestCase
     {
         $client->connect();
         $this->assertTrue(true);
+
         return $client;
     }
 

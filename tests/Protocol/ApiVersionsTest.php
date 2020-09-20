@@ -9,7 +9,7 @@ use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsRequest;
 use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponse;
 use PHPUnit\Framework\TestCase;
 
-class ApiVersionTest extends TestCase
+class ApiVersionsTest extends TestCase
 {
     private const ENCODE_REQUEST_RESULT = '116c6f6e6779616e2d6b61666b612d70687005312e302e30';
 
