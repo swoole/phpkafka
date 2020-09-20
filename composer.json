@@ -19,6 +19,7 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit",
+        "swoole-test": "./swoole-phpunit",
         "test-coverage": "php -dzend_extension=xdebug ./vendor/bin/phpunit"
     }
 }

@@ -3,8 +3,7 @@ name: ci
 on: [push, pull_request]
 
 jobs:
-  build:
-
+  ci:
     runs-on: ubuntu-latest
 
     strategy:
@@ -13,14 +12,17 @@ jobs:
         php: [ 7.1, 7.2, 7.3, 7.4 ]
         kafka: [ 1.0.0, 1.1.1, 2.6.0 ]
 
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+      KAFKA_VERSION: ${{ matrix.kafka }}
+      SWOOLE_VERSION: 4.5.3
+      KAFKA_HOST: kafka-${{ matrix.kafka }}
+      KAFKA_PORT: 9092
+
     steps:
     - uses: actions/checkout@v1
 
     - name: start docker
-      env:
-        PHP_VERSION: ${{ matrix.php }}
-        KAFKA_VERSION: ${{ matrix.kafka }}
-        SWOOLE_VERSION: 4.5.3
       run: |
         cd .github
         # kafka
@@ -32,8 +34,8 @@ jobs:
     - name: composer update
       run: docker exec swoole composer update
 
-    - name: test
-      env:
-        KAFKA_HOST: kafka-${{ matrix.kafka }}
-        KAFKA_PORT: 9092
+    - name: php-test
       run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer test
+
+    - name: swoole-test
+      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer swoole-test
