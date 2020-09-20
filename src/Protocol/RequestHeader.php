@@ -46,10 +46,10 @@ class RequestHeader extends AbstractStruct
         $this->correlationId = $correlationId ?? ++self::$correlationIdIncrValue;
         $this->clientId = $clientId;
         $this->map = [
-            'requestApiKey'     => new ProtocolField('Int16', null, 0),
-            'requestApiVersion' => new ProtocolField('Int16', null, 0),
-            'correlationId'     => new ProtocolField('Int32', null, 0),
-            'clientId'          => new ProtocolField('NullableString', null, 1),
+            new ProtocolField('requestApiKey', 'Int16', null, 0),
+            new ProtocolField('requestApiVersion', 'Int16', null, 0),
+            new ProtocolField('correlationId', 'Int32', null, 0),
+            new ProtocolField('clientId', 'NullableString', null, 1),
         ];
     }
 

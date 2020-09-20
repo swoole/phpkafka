@@ -9,6 +9,11 @@ class ProtocolField
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $type;
 
     /**
@@ -21,11 +26,17 @@ class ProtocolField
      */
     private $version;
 
-    public function __construct(string $type, ?string $arrayType, int $version)
+    public function __construct(string $name, string $type, ?string $arrayType, int $version)
     {
+        $this->name = $name;
         $this->type = $type;
         $this->arrayType = $arrayType;
         $this->version = $version;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function getType(): string

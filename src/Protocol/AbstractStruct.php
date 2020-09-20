@@ -15,11 +15,17 @@ abstract class AbstractStruct implements \JsonSerializable
 
     public function pack(int $apiVersion = 0): string
     {
+        $parsedfieldsNames = [];
         $result = '';
-        foreach ($this->map as $fieldName => $protocolField) {
+        foreach ($this->map as $protocolField) {
             if ($apiVersion < $protocolField->getVersion()) {
                 continue;
             }
+            $fieldName = $protocolField->getName();
+            if (isset($parsedfieldsNames[$fieldName])) {
+                continue;
+            }
+            $parsedfieldsNames[$fieldName] = 1;
             $value = $this->$fieldName;
             $arrayType = $protocolField->getArrayType();
             if (null === $arrayType) {
@@ -38,7 +44,7 @@ abstract class AbstractStruct implements \JsonSerializable
                 if (!class_exists($arrayTypeClass)) {
                     throw new \InvalidArgumentException(sprintf('Invalid arrayType %s', $arrayType));
                 }
-                $result .= $arrayTypeClass::pack($value, $protocolField->getType());
+                $result .= $arrayTypeClass::pack($value, $protocolField->getType(), $apiVersion);
             }
         }
 
@@ -47,11 +53,17 @@ abstract class AbstractStruct implements \JsonSerializable
 
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
+        $parsedfieldsNames = [];
         $size = $tmpSize = 0;
-        foreach ($this->map as $fieldName => $protocolField) {
+        foreach ($this->map as $protocolField) {
             if ($apiVersion < $protocolField->getVersion()) {
                 continue;
             }
+            $fieldName = $protocolField->getName();
+            if (isset($parsedfieldsNames[$fieldName])) {
+                continue;
+            }
+            $parsedfieldsNames[$fieldName] = 1;
             $type = $protocolField->getType();
             $arrayType = $protocolField->getArrayType();
             if (null === $arrayType) {
@@ -79,7 +91,7 @@ abstract class AbstractStruct implements \JsonSerializable
                 if (!class_exists($arrayTypeClass)) {
                     throw new \InvalidArgumentException(sprintf('Invalid arrayType %s', $arrayType));
                 }
-                $this->$fieldName = $arrayTypeClass::unpack($data, $tmpSize, $type);
+                $this->$fieldName = $arrayTypeClass::unpack($data, $tmpSize, $type, $apiVersion);
             }
             $data = substr($data, $tmpSize);
             $size += $tmpSize;
@@ -88,15 +100,23 @@ abstract class AbstractStruct implements \JsonSerializable
 
     public function toArray(): array
     {
+        $parsedfieldsNames = [];
         $result = [];
-        foreach ($this->map as $fieldName => $protocolField) {
+        foreach ($this->map as $protocolField) {
+            $fieldName = $protocolField->getName();
+            if (isset($parsedfieldsNames[$fieldName])) {
+                continue;
+            }
+            $parsedfieldsNames[$fieldName] = 1;
             $value = $this->$fieldName;
             if ($value instanceof self) {
                 $value = $value->toArray();
             } elseif (null !== $protocolField->getArrayType()) {
                 $array = [];
-                foreach ($value as $item) {
-                    $array[] = $item->toArray();
+                if ($value) {
+                    foreach ($value as $item) {
+                        $array[] = $item->toArray();
+                    }
                 }
                 $value = $array;
             }

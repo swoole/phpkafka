@@ -27,8 +27,8 @@ class ApiVersionsRequest extends AbstractRequest
     public function __construct()
     {
         $this->map = [
-            'clientSoftwareName'    => new ProtocolField('CompactString', null, 3),
-            'clientSoftwareVersion' => new ProtocolField('CompactString', null, 3),
+            new ProtocolField('clientSoftwareName', 'CompactString', null, 3),
+            new ProtocolField('clientSoftwareVersion', 'CompactString', null, 3),
         ];
     }
 

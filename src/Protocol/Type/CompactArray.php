@@ -7,7 +7,7 @@ namespace Longyan\Kafka\Protocol\Type;
 use InvalidArgumentException;
 use Longyan\Kafka\Protocol\AbstractStruct;
 
-class ArrayUVarInt extends AbstractType
+class CompactArray extends AbstractType
 {
     private function __construct()
     {

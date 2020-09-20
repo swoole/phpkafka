@@ -34,9 +34,9 @@ class ApiVersionsResponse extends AbstractResponse
     public function __construct()
     {
         $this->map = [
-            'errorCode'      => new ProtocolField('Int16', null, 0),
-            'apiKeys'        => new ProtocolField(\Longyan\Kafka\Protocol\ApiVersions\ApiKeys::class, 'ArrayInt32', 0),
-            'throttleTimeMs' => new ProtocolField('Int32', null, 1),
+            new ProtocolField('errorCode', 'Int16', null, 0),
+            new ProtocolField('apiKeys', \Longyan\Kafka\Protocol\ApiVersions\ApiKeys::class, 'ArrayInt32', 0),
+            new ProtocolField('throttleTimeMs', 'Int32', null, 1),
         ];
     }
 

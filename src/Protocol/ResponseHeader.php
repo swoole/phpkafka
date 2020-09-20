@@ -16,7 +16,7 @@ class ResponseHeader extends AbstractStruct
     public function __construct()
     {
         $this->map = [
-            'correlationId'     => new ProtocolField('Int32', null, 0),
+            new ProtocolField('correlationId', 'Int32', null, 0),
         ];
     }
 

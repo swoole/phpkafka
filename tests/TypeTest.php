@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Test;
 
 use Longyan\Kafka\Protocol\Type\ArrayInt32;
-use Longyan\Kafka\Protocol\Type\ArrayUVarInt;
 use Longyan\Kafka\Protocol\Type\Boolean;
+use Longyan\Kafka\Protocol\Type\CompactArray;
+use Longyan\Kafka\Protocol\Type\CompactNullableString;
 use Longyan\Kafka\Protocol\Type\CompactString;
 use Longyan\Kafka\Protocol\Type\Float64;
 use Longyan\Kafka\Protocol\Type\Int16;
@@ -121,6 +122,19 @@ class TypeTest extends TestCase
         $this->assertEquals(2, $size);
     }
 
+    public function testCompactNullableString()
+    {
+        $encodeResult = CompactNullableString::pack(self::TEST_STRING);
+        $this->assertEquals('315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals(self::TEST_STRING, CompactNullableString::unpack($encodeResult, $size));
+        $this->assertEquals(1 + \strlen(self::TEST_STRING), $size);
+
+        $encodeResult = CompactNullableString::pack(null);
+        $this->assertEquals('00', bin2hex($encodeResult));
+        $this->assertNull(CompactNullableString::unpack($encodeResult, $size));
+        $this->assertEquals(1, $size);
+    }
+
     public function testString16()
     {
         $encodeResult = String16::pack(self::TEST_STRING);
@@ -211,12 +225,12 @@ class TypeTest extends TestCase
         $this->assertEquals(4, $size);
     }
 
-    public function testArrayUVarInt()
+    public function testCompactArray()
     {
         $exceptedArray = [1, 2, 3];
-        $encodeResult = ArrayUVarInt::pack($exceptedArray, 'Int32');
+        $encodeResult = CompactArray::pack($exceptedArray, 'Int32');
         $this->assertEquals('03000000010000000200000003', bin2hex($encodeResult));
-        $this->assertEquals($exceptedArray, ArrayUVarInt::unpack($encodeResult, $size, 'Int32'));
+        $this->assertEquals($exceptedArray, CompactArray::unpack($encodeResult, $size, 'Int32'));
         $this->assertEquals(13, $size);
     }
 }

@@ -33,9 +33,9 @@ class ApiKeys extends AbstractStruct
     public function __construct()
     {
         $this->map = [
-            'apiKey'     => new ProtocolField('Int16', null, 0),
-            'minVersion' => new ProtocolField('Int16', null, 0),
-            'maxVersion' => new ProtocolField('Int16', null, 0),
+            new ProtocolField('apiKey', 'Int16', null, 0),
+            new ProtocolField('minVersion', 'Int16', null, 0),
+            new ProtocolField('maxVersion', 'Int16', null, 0),
         ];
     }
 
