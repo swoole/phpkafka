@@ -15,9 +15,17 @@ class ResponseHeader extends AbstractStruct
 
     public function __construct()
     {
-        $this->map = [
-            new ProtocolField('correlationId', 'Int32', null, 0),
-        ];
+        if (!isset(self::$maps[self::class])) {
+            self::$maps[self::class] = [
+                new ProtocolField('correlationId', 'Int32', null, 0),
+            ];
+            self::$taggedFieldses[self::class] = [];
+        }
+    }
+
+    public function getFlexibleVersions(): ?int
+    {
+        return 1;
     }
 
     public function getCorrelationId(): int
@@ -30,5 +38,10 @@ class ResponseHeader extends AbstractStruct
         $this->correlationId = $correlationId;
 
         return $this;
+    }
+
+    public static function parseVersion(int $requestApiVersion, int $flexibleVersion): int
+    {
+        return $requestApiVersion >= $flexibleVersion ? 1 : 0;
     }
 }

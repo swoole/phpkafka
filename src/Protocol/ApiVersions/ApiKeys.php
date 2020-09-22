@@ -32,11 +32,14 @@ class ApiKeys extends AbstractStruct
 
     public function __construct()
     {
-        $this->map = [
-            new ProtocolField('apiKey', 'Int16', null, 0),
-            new ProtocolField('minVersion', 'Int16', null, 0),
-            new ProtocolField('maxVersion', 'Int16', null, 0),
-        ];
+        if (!isset(self::$maps[self::class])) {
+            self::$maps[self::class] = [
+                new ProtocolField('apiKey', 'Int16', null, 0),
+                new ProtocolField('minVersion', 'Int16', null, 0),
+                new ProtocolField('maxVersion', 'Int16', null, 0),
+            ];
+            self::$taggedFieldses[self::class] = [];
+        }
     }
 
     public function getApiKey(): int

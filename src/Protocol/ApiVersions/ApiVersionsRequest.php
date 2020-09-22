@@ -26,10 +26,13 @@ class ApiVersionsRequest extends AbstractRequest
 
     public function __construct()
     {
-        $this->map = [
-            new ProtocolField('clientSoftwareName', 'CompactString', null, 3),
-            new ProtocolField('clientSoftwareVersion', 'CompactString', null, 3),
-        ];
+        if (!isset(self::$maps[self::class])) {
+            self::$maps[self::class] = [
+                new ProtocolField('clientSoftwareName', 'CompactString', null, 3),
+                new ProtocolField('clientSoftwareVersion', 'CompactString', null, 3),
+            ];
+            self::$taggedFieldses[self::class] = [];
+        }
     }
 
     public function getRequestApiKey(): ?int
@@ -38,6 +41,11 @@ class ApiVersionsRequest extends AbstractRequest
     }
 
     public function getMaxSupportedVersion(): int
+    {
+        return 3;
+    }
+
+    public function getFlexibleVersions(): ?int
     {
         return 3;
     }

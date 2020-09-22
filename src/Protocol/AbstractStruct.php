@@ -4,20 +4,40 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol;
 
+use Longyan\Kafka\Protocol\Type\UVarInt;
+
 abstract class AbstractStruct implements \JsonSerializable
 {
     /**
      * Protocol fields map.
      *
-     * @var ProtocolField[]
+     * @var ProtocolField[][]
      */
-    protected $map;
+    protected static $maps = [];
+
+    /**
+     * tagged fieldses.
+     *
+     * @var ProtocolField[][]
+     */
+    protected static $taggedFieldses = [];
 
     public function pack(int $apiVersion = 0): string
     {
         $parsedfieldsNames = [];
         $result = '';
-        foreach ($this->map as $protocolField) {
+        $taggedResult = '';
+        $hasTagged = false;
+        $taggedIndex = 0;
+        foreach (array_merge(self::$maps[static::class], ['|'], self::$taggedFieldses[static::class]) as $protocolField) {
+            if ('|' === $protocolField) {
+                if ($apiVersion < $this->getFlexibleVersions()) {
+                    break;
+                }
+                $hasTagged = true;
+                continue;
+            }
+            /** @var ProtocolField $protocolField */
             if ($apiVersion < $protocolField->getVersion()) {
                 continue;
             }
@@ -27,35 +47,50 @@ abstract class AbstractStruct implements \JsonSerializable
             }
             $parsedfieldsNames[$fieldName] = 1;
             $value = $this->$fieldName;
+            if ($hasTagged && null === $value) {
+                continue;
+            }
             $arrayType = $protocolField->getArrayType();
             if (null === $arrayType) {
                 if ($value instanceof self) {
-                    $result .= $value->pack($apiVersion);
-                    continue;
+                    $item = $value->pack($apiVersion);
+                } else {
+                    $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $protocolField->getType();
+                    if (class_exists($typeClass)) {
+                        $item = $typeClass::pack($value);
+                    } else {
+                        throw new \InvalidArgumentException(sprintf('Invalid type %s', $protocolField->getTypeForDisplay()));
+                    }
                 }
-                $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $protocolField->getType();
-                if (class_exists($typeClass)) {
-                    $result .= $typeClass::pack($value);
-                    continue;
-                }
-                throw new \InvalidArgumentException(sprintf('Invalid type %s', $protocolField->getTypeForDisplay()));
             } else {
                 $arrayTypeClass = '\Longyan\Kafka\Protocol\Type\\' . $arrayType;
                 if (!class_exists($arrayTypeClass)) {
                     throw new \InvalidArgumentException(sprintf('Invalid arrayType %s', $arrayType));
                 }
-                $result .= $arrayTypeClass::pack($value, $protocolField->getType(), $apiVersion);
+                $item = $arrayTypeClass::pack($value, $protocolField->getType(), $apiVersion);
+            }
+            if ($hasTagged) {
+                $item = UVarInt::pack($taggedIndex) . UVarInt::pack(\strlen($item)) . $item;
+                $taggedResult .= $item;
+                ++$taggedIndex;
+            } else {
+                $result .= $item;
             }
         }
 
-        return $result;
+        $flexibleVersions = $this->getFlexibleVersions();
+        if (null !== $flexibleVersions && $apiVersion >= $flexibleVersions) {
+            return $result . UVarInt::pack($taggedIndex) . $taggedResult;
+        } else {
+            return $result;
+        }
     }
 
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
         $parsedfieldsNames = [];
         $size = $tmpSize = 0;
-        foreach ($this->map as $protocolField) {
+        foreach (self::$maps[static::class] as $protocolField) {
             if ($apiVersion < $protocolField->getVersion()) {
                 continue;
             }
@@ -64,45 +99,73 @@ abstract class AbstractStruct implements \JsonSerializable
                 continue;
             }
             $parsedfieldsNames[$fieldName] = 1;
-            $type = $protocolField->getType();
-            $arrayType = $protocolField->getArrayType();
-            if (null === $arrayType) {
-                $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $type;
-                if (class_exists($typeClass)) {
-                    $this->$fieldName = $typeClass::unpack($data, $tmpSize);
-                } else {
-                    if (!class_exists($type)) {
-                        $className = implode('\\', \array_slice(explode('\\', static::class), 0, -1)) . '\\' . $type;
-                        if (!class_exists($className)) {
-                            throw new \InvalidArgumentException(sprintf('Invalid type %s', $type));
-                        }
-                        $type = $className;
-                    }
-                    if (!is_subclass_of($type, self::class)) {
-                        throw new \InvalidArgumentException(sprintf('Invalid type %s', $type));
-                    }
-                    /** @var self $value */
-                    $value = new $type();
-                    $value->unpack($data, $tmpSize);
-                    $this->$fieldName = $value;
-                }
-            } else {
-                $arrayTypeClass = '\Longyan\Kafka\Protocol\Type\\' . $arrayType;
-                if (!class_exists($arrayTypeClass)) {
-                    throw new \InvalidArgumentException(sprintf('Invalid arrayType %s', $arrayType));
-                }
-                $this->$fieldName = $arrayTypeClass::unpack($data, $tmpSize, $type, $apiVersion);
-            }
+            $this->$fieldName = $this->unpackItem($apiVersion, $data, $protocolField, $tmpSize);
             $data = substr($data, $tmpSize);
             $size += $tmpSize;
         }
+        $flexibleVersions = $this->getFlexibleVersions();
+        if (null !== $flexibleVersions && $apiVersion >= $flexibleVersions) {
+            $taggedFieldsCount = UVarInt::unpack($data, $tmpSize);
+            $data = substr($data, $tmpSize);
+            $size += $tmpSize;
+            for ($i = 0; $i < $taggedFieldsCount; ++$i) {
+                $tag = UVarInt::unpack($data, $tmpSize);
+                $data = substr($data, $tmpSize);
+                $size += $tmpSize;
+                $length = UVarInt::unpack($data, $tmpSize);
+                $data = substr($data, $tmpSize);
+                $size += $tmpSize + $length;
+                $dataBuffer = substr($data, 0, $length);
+                $data = substr($data, $length);
+                if (!isset(static::$taggedFieldses[static::class][$tag])) {
+                    continue;
+                }
+                $protocolField = static::$taggedFieldses[static::class][$tag];
+                $fieldName = $protocolField->getName();
+                $this->$fieldName = $this->unpackItem($apiVersion, $dataBuffer, $protocolField, $tmpSize);
+            }
+        }
+    }
+
+    protected function unpackItem(int $apiVersion, string $data, ProtocolField $protocolField, ?int &$tmpSize)
+    {
+        $type = $protocolField->getType();
+        $arrayType = $protocolField->getArrayType();
+        if (null === $arrayType) {
+            $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $type;
+            if (class_exists($typeClass)) {
+                $value = $typeClass::unpack($data, $tmpSize);
+            } else {
+                if (!class_exists($type)) {
+                    $className = implode('\\', \array_slice(explode('\\', static::class), 0, -1)) . '\\' . $type;
+                    if (!class_exists($className)) {
+                        throw new \InvalidArgumentException(sprintf('Invalid type %s', $type));
+                    }
+                    $type = $className;
+                }
+                if (!is_subclass_of($type, self::class)) {
+                    throw new \InvalidArgumentException(sprintf('Invalid type %s', $type));
+                }
+                /** @var self $value */
+                $value = new $type();
+                $value->unpack($data, $tmpSize);
+            }
+        } else {
+            $arrayTypeClass = '\Longyan\Kafka\Protocol\Type\\' . $arrayType;
+            if (!class_exists($arrayTypeClass)) {
+                throw new \InvalidArgumentException(sprintf('Invalid arrayType %s', $arrayType));
+            }
+            $value = $arrayTypeClass::unpack($data, $tmpSize, $type, $apiVersion);
+        }
+
+        return $value;
     }
 
     public function toArray(): array
     {
         $parsedfieldsNames = [];
         $result = [];
-        foreach ($this->map as $protocolField) {
+        foreach (array_merge(self::$maps[static::class], self::$taggedFieldses[static::class]) as $protocolField) {
             $fieldName = $protocolField->getName();
             if (isset($parsedfieldsNames[$fieldName])) {
                 continue;
@@ -115,7 +178,11 @@ abstract class AbstractStruct implements \JsonSerializable
                 $array = [];
                 if ($value) {
                     foreach ($value as $item) {
-                        $array[] = $item->toArray();
+                        if ($item instanceof self) {
+                            $array[] = $item->toArray();
+                        } else {
+                            $array[] = $item;
+                        }
                     }
                 }
                 $value = $array;
@@ -124,6 +191,11 @@ abstract class AbstractStruct implements \JsonSerializable
         }
 
         return $result;
+    }
+
+    public function getFlexibleVersions(): ?int
+    {
+        return null;
     }
 
     /**

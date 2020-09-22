@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ApiVersionsTest extends TestCase
 {
-    private const ENCODE_REQUEST_RESULT = '116c6f6e6779616e2d6b61666b612d70687005312e302e30';
+    private const ENCODE_REQUEST_RESULT = '126c6f6e6779616e2d6b61666b612d70687006312e302e3000';
 
     private const ENCODE_RESPONSE_RESULT_V0 = '007b00000001001200000064';
 
@@ -32,7 +32,7 @@ class ApiVersionsTest extends TestCase
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT), $size, 0);
         $this->assertEquals(0, $size);
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT), $size, 3);
-        $this->assertEquals(24, $size);
+        $this->assertEquals(25, $size);
         $this->assertEquals([
             'clientSoftwareName'    => 'longyan-kafka-php',
             'clientSoftwareVersion' => '1.0.0',

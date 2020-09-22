@@ -44,7 +44,7 @@ class TypeTest extends TestCase
     public function testCompactString()
     {
         $encodeResult = CompactString::pack(self::TEST_STRING);
-        $this->assertEquals('315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals('325048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
         $this->assertEquals(self::TEST_STRING, CompactString::unpack($encodeResult, $size));
         $this->assertEquals(1 + \strlen(self::TEST_STRING), $size);
     }
@@ -125,7 +125,7 @@ class TypeTest extends TestCase
     public function testCompactNullableString()
     {
         $encodeResult = CompactNullableString::pack(self::TEST_STRING);
-        $this->assertEquals('315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals('325048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
         $this->assertEquals(self::TEST_STRING, CompactNullableString::unpack($encodeResult, $size));
         $this->assertEquals(1 + \strlen(self::TEST_STRING), $size);
 
@@ -229,7 +229,7 @@ class TypeTest extends TestCase
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = CompactArray::pack($exceptedArray, 'Int32');
-        $this->assertEquals('03000000010000000200000003', bin2hex($encodeResult));
+        $this->assertEquals('04000000010000000200000003', bin2hex($encodeResult));
         $this->assertEquals($exceptedArray, CompactArray::unpack($encodeResult, $size, 'Int32'));
         $this->assertEquals(13, $size);
     }

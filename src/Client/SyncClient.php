@@ -134,7 +134,9 @@ class SyncClient implements ClientInterface
         $this->socket->send($kafkaRequest->pack());
         $correlationId = $header->getCorrelationId();
         $this->waitResponseMaps[$correlationId] = [
-            'apiKey' => $apiKey,
+            'apiKey'           => $apiKey,
+            'apiVersion'       => $header->getRequestApiVersion(),
+            'flexibleVersions' => $request->getFlexibleVersions(),
         ];
 
         return $correlationId;
@@ -142,17 +144,21 @@ class SyncClient implements ClientInterface
 
     public function recv(?int $correlationId, ?ResponseHeader &$header = null): AbstractResponse
     {
+        if (!isset($this->waitResponseMaps[$correlationId])) {
+            throw new InvalidArgumentException(sprintf('Invalid correlationId %s', $correlationId));
+        }
+        $mapData = $this->waitResponseMaps[$correlationId];
         $data = $this->socket->recv(4);
         $length = Int32::unpack($data);
         $data = $this->socket->recv($length);
         $header = new ResponseHeader();
-        $header->unpack($data, $size);
-        if (!isset($this->waitResponseMaps[$correlationId])) {
-            throw new InvalidArgumentException(sprintf('Invalid correlationId %s', $correlationId));
-        }
+        $header->unpack($data, $size, ResponseHeader::parseVersion($mapData['apiVersion'], $mapData['flexibleVersions']));
         $data = substr($data, $size);
 
-        return ApiKeys::createResponse($this->waitResponseMaps[$correlationId]['apiKey'], $data);
+        $result = ApiKeys::createResponse($mapData['apiKey'], $data, $mapData['apiVersion']);
+        unset($this->waitResponseMaps[$correlationId]);
+
+        return $result;
     }
 
     protected function updateApiVersions()

@@ -19,17 +19,17 @@ class ApiKeys
     {
     }
 
-    public static function createResponse(int $protocol, string $data = ''): AbstractResponse
+    public static function createResponse(int $protocol, string $data = '', int $apiVersion = 0): AbstractResponse
     {
         $name = self::PROTOCOL_MAP[$protocol] ?? null;
         if (!$name) {
             throw new \RuntimeException(sprintf('Could not found api keys %d', $protocol));
         }
-        $class = 'Longyan\Kafka\Protocol\ApiVersions\\' . $name . 'Response';
+        $class = 'Longyan\Kafka\Protocol\\' . $name . '\\' . $name . 'Response';
         /** @var AbstractResponse $instance */
         $instance = new $class();
         if ($data) {
-            $instance->unpack($data);
+            $instance->unpack($data, $size, $apiVersion);
         }
 
         return $instance;
