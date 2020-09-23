@@ -10,9 +10,12 @@ class ApiKeys
 
     public const PROTOCOL_CREATE_TOPICS = 19;
 
+    public const PROTOCOL_DELETE_TOPICS = 20;
+
     public const PROTOCOL_MAP = [
         self::PROTOCOL_API_VERSIONS  => 'ApiVersions',
         self::PROTOCOL_CREATE_TOPICS => 'CreateTopics',
+        self::PROTOCOL_DELETE_TOPICS => 'DeleteTopics',
     ];
 
     private function __construct()
