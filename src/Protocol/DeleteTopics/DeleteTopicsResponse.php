@@ -5,18 +5,10 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\DeleteTopics;
 
 use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
 
 class DeleteTopicsResponse extends AbstractResponse
 {
-    /**
-     * The results for each topic we tried to delete.
-     *
-     * @var DeleteResponse[]
-     */
-    protected $responses;
-
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
      *
@@ -24,44 +16,33 @@ class DeleteTopicsResponse extends AbstractResponse
      */
     protected $throttleTimeMs;
 
+    /**
+     * The results for each topic we tried to delete.
+     *
+     * @var DeletableTopicResult[]
+     */
+    protected $responses = [];
+
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('throttleTimeMs', 'Int32', null, 1),
-                new ProtocolField('responses', DeleteResponse::class, 'CompactArray', 4),
-                new ProtocolField('responses', DeleteResponse::class, 'ArrayInt32', 0),
+                new ProtocolField('throttleTimeMs', 'int32', false, [1, 2, 3, 4], [4], [], [], null),
+                new ProtocolField('responses', DeletableTopicResult::class, true, [0, 1, 2, 3, 4], [4], [], [], null),
             ];
-            self::$taggedFieldses[self::class] = [];
+            self::$taggedFieldses[self::class] = [
+            ];
         }
     }
 
     public function getRequestApiKey(): ?int
     {
-        return ApiKeys::PROTOCOL_DELETE_TOPICS;
+        return 20;
     }
 
-    public function getFlexibleVersions(): ?int
+    public function getFlexibleVersions(): array
     {
-        return 4;
-    }
-
-    /**
-     * @return DeleteResponse[]
-     */
-    public function getResponses(): array
-    {
-        return $this->responses;
-    }
-
-    /**
-     * @param DeleteResponse[] $responses
-     */
-    public function setResponses(array $responses): self
-    {
-        $this->responses = $responses;
-
-        return $this;
+        return [4];
     }
 
     public function getThrottleTimeMs(): int
@@ -72,6 +53,24 @@ class DeleteTopicsResponse extends AbstractResponse
     public function setThrottleTimeMs(int $throttleTimeMs): self
     {
         $this->throttleTimeMs = $throttleTimeMs;
+
+        return $this;
+    }
+
+    /**
+     * @return DeletableTopicResult[]
+     */
+    public function getResponses(): array
+    {
+        return $this->responses;
+    }
+
+    /**
+     * @param DeletableTopicResult[] $responses
+     */
+    public function setResponses(array $responses): self
+    {
+        $this->responses = $responses;
 
         return $this;
     }

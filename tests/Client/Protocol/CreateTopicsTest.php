@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Test\Client\Protocol;
 
 use Longyan\Kafka\Client\ClientInterface;
+use Longyan\Kafka\Protocol\CreateTopics\CreatableTopic;
 use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsRequest;
 use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsResponse;
-use Longyan\Kafka\Protocol\CreateTopics\Topic;
 use Longyan\Kafka\Protocol\ErrorCode;
 use Longyan\Kafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ class CreateTopicsTest extends TestCase
         $client->connect();
         $request = new CreateTopicsRequest();
         $request->setTopics([
-            (new Topic())->setName('CreateTopicsTest')->setNumPartitions(1)->setReplicationFactor(1),
+            (new CreatableTopic())->setTopicName('CreateTopicsTest')->setNumPartitions(1)->setReplicationFactor(1),
         ]);
         $request->setTimeoutMs(10000);
         $request->setValidateOnly(true);

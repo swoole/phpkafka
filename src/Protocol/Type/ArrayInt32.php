@@ -32,9 +32,8 @@ class ArrayInt32 extends AbstractType
                         $result .= $item->pack($apiVersion);
                         continue;
                     }
-                    $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
-                    if (class_exists($typeClass)) {
-                        $result .= $typeClass::pack($item);
+                    if (is_subclass_of($elementType, AbstractType::class)) {
+                        $result .= $elementType::pack($item);
                         continue;
                     }
                     throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
@@ -64,9 +63,8 @@ class ArrayInt32 extends AbstractType
                         $item->unpack($value, $tmpSize, $apiVersion);
                         continue;
                     }
-                    $typeClass = '\Longyan\Kafka\Protocol\Type\\' . $elementType;
-                    if (class_exists($typeClass)) {
-                        $array[] = $typeClass::unpack($value, $tmpSize);
+                    if (is_subclass_of($elementType, AbstractType::class)) {
+                        $array[] = $elementType::unpack($value, $tmpSize);
                         continue;
                     }
 

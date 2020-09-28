@@ -7,8 +7,8 @@ namespace Longyan\Kafka\Client;
 use Longyan\Kafka\Config\CommonConfig;
 use Longyan\Kafka\Protocol\AbstractRequest;
 use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\RequestHeader;
-use Longyan\Kafka\Protocol\ResponseHeader;
+use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
+use Longyan\Kafka\Protocol\ResponseHeader\ResponseHeader;
 use Longyan\Kafka\Socket\SocketInterface;
 use Longyan\Kafka\Socket\StreamSocket;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol;
 
+use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
 use Longyan\Kafka\Protocol\Type\Int32;
 
 class KafkaRequest

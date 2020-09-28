@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Test\Protocol;
 
-use Longyan\Kafka\Protocol\CreateTopics\ConfigResult;
+use Longyan\Kafka\Protocol\CreateTopics\CreatableReplicaAssignment;
+use Longyan\Kafka\Protocol\CreateTopics\CreatableTopic;
+use Longyan\Kafka\Protocol\CreateTopics\CreatableTopicConfigs;
+use Longyan\Kafka\Protocol\CreateTopics\CreatableTopicResult;
+use Longyan\Kafka\Protocol\CreateTopics\CreateableTopicConfig;
 use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsRequest;
 use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsResponse;
-use Longyan\Kafka\Protocol\CreateTopics\Topic;
-use Longyan\Kafka\Protocol\CreateTopics\TopicResult;
-use Longyan\Kafka\Protocol\CreateTopics\TopicsAssignment;
-use Longyan\Kafka\Protocol\CreateTopics\TopicsConfig;
 use PHPUnit\Framework\TestCase;
 
 class CreateTopicsTest extends TestCase
@@ -19,26 +19,28 @@ class CreateTopicsTest extends TestCase
 
     private const ENCODE_REQUEST_RESULT_V1 = '0000000100047465737400000003ffff00000001000000010000000300000001000000020000000300000001000361626300036465660000271001';
 
+    private const ENCODE_REQUEST_RESULT_V5 = '02057465737400000003ffff020000000104000000010000000200000003000204616263046465660000000027100100';
+
     private const ENCODE_RESPONSE_RESULT_V0 = '000000010004746573740000';
 
     private const ENCODE_RESPONSE_RESULT_V1 = '00000001000474657374000000076d657373616765';
 
     private const ENCODE_RESPONSE_RESULT_V2 = '0000271000000001000474657374000000076d657373616765';
 
-    private const ENCODE_RESPONSE_RESULT_V5 = '000027100205746573740000086d657373616765000000030001020461626304646566017b01000000';
+    private const ENCODE_RESPONSE_RESULT_V5 = '000027100205746573740000086d657373616765000000030001020461626304646566017b0100010002000b00';
 
     public function testPackRequest()
     {
         $request = new CreateTopicsRequest();
         $request->setTopics([
-            (new Topic())->setName('test')
+            (new CreatableTopic())->setTopicName('test')
                          ->setNumPartitions(3)
                          ->setReplicationFactor(-1)
                          ->setAssignments([
-                             (new TopicsAssignment())->setPartitionIndex(1)
-                                                     ->setBrokerIds([1, 2, 3]),
+                             (new CreatableReplicaAssignment())->setPartitionIndex(1)
+                                                               ->setBrokerId([1, 2, 3]),
                          ])
-                         ->setConfigs([(new TopicsConfig())
+                         ->setConfigs([(new CreateableTopicConfig())
                             ->setName('abc')
                             ->setValue('def'),
                          ]),
@@ -47,6 +49,7 @@ class CreateTopicsTest extends TestCase
         $request->setValidateOnly(true);
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V0, bin2hex($request->pack()));
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V1, bin2hex($request->pack(1)));
+        $this->assertEquals(self::ENCODE_REQUEST_RESULT_V5, bin2hex($request->pack(5)));
     }
 
     public function testUnpackRequest()
@@ -57,14 +60,14 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'topics'       => [
                 [
-                    'name'              => 'test',
+                    'topicName'         => 'test',
                     'numPartitions'     => 3,
                     'replicationFactor' => -1,
                     'assignments'       => [[
                         'partitionIndex' => 1,
-                        'brokerIds'      => [1, 2, 3],
+                        'brokerId'       => [1, 2, 3],
                     ]],
-                    'configs'           => [[
+                    'configs' => [[
                         'name'  => 'abc',
                         'value' => 'def',
                     ]],
@@ -79,12 +82,34 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'topics'       => [
                 [
-                    'name'              => 'test',
+                    'topicName'         => 'test',
                     'numPartitions'     => 3,
                     'replicationFactor' => -1,
                     'assignments'       => [[
                         'partitionIndex' => 1,
-                        'brokerIds'      => [1, 2, 3],
+                        'brokerId'       => [1, 2, 3],
+                    ]],
+                    'configs'           => [[
+                        'name'  => 'abc',
+                        'value' => 'def',
+                    ]],
+                ],
+            ],
+            'timeoutMs'    => 10000,
+            'validateOnly' => true,
+        ], $request->toArray());
+
+        $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V5), $size, 5);
+        $this->assertEquals(48, $size);
+        $this->assertEquals([
+            'topics'       => [
+                [
+                    'topicName'         => 'test',
+                    'numPartitions'     => 3,
+                    'replicationFactor' => -1,
+                    'assignments'       => [[
+                        'partitionIndex' => 1,
+                        'brokerId'       => [1, 2, 3],
                     ]],
                     'configs'           => [[
                         'name'  => 'abc',
@@ -102,14 +127,15 @@ class CreateTopicsTest extends TestCase
         $response = new CreateTopicsResponse();
         $response->setThrottleTimeMs(10000);
         $response->setTopics([
-            (new TopicResult())->setConfigs([
-                (new ConfigResult())->setName('abc')->setValue('def')->setIsSensitive(true)->setReadonly(true)->setConfigSource(123),
+            (new CreatableTopicResult())->setConfigs([
+                (new CreatableTopicConfigs())->setName('abc')->setValue('def')->setIsSensitive(true)->setReadOnly(true)->setConfigSource(123),
             ])
                                ->setErrorCode(0)
                                ->setErrorMessage('message')
-                               ->setName('test')
+                               ->setTopicName('test')
                                ->setNumPartitions(3)
-                               ->setReplicationFactor(1),
+                               ->setReplicationFactor(1)
+                               ->setTopicConfigErrorCode(11),
         ]);
 
         $this->assertEquals(self::ENCODE_RESPONSE_RESULT_V0, bin2hex($response->pack()));
@@ -126,12 +152,13 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => null,
             'topics'         => [[
-                'name'              => 'test',
-                'errorCode'         => 0,
-                'errorMessage'      => null,
-                'numPartitions'     => null,
-                'replicationFactor' => null,
-                'configs'           => [],
+                'topicName'            => 'test',
+                'errorCode'            => 0,
+                'errorMessage'         => null,
+                'numPartitions'        => -1,
+                'replicationFactor'    => -1,
+                'configs'              => [],
+                'topicConfigErrorCode' => null,
             ]],
         ], $response->toArray());
 
@@ -140,12 +167,13 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => null,
             'topics'         => [[
-                'name'              => 'test',
-                'errorCode'         => 0,
-                'errorMessage'      => 'message',
-                'numPartitions'     => null,
-                'replicationFactor' => null,
-                'configs'           => [],
+                'topicName'            => 'test',
+                'errorCode'            => 0,
+                'errorMessage'         => 'message',
+                'numPartitions'        => -1,
+                'replicationFactor'    => -1,
+                'configs'              => [],
+                'topicConfigErrorCode' => null,
             ]],
         ], $response->toArray());
 
@@ -154,21 +182,22 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'topics'         => [[
-                'name'              => 'test',
-                'errorCode'         => 0,
-                'errorMessage'      => 'message',
-                'numPartitions'     => null,
-                'replicationFactor' => null,
-                'configs'           => [],
+                'topicName'            => 'test',
+                'errorCode'            => 0,
+                'errorMessage'         => 'message',
+                'numPartitions'        => -1,
+                'replicationFactor'    => -1,
+                'configs'              => [],
+                'topicConfigErrorCode' => null,
             ]],
         ], $response->toArray());
 
         $response->unpack(hex2bin(self::ENCODE_RESPONSE_RESULT_V5), $size, 5);
-        $this->assertEquals(41, $size);
+        $this->assertEquals(45, $size);
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'topics'         => [[
-                'name'              => 'test',
+                'topicName'         => 'test',
                 'errorCode'         => 0,
                 'errorMessage'      => 'message',
                 'numPartitions'     => 3,
@@ -176,10 +205,11 @@ class CreateTopicsTest extends TestCase
                 'configs'           => [[
                     'name'         => 'abc',
                     'value'        => 'def',
-                    'readonly'     => true,
+                    'readOnly'     => true,
                     'configSource' => 123,
                     'isSensitive'  => true,
                 ]],
+                'topicConfigErrorCode' => 11,
             ]],
         ], $response->toArray());
     }

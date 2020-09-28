@@ -17,7 +17,7 @@ class DeleteTopicsTest extends TestCase
         $client = TestUtil::createKafkaClient();
         $client->connect();
         $request = new DeleteTopicsRequest();
-        $request->setTopicNames(['CreateTopicsTest']);
+        $request->setTopicName(['CreateTopicsTest']);
         $request->setTimeoutMs(10000);
         $correlationId = $client->send($request);
         $this->assertGreaterThan(0, $correlationId);
@@ -39,7 +39,7 @@ class DeleteTopicsTest extends TestCase
             $response = $client->recv($correlationId);
             $responses = $response->getResponses();
             $this->assertCount(1, $responses);
-            $this->assertEquals('CreateTopicsTest', $responses[0]->getName());
+            $this->assertEquals('CreateTopicsTest', $responses[0]->getTopicName());
         } finally {
             $client->close();
         }

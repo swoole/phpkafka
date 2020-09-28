@@ -213,24 +213,24 @@ class TypeTest extends TestCase
     public function testArrayInt32()
     {
         $exceptedArray = [1, 2, 3];
-        $encodeResult = ArrayInt32::pack($exceptedArray, 'Int32');
+        $encodeResult = ArrayInt32::pack($exceptedArray, Int32::class);
         $this->assertEquals('00000003000000010000000200000003', bin2hex($encodeResult));
-        $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, 'Int32'));
+        $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, Int32::class));
         $this->assertEquals(16, $size);
 
         $exceptedArray = null;
-        $encodeResult = ArrayInt32::pack($exceptedArray, 'Int32');
+        $encodeResult = ArrayInt32::pack($exceptedArray, Int32::class);
         $this->assertEquals('ffffffff', bin2hex($encodeResult));
-        $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, 'Int32'));
+        $this->assertEquals($exceptedArray, ArrayInt32::unpack($encodeResult, $size, Int32::class));
         $this->assertEquals(4, $size);
     }
 
     public function testCompactArray()
     {
         $exceptedArray = [1, 2, 3];
-        $encodeResult = CompactArray::pack($exceptedArray, 'Int32');
+        $encodeResult = CompactArray::pack($exceptedArray, Int32::class);
         $this->assertEquals('04000000010000000200000003', bin2hex($encodeResult));
-        $this->assertEquals($exceptedArray, CompactArray::unpack($encodeResult, $size, 'Int32'));
+        $this->assertEquals($exceptedArray, CompactArray::unpack($encodeResult, $size, Int32::class));
         $this->assertEquals(13, $size);
     }
 }

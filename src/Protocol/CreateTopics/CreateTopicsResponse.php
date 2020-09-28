@@ -5,18 +5,10 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\CreateTopics;
 
 use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
 
 class CreateTopicsResponse extends AbstractResponse
 {
-    /**
-     * Results for each topic we tried to create.
-     *
-     * @var TopicResult[]
-     */
-    protected $topics;
-
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
      *
@@ -24,44 +16,33 @@ class CreateTopicsResponse extends AbstractResponse
      */
     protected $throttleTimeMs;
 
+    /**
+     * Results for each topic we tried to create.
+     *
+     * @var CreatableTopicResult[]
+     */
+    protected $topics = [];
+
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('throttleTimeMs', 'Int32', null, 2),
-                new ProtocolField('topics', TopicResult::class, 'CompactArray', 5),
-                new ProtocolField('topics', TopicResult::class, 'ArrayInt32', 0),
+                new ProtocolField('throttleTimeMs', 'int32', false, [2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('topics', CreatableTopicResult::class, true, [0, 1, 2, 3, 4, 5], [5], [], [], null),
             ];
-            self::$taggedFieldses[self::class] = [];
+            self::$taggedFieldses[self::class] = [
+            ];
         }
     }
 
     public function getRequestApiKey(): ?int
     {
-        return ApiKeys::PROTOCOL_CREATE_TOPICS;
+        return 19;
     }
 
-    public function getFlexibleVersions(): ?int
+    public function getFlexibleVersions(): array
     {
-        return 5;
-    }
-
-    /**
-     * @return TopicResult[]
-     */
-    public function getTopics(): array
-    {
-        return $this->topics;
-    }
-
-    /**
-     * @param TopicResult[] $topics
-     */
-    public function setTopics(array $topics): self
-    {
-        $this->topics = $topics;
-
-        return $this;
+        return [5];
     }
 
     public function getThrottleTimeMs(): int
@@ -72,6 +53,24 @@ class CreateTopicsResponse extends AbstractResponse
     public function setThrottleTimeMs(int $throttleTimeMs): self
     {
         $this->throttleTimeMs = $throttleTimeMs;
+
+        return $this;
+    }
+
+    /**
+     * @return CreatableTopicResult[]
+     */
+    public function getTopics(): array
+    {
+        return $this->topics;
+    }
+
+    /**
+     * @param CreatableTopicResult[] $topics
+     */
+    public function setTopics(array $topics): self
+    {
+        $this->topics = $topics;
 
         return $this;
     }

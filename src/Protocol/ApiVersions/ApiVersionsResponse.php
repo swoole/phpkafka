@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\ApiVersions;
 
 use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
 
 class ApiVersionsResponse extends AbstractResponse
@@ -20,9 +19,9 @@ class ApiVersionsResponse extends AbstractResponse
     /**
      * The APIs supported by the broker.
      *
-     * @var \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[]
+     * @var ApiVersionsResponseKey[]
      */
-    protected $apiKeys;
+    protected $apiKeys = [];
 
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
@@ -35,22 +34,23 @@ class ApiVersionsResponse extends AbstractResponse
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('errorCode', 'Int16', null, 0),
-                new ProtocolField('apiKeys', \Longyan\Kafka\Protocol\ApiVersions\ApiKeys::class, 'ArrayInt32', 0),
-                new ProtocolField('throttleTimeMs', 'Int32', null, 1),
+                new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3], [3], [], [], null),
+                new ProtocolField('apiKeys', ApiVersionsResponseKey::class, true, [0, 1, 2, 3], [3], [], [], null),
+                new ProtocolField('throttleTimeMs', 'int32', false, [1, 2, 3], [3], [], [], null),
             ];
-            self::$taggedFieldses[self::class] = [];
+            self::$taggedFieldses[self::class] = [
+            ];
         }
     }
 
     public function getRequestApiKey(): ?int
     {
-        return ApiKeys::PROTOCOL_API_VERSIONS;
+        return 18;
     }
 
-    public function getFlexibleVersions(): ?int
+    public function getFlexibleVersions(): array
     {
-        return 3;
+        return [3];
     }
 
     public function getErrorCode(): int
@@ -66,7 +66,7 @@ class ApiVersionsResponse extends AbstractResponse
     }
 
     /**
-     * @return ApiKeys[]
+     * @return ApiVersionsResponseKey[]
      */
     public function getApiKeys(): array
     {
@@ -74,7 +74,7 @@ class ApiVersionsResponse extends AbstractResponse
     }
 
     /**
-     * @param ApiKeys[] $apiKeys
+     * @param ApiVersionsResponseKey[] $apiKeys
      */
     public function setApiKeys(array $apiKeys): self
     {

@@ -8,3 +8,4 @@ vendor/
 *.lock
 *.log
 /coverage.txt
+/.php_cs.cache

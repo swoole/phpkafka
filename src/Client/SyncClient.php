@@ -15,8 +15,8 @@ use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsRequest;
 use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponse;
 use Longyan\Kafka\Protocol\ErrorCode;
 use Longyan\Kafka\Protocol\KafkaRequest;
-use Longyan\Kafka\Protocol\RequestHeader;
-use Longyan\Kafka\Protocol\ResponseHeader;
+use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
+use Longyan\Kafka\Protocol\ResponseHeader\ResponseHeader;
 use Longyan\Kafka\Protocol\Type\Int32;
 use Longyan\Kafka\Socket\SocketInterface;
 use Longyan\Kafka\Socket\StreamSocket;
@@ -37,6 +37,11 @@ class SyncClient implements ClientInterface
      * @var array
      */
     private $waitResponseMaps;
+
+    /**
+     * @var int
+     */
+    private $correlationIdIncrValue = 0;
 
     public function __construct(string $host, int $port, ?CommonConfig $config = null, string $socketClass = StreamSocket::class)
     {
@@ -128,7 +133,11 @@ class SyncClient implements ClientInterface
     {
         $apiKey = $request->getRequestApiKey();
         if (null === $header) {
-            $header = new RequestHeader($apiKey, $this->getRequestApiVersion($request), null, $this->getConfig()->getClientId());
+            $header = new RequestHeader();
+            $header->setRequestApiKey($apiKey);
+            $header->setRequestApiVersion($this->getRequestApiVersion($request));
+            $header->setClientId($this->getConfig()->getClientId());
+            $header->setCorrelationId(++$this->correlationIdIncrValue);
         }
         $kafkaRequest = new KafkaRequest($request, $header);
         $this->socket->send($kafkaRequest->pack());

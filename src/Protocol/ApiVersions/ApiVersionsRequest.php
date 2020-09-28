@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\ApiVersions;
 
 use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
 
 class ApiVersionsRequest extends AbstractRequest
@@ -13,31 +12,32 @@ class ApiVersionsRequest extends AbstractRequest
     /**
      * The name of the client.
      *
-     * @var string|null
+     * @var string
      */
-    protected $clientSoftwareName = 'longyan-kafka-php';
+    protected $clientSoftwareName;
 
     /**
      * The version of the client.
      *
-     * @var string|null
+     * @var string
      */
-    protected $clientSoftwareVersion = '1.0.0';
+    protected $clientSoftwareVersion;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('clientSoftwareName', 'CompactString', null, 3),
-                new ProtocolField('clientSoftwareVersion', 'CompactString', null, 3),
+                new ProtocolField('clientSoftwareName', 'string', false, [3], [3], [], [], null),
+                new ProtocolField('clientSoftwareVersion', 'string', false, [3], [3], [], [], null),
             ];
-            self::$taggedFieldses[self::class] = [];
+            self::$taggedFieldses[self::class] = [
+            ];
         }
     }
 
     public function getRequestApiKey(): ?int
     {
-        return ApiKeys::PROTOCOL_API_VERSIONS;
+        return 18;
     }
 
     public function getMaxSupportedVersion(): int
@@ -45,29 +45,29 @@ class ApiVersionsRequest extends AbstractRequest
         return 3;
     }
 
-    public function getFlexibleVersions(): ?int
+    public function getFlexibleVersions(): array
     {
-        return 3;
+        return [3];
     }
 
-    public function getClientSoftwareName(): ?string
+    public function getClientSoftwareName(): string
     {
         return $this->clientSoftwareName;
     }
 
-    public function setClientSoftwareName(?string $clientSoftwareName): self
+    public function setClientSoftwareName(string $clientSoftwareName): self
     {
         $this->clientSoftwareName = $clientSoftwareName;
 
         return $this;
     }
 
-    public function getClientSoftwareVersion(): ?string
+    public function getClientSoftwareVersion(): string
     {
         return $this->clientSoftwareVersion;
     }
 
-    public function setClientSoftwareVersion(?string $clientSoftwareVersion): self
+    public function setClientSoftwareVersion(string $clientSoftwareVersion): self
     {
         $this->clientSoftwareVersion = $clientSoftwareVersion;
 

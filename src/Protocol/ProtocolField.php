@@ -17,21 +17,45 @@ class ProtocolField
     private $type;
 
     /**
-     * @var string|null
+     * @var bool
      */
-    private $arrayType;
+    private $isArray;
 
     /**
-     * @var int
+     * @var int[]
      */
-    private $version;
+    private $versions;
 
-    public function __construct(string $name, string $type, ?string $arrayType, int $version)
+    /**
+     * @var int[]
+     */
+    private $flexibleVersions;
+
+    /**
+     * @var int[]
+     */
+    private $nullableVersions;
+
+    /**
+     * @var int[]
+     */
+    private $taggedVersions;
+
+    /**
+     * @var int|null
+     */
+    private $tag;
+
+    public function __construct(string $name, string $type, bool $isArray, array $versions, array $flexibleVersions, array $nullableVersions, array $taggedVersions, ?int $tag = null)
     {
         $this->name = $name;
         $this->type = $type;
-        $this->arrayType = $arrayType;
-        $this->version = $version;
+        $this->isArray = $isArray;
+        $this->versions = $versions;
+        $this->flexibleVersions = $flexibleVersions;
+        $this->nullableVersions = $nullableVersions;
+        $this->taggedVersions = $taggedVersions;
+        $this->tag = $tag;
     }
 
     public function getName(): string
@@ -44,22 +68,56 @@ class ProtocolField
         return $this->type;
     }
 
-    public function getArrayType(): ?string
+    public function getIsArray(): bool
     {
-        return $this->arrayType;
+        return $this->isArray;
     }
 
-    public function getVersion(): int
+    /**
+     * @return int[]
+     */
+    public function getVersions(): array
     {
-        return $this->version;
+        return $this->versions;
+    }
+
+    /**
+     * Get the value of flexibleVersions.
+     *
+     * @return int[]
+     */
+    public function getFlexibleVersions(): array
+    {
+        return $this->flexibleVersions;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getNullableVersions(): array
+    {
+        return $this->nullableVersions;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getTaggedVersions(): array
+    {
+        return $this->taggedVersions;
+    }
+
+    public function getTag(): ?int
+    {
+        return $this->tag;
     }
 
     public function getTypeForDisplay(): string
     {
-        if (null === $this->arrayType) {
-            return $this->type;
+        if ($this->isArray) {
+            return $this->type . '[]';
         } else {
-            return $this->arrayType . '<' . $this->type . '>';
+            return $this->type;
         }
     }
 }

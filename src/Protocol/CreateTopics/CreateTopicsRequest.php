@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\CreateTopics;
 
 use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ApiKeys;
 use Longyan\Kafka\Protocol\ProtocolField;
 
 class CreateTopicsRequest extends AbstractRequest
@@ -13,7 +12,7 @@ class CreateTopicsRequest extends AbstractRequest
     /**
      * The topics to create.
      *
-     * @var Topic[]
+     * @var CreatableTopic[]
      */
     protected $topics = [];
 
@@ -22,7 +21,7 @@ class CreateTopicsRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $timeoutMs = 0;
+    protected $timeoutMs = 60000;
 
     /**
      * If true, check that the topics can be created as specified, but don't create anything.
@@ -35,18 +34,18 @@ class CreateTopicsRequest extends AbstractRequest
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topics', Topic::class, 'CompactArray', 5),
-                new ProtocolField('topics', Topic::class, 'ArrayInt32', 0),
-                new ProtocolField('timeoutMs', 'Int32', null, 0),
-                new ProtocolField('validateOnly', 'Boolean', null, 1),
+                new ProtocolField('topics', CreatableTopic::class, true, [0, 1, 2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('timeoutMs', 'int32', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('validateOnly', 'bool', false, [1, 2, 3, 4, 5], [5], [], [], null),
             ];
-            self::$taggedFieldses[self::class] = [];
+            self::$taggedFieldses[self::class] = [
+            ];
         }
     }
 
     public function getRequestApiKey(): ?int
     {
-        return ApiKeys::PROTOCOL_CREATE_TOPICS;
+        return 19;
     }
 
     public function getMaxSupportedVersion(): int
@@ -54,13 +53,13 @@ class CreateTopicsRequest extends AbstractRequest
         return 5;
     }
 
-    public function getFlexibleVersions(): ?int
+    public function getFlexibleVersions(): array
     {
-        return 5;
+        return [5];
     }
 
     /**
-     * @return Topic[]
+     * @return CreatableTopic[]
      */
     public function getTopics(): array
     {
@@ -68,7 +67,7 @@ class CreateTopicsRequest extends AbstractRequest
     }
 
     /**
-     * @param Topic[]
+     * @param CreatableTopic[] $topics
      */
     public function setTopics(array $topics): self
     {
