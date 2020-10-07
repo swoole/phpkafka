@@ -103,7 +103,7 @@ class RecordBatch extends AbstractStruct
         $result .= Int32::pack($this->batchLength = 4 + 1 + 4 + \strlen($data));
         $result .= Int32::pack($this->partitionLeaderEpoch);
         $result .= Int8::pack($this->magic);
-        $result .= Int32::pack(ProtocolUtil::int32(hexdec(hash('crc32c', $data))));
+        $result .= Int32::pack(ProtocolUtil::int32(hexdec(ProtocolUtil::crc32c($data))));
         $result .= $data;
 
         return String32::pack($result);
@@ -136,7 +136,7 @@ class RecordBatch extends AbstractStruct
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
 
-        if (ProtocolUtil::int32(hexdec(hash('crc32c', $data))) !== $this->crc) {
+        if (ProtocolUtil::int32(hexdec(ProtocolUtil::crc32c($data))) !== $this->crc) {
             throw new CRC32Exception('crc32 verification failed');
         }
 

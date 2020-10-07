@@ -2,7 +2,8 @@
     "name": "longyan/kafka",
     "description": "A kafka client. Support php-fpm and Swoole.",
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "google/crc32": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",

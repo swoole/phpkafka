@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol;
 
+use Google\CRC32\CRC32;
 use Longyan\Kafka\Protocol\Type\Int32;
 use Longyan\Kafka\Protocol\Type\Int64;
 use Longyan\Kafka\Protocol\Type\UInt32;
@@ -16,6 +17,11 @@ class ProtocolUtil
      * @var bool
      */
     private static $nativeIsBigEndian;
+
+    /**
+     * @var \Google\CRC32\CRC32Interface
+     */
+    private static $crc32;
 
     public static function nativeIsBigEndian(): bool
     {
@@ -105,5 +111,24 @@ class ProtocolUtil
         }
 
         return bindec(str_pad(substr($bin, $bits), 32, '0', \STR_PAD_RIGHT));
+    }
+
+    public static function crc32c(string $data, bool $rawOutput = false)
+    {
+        if (\PHP_VERSION_ID >= 70400) {
+            return hash('crc32c', $data, $rawOutput);
+        } else {
+            if (self::$crc32) {
+                $crc32 = self::$crc32;
+            } else {
+                self::$crc32 = $crc32 = CRC32::create(CRC32::CASTAGNOLI);
+            }
+            $crc32->update($data);
+
+            $result = $crc32->hash($rawOutput);
+            $crc32->reset();
+
+            return $result;
+        }
     }
 }
