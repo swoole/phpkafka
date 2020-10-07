@@ -76,6 +76,9 @@ abstract class AbstractGenerator
             if (isset(TypeRelation::TYPE_RELATION[$type])) {
                 [$phpType] = TypeRelation::TYPE_RELATION[$type];
                 $typeWithNamespace = "'{$type}'";
+            } elseif (class_exists($type)) {
+                $phpType = $type;
+                $typeWithNamespace = "'{$type}'";
             } else {
                 $hasGenerated = $this->messageGenerator->hasGenerated($type);
                 if (!$hasGenerated && !isset($field->fields)) {
@@ -85,7 +88,7 @@ abstract class AbstractGenerator
                 }
                 $typeWithNamespace = $type . '::class';
             }
-            $propertyName = $field->entityType ?? lcfirst($field->name);
+            $propertyName = lcfirst($field->name);
             $ucPropertyName = ucfirst($propertyName);
             $about = $field->about ?? '';
             if ($isArray) {
@@ -94,16 +97,14 @@ abstract class AbstractGenerator
             } else {
                 $phpCommentType = $phpType;
             }
-            if (isset($field->nullableVersions)) {
+            if ($allowNull = isset($field->nullableVersions)) {
                 $phpType = '?' . $phpType;
                 $phpCommentType .= '|null';
             }
-            if (isset($field->default)) {
-                $defaultValue = ' = ' . $this->parseDefaultValue($phpType, $field->default);
-            } elseif ('array' === $phpType) {
+            if ('array' === $phpType) {
                 $defaultValue = ' = []';
             } else {
-                $defaultValue = '';
+                $defaultValue = ' = ' . $this->parseDefaultValue($phpType, $field->default ?? null, $allowNull);
             }
             $classProperties .= <<<CODE
 /**
@@ -198,15 +199,32 @@ CODE;
         throw new \InvalidArgumentException(sprintf('Invalid versions %s', $versions));
     }
 
-    protected function parseDefaultValue(string $phpType, $default): string
+    protected function parseDefaultValue(string $phpType, $default, bool $allowNull): string
     {
-        switch ($phpType) {
-            case 'bool':
-            case 'float':
-            case 'int':
-                return (string) $default;
-            default:
-                return "'{$default}'";
+        if (null === $default) {
+            if ($allowNull) {
+                return 'null';
+            }
+            switch ($phpType) {
+                case 'bool':
+                    return 'false';
+                case 'float':
+                case 'int':
+                    return '0';
+                case 'string':
+                    return "''";
+                default:
+                    return 'null';
+            }
+        } else {
+            switch ($phpType) {
+                case 'bool':
+                case 'float':
+                case 'int':
+                    return (string) $default;
+                default:
+                    return "'{$default}'";
+            }
         }
     }
 

@@ -14,7 +14,7 @@ class ResponseHeader extends AbstractResponseHeader
      *
      * @var int
      */
-    protected $correlationId;
+    protected $correlationId = 0;
 
     public function __construct()
     {

@@ -14,28 +14,28 @@ class TxnOffsetCommitRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $transactionalId;
+    protected $transactionalId = '';
 
     /**
      * The ID of the group.
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The current producer ID in use by the transactional ID.
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * The current epoch associated with the producer ID.
      *
      * @var int
      */
-    protected $producerEpoch;
+    protected $producerEpoch = 0;
 
     /**
      * The generation of the consumer.

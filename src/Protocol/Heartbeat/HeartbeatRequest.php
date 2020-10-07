@@ -14,21 +14,21 @@ class HeartbeatRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The generation of the group.
      *
      * @var int
      */
-    protected $generationId;
+    protected $generationId = 0;
 
     /**
      * The member ID.
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The unique identifier of the consumer instance provided by end user.

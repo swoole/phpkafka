@@ -14,13 +14,13 @@ class CreatePartitionsAssignment extends AbstractStruct
      *
      * @var int32[]
      */
-    protected $brokerId = [];
+    protected $brokerIds = [];
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', true, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('brokerIds', 'int32', true, [0, 1, 2], [2], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -35,17 +35,17 @@ class CreatePartitionsAssignment extends AbstractStruct
     /**
      * @return int32[]
      */
-    public function getBrokerId(): array
+    public function getBrokerIds(): array
     {
-        return $this->brokerId;
+        return $this->brokerIds;
     }
 
     /**
-     * @param int32[] $brokerId
+     * @param int32[] $brokerIds
      */
-    public function setBrokerId(array $brokerId): self
+    public function setBrokerIds(array $brokerIds): self
     {
-        $this->brokerId = $brokerId;
+        $this->brokerIds = $brokerIds;
 
         return $this;
     }

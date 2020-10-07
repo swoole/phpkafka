@@ -14,49 +14,49 @@ class DescribedDelegationToken extends AbstractStruct
      *
      * @var string
      */
-    protected $principalType;
+    protected $principalType = '';
 
     /**
      * The token principal name.
      *
      * @var string
      */
-    protected $principalName;
+    protected $principalName = '';
 
     /**
      * The token issue timestamp in milliseconds.
      *
      * @var int
      */
-    protected $issueTimestamp;
+    protected $issueTimestamp = 0;
 
     /**
      * The token expiry timestamp in milliseconds.
      *
      * @var int
      */
-    protected $expiryTimestamp;
+    protected $expiryTimestamp = 0;
 
     /**
      * The token maximum timestamp length in milliseconds.
      *
      * @var int
      */
-    protected $maxTimestamp;
+    protected $maxTimestamp = 0;
 
     /**
      * The token ID.
      *
      * @var string
      */
-    protected $tokenId;
+    protected $tokenId = '';
 
     /**
      * The token HMAC.
      *
      * @var string
      */
-    protected $hmac;
+    protected $hmac = '';
 
     /**
      * Those who are able to renew this token before it expires.

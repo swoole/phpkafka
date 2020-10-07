@@ -14,7 +14,7 @@ class AlterReplicaLogDir extends AbstractStruct
      *
      * @var string
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * The topics to add to the directory.

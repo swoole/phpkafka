@@ -14,7 +14,7 @@ class LeaderAndIsrTopicState extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The state of each partition.

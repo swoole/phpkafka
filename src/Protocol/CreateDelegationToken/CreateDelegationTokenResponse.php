@@ -14,63 +14,63 @@ class CreateDelegationTokenResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The principal type of the token owner.
      *
      * @var string
      */
-    protected $principalType;
+    protected $principalType = '';
 
     /**
      * The name of the token owner.
      *
      * @var string
      */
-    protected $principalName;
+    protected $principalName = '';
 
     /**
      * When this token was generated.
      *
      * @var int
      */
-    protected $issueTimestampMs;
+    protected $issueTimestampMs = 0;
 
     /**
      * When this token expires.
      *
      * @var int
      */
-    protected $expiryTimestampMs;
+    protected $expiryTimestampMs = 0;
 
     /**
      * The maximum lifetime of this token.
      *
      * @var int
      */
-    protected $maxTimestampMs;
+    protected $maxTimestampMs = 0;
 
     /**
      * The token UUID.
      *
      * @var string
      */
-    protected $tokenId;
+    protected $tokenId = '';
 
     /**
      * HMAC of the delegation token.
      *
      * @var string
      */
-    protected $hmac;
+    protected $hmac = '';
 
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     public function __construct()
     {

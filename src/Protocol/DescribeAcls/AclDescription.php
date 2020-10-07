@@ -14,28 +14,28 @@ class AclDescription extends AbstractStruct
      *
      * @var string
      */
-    protected $principal;
+    protected $principal = '';
 
     /**
      * The ACL host.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The ACL operation.
      *
      * @var int
      */
-    protected $operation;
+    protected $operation = 0;
 
     /**
      * The ACL permission type.
      *
      * @var int
      */
-    protected $permissionType;
+    protected $permissionType = 0;
 
     public function __construct()
     {

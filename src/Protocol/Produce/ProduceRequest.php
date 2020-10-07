@@ -14,21 +14,21 @@ class ProduceRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $transactionalId;
+    protected $transactionalId = null;
 
     /**
      * The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments, 1 for only the leader and -1 for the full ISR.
      *
      * @var int
      */
-    protected $acks;
+    protected $acks = 0;
 
     /**
      * The timeout to await a response in miliseconds.
      *
      * @var int
      */
-    protected $timeoutMs;
+    protected $timeoutMs = 0;
 
     /**
      * Each topic to produce to.

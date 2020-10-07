@@ -14,7 +14,7 @@ class OffsetCommitResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The responses for each topic.

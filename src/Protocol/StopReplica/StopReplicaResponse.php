@@ -14,7 +14,7 @@ class StopReplicaResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The responses for each partition.

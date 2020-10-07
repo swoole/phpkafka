@@ -14,7 +14,7 @@ class DescribeLogDirsTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * @var DescribeLogDirsPartition[]
@@ -25,7 +25,7 @@ class DescribeLogDirsTopic extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2], [2], [], [], null),
                 new ProtocolField('partitions', DescribeLogDirsPartition::class, true, [0, 1, 2], [2], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -38,14 +38,14 @@ class DescribeLogDirsTopic extends AbstractStruct
         return [2];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

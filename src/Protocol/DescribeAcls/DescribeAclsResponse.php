@@ -14,21 +14,21 @@ class DescribeAclsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * Each Resource that is referenced in an ACL.

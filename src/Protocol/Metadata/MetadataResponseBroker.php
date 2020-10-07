@@ -14,21 +14,21 @@ class MetadataResponseBroker extends AbstractStruct
      *
      * @var int
      */
-    protected $brokerId;
+    protected $nodeId = 0;
 
     /**
      * The broker hostname.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The broker port.
      *
      * @var int
      */
-    protected $port;
+    protected $port = 0;
 
     /**
      * The rack of the broker, or null if it has not been assigned to a rack.
@@ -41,7 +41,7 @@ class MetadataResponseBroker extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
+                new ProtocolField('nodeId', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('host', 'string', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('port', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('rack', 'string', false, [1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [], null),
@@ -56,14 +56,14 @@ class MetadataResponseBroker extends AbstractStruct
         return [9];
     }
 
-    public function getBrokerId(): int
+    public function getNodeId(): int
     {
-        return $this->brokerId;
+        return $this->nodeId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setNodeId(int $nodeId): self
     {
-        $this->brokerId = $brokerId;
+        $this->nodeId = $nodeId;
 
         return $this;
     }

@@ -14,28 +14,28 @@ class DeleteAclsMatchingAcl extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The deletion error message, or null if the deletion succeeded.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The ACL resource type.
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The ACL resource name.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     /**
      * The ACL resource pattern type.
@@ -49,28 +49,28 @@ class DeleteAclsMatchingAcl extends AbstractStruct
      *
      * @var string
      */
-    protected $principal;
+    protected $principal = '';
 
     /**
      * The ACL host.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The ACL operation.
      *
      * @var int
      */
-    protected $operation;
+    protected $operation = 0;
 
     /**
      * The ACL permission type.
      *
      * @var int
      */
-    protected $permissionType;
+    protected $permissionType = 0;
 
     public function __construct()
     {

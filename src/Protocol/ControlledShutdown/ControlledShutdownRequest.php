@@ -14,7 +14,7 @@ class ControlledShutdownRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $brokerId;
+    protected $brokerId = 0;
 
     /**
      * The broker epoch.

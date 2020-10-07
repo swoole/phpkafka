@@ -14,14 +14,14 @@ class StopReplicaRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $brokerId;
+    protected $controllerId = 0;
 
     /**
      * The controller epoch.
      *
      * @var int
      */
-    protected $controllerEpoch;
+    protected $controllerEpoch = 0;
 
     /**
      * The broker epoch.
@@ -35,7 +35,7 @@ class StopReplicaRequest extends AbstractRequest
      *
      * @var bool
      */
-    protected $deletePartitions;
+    protected $deletePartitions = false;
 
     /**
      * The partitions to stop.
@@ -62,7 +62,7 @@ class StopReplicaRequest extends AbstractRequest
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3], [2, 3], [], [], null),
+                new ProtocolField('controllerId', 'int32', false, [0, 1, 2, 3], [2, 3], [], [], null),
                 new ProtocolField('controllerEpoch', 'int32', false, [0, 1, 2, 3], [2, 3], [], [], null),
                 new ProtocolField('brokerEpoch', 'int64', false, [1, 2, 3], [2, 3], [], [], null),
                 new ProtocolField('deletePartitions', 'bool', false, [0, 1, 2], [2, 3], [], [], null),
@@ -90,14 +90,14 @@ class StopReplicaRequest extends AbstractRequest
         return [2, 3];
     }
 
-    public function getBrokerId(): int
+    public function getControllerId(): int
     {
-        return $this->brokerId;
+        return $this->controllerId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setControllerId(int $controllerId): self
     {
-        $this->brokerId = $brokerId;
+        $this->controllerId = $controllerId;
 
         return $this;
     }

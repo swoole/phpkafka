@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Longyan\Kafka\Protocol;
 
+use Longyan\Kafka\Protocol\Type\AbstractType;
 use Longyan\Kafka\Protocol\Type\ArrayInt32;
 use Longyan\Kafka\Protocol\Type\CompactArray;
 use Longyan\Kafka\Protocol\Type\TypeRelation;
@@ -66,7 +67,7 @@ abstract class AbstractStruct implements \JsonSerializable
                 if ($protocolField->getIsArray()) {
                     $arrayType = $this->getArrayType($apiVersion, $protocolField);
                     $item = $arrayType::pack($value, $type, $apiVersion);
-                } elseif (class_exists($type)) {
+                } elseif (is_subclass_of($type, AbstractType::class)) {
                     $item = $type::pack($value);
                 } else {
                     throw new \InvalidArgumentException(sprintf('Invalid type %s', $protocolField->getTypeForDisplay()));
@@ -137,7 +138,7 @@ abstract class AbstractStruct implements \JsonSerializable
             $value = $arrayType::unpack($data, $tmpSize, $type, $apiVersion);
         } else {
             $type = $this->getType($apiVersion, $protocolField);
-            if (class_exists($type)) {
+            if (is_subclass_of($type, AbstractType::class)) {
                 $value = $type::unpack($data, $tmpSize);
             } else {
                 if (!class_exists($type)) {

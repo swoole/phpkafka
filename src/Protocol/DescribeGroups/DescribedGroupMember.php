@@ -14,7 +14,7 @@ class DescribedGroupMember extends AbstractStruct
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The unique identifier of the consumer instance provided by end user.
@@ -28,28 +28,28 @@ class DescribedGroupMember extends AbstractStruct
      *
      * @var string
      */
-    protected $clientId;
+    protected $clientId = '';
 
     /**
      * The client host.
      *
      * @var string
      */
-    protected $clientHost;
+    protected $clientHost = '';
 
     /**
      * The metadata corresponding to the current group protocol in use.
      *
      * @var string
      */
-    protected $memberMetadata;
+    protected $memberMetadata = '';
 
     /**
      * The current assignment provided by the group leader.
      *
      * @var string
      */
-    protected $memberAssignment;
+    protected $memberAssignment = '';
 
     public function __construct()
     {

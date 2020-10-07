@@ -14,14 +14,14 @@ class SyncGroupRequestAssignment extends AbstractStruct
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The member assignment.
      *
      * @var string
      */
-    protected $assignment;
+    protected $assignment = '';
 
     public function __construct()
     {

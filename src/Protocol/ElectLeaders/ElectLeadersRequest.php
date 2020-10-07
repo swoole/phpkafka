@@ -14,14 +14,14 @@ class ElectLeadersRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $electionType;
+    protected $electionType = 0;
 
     /**
      * The topic partitions to elect leaders.
      *
      * @var TopicPartitions[]|null
      */
-    protected $topicPartitions;
+    protected $topicPartitions = null;
 
     /**
      * The time in ms to wait for the election to complete.

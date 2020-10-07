@@ -14,13 +14,13 @@ class DeleteGroupsRequest extends AbstractRequest
      *
      * @var string[]
      */
-    protected $groupId = [];
+    protected $groupsNames = [];
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('groupId', 'string', true, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('groupsNames', 'string', true, [0, 1, 2], [2], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -45,17 +45,17 @@ class DeleteGroupsRequest extends AbstractRequest
     /**
      * @return string[]
      */
-    public function getGroupId(): array
+    public function getGroupsNames(): array
     {
-        return $this->groupId;
+        return $this->groupsNames;
     }
 
     /**
-     * @param string[] $groupId
+     * @param string[] $groupsNames
      */
-    public function setGroupId(array $groupId): self
+    public function setGroupsNames(array $groupsNames): self
     {
-        $this->groupId = $groupId;
+        $this->groupsNames = $groupsNames;
 
         return $this;
     }

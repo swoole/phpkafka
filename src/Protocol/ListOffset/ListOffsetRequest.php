@@ -14,14 +14,14 @@ class ListOffsetRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $brokerId;
+    protected $replicaId = 0;
 
     /**
      * This setting controls the visibility of transactional records. Using READ_UNCOMMITTED (isolation_level = 0) makes all records visible. With READ_COMMITTED (isolation_level = 1), non-transactional and COMMITTED transactional records are visible. To be more concrete, READ_COMMITTED returns all data from offsets smaller than the current LSO (last stable offset), and enables the inclusion of the list of aborted transactions in the result, which allows consumers to discard ABORTED transactional records.
      *
      * @var int
      */
-    protected $isolationLevel;
+    protected $isolationLevel = 0;
 
     /**
      * Each topic in the request.
@@ -34,7 +34,7 @@ class ListOffsetRequest extends AbstractRequest
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5], [], [], [], null),
+                new ProtocolField('replicaId', 'int32', false, [0, 1, 2, 3, 4, 5], [], [], [], null),
                 new ProtocolField('isolationLevel', 'int8', false, [2, 3, 4, 5], [], [], [], null),
                 new ProtocolField('topics', ListOffsetTopic::class, true, [0, 1, 2, 3, 4, 5], [], [], [], null),
             ];
@@ -58,14 +58,14 @@ class ListOffsetRequest extends AbstractRequest
         return [];
     }
 
-    public function getBrokerId(): int
+    public function getReplicaId(): int
     {
-        return $this->brokerId;
+        return $this->replicaId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setReplicaId(int $replicaId): self
     {
-        $this->brokerId = $brokerId;
+        $this->replicaId = $replicaId;
 
         return $this;
     }

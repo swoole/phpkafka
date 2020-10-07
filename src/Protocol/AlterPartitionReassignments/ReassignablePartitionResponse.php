@@ -14,21 +14,21 @@ class ReassignablePartitionResponse extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The error code for this partition, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message for this partition, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     public function __construct()
     {

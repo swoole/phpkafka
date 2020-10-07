@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\Type;
 
 use InvalidArgumentException;
+use Longyan\Kafka\Protocol\ProtocolUtil;
 
 class UVarInt extends AbstractType
 {
@@ -21,38 +22,38 @@ class UVarInt extends AbstractType
         if ($value < self::MIN_VALUE || $value > self::MAX_VALUE) {
             throw new InvalidArgumentException(sprintf('%s is outside the range of VarInt', $value));
         }
-        $buffer = str_repeat("\0", self::size($value, true));
-        $current = 0;
-
-        $high = 0;
-        $low = $value;
-
-        while (($low >= 0x80 || $low < 0) || 0 != $high) {
-            $buffer[$current] = \chr($low | 0x80);
-            $value = ($value >> 7) & ~(0x7F << ((\PHP_INT_SIZE << 3) - 7));
-            $carry = ($high & 0x7F) << ((\PHP_INT_SIZE << 3) - 7);
-            $high = ($high >> 7) & ~(0x7F << ((\PHP_INT_SIZE << 3) - 7));
-            $low = (($low >> 7) & ~(0x7F << ((\PHP_INT_SIZE << 3) - 7)) | $carry);
-            ++$current;
+        $buffer = '';
+        while (0 != ($value & 0xffffff80)) {
+            $b = \chr(($value & 0x7f) | 0x80);
+            $buffer .= $b;
+            $value = ProtocolUtil::shr32($value, 7);
         }
-        $buffer[$current] = \chr($low);
+        $buffer .= \chr($value);
 
         return $buffer;
     }
 
     public static function unpack(string $value, ?int &$size = null): int
     {
-        return VarLong::unpack($value, $size) & 0xFFFFFFFF;
+        $result = 0;
+        $i = 0;
+        $size = 0;
+        while (0 != (($b = \ord($value[$size++])) & 0x80)) {
+            $result |= ($b & 0x7f) << $i;
+            $i += 7;
+            if ($i > 28) {
+                throw new \InvalidArgumentException('illegal Varint');
+            }
+        }
+        $result |= $b << $i;
+
+        return $result;
     }
 
-    public static function size(int $value, bool $signExtended = false): int
+    public static function size(int $value): int
     {
-        if ($value < 0) {
-            if ($signExtended) {
-                return 10;
-            } else {
-                return 5;
-            }
+        if (\PHP_INT_SIZE == 4 && $value < 0) {
+            return 5;
         }
         if ($value < (1 << 7)) {
             return 1;

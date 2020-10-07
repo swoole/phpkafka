@@ -14,14 +14,14 @@ class OffsetDeleteResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The responses for each topic.

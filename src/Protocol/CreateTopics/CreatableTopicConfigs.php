@@ -14,21 +14,21 @@ class CreatableTopicConfigs extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The configuration value.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * True if the configuration is read-only.
      *
      * @var bool
      */
-    protected $readOnly;
+    protected $readOnly = false;
 
     /**
      * The configuration source.
@@ -42,7 +42,7 @@ class CreatableTopicConfigs extends AbstractStruct
      *
      * @var bool
      */
-    protected $isSensitive;
+    protected $isSensitive = false;
 
     public function __construct()
     {

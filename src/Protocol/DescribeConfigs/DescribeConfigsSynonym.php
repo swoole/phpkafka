@@ -14,21 +14,21 @@ class DescribeConfigsSynonym extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The synonym value.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * The synonym source.
      *
      * @var int
      */
-    protected $source;
+    protected $source = 0;
 
     public function __construct()
     {

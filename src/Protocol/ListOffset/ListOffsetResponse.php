@@ -14,7 +14,7 @@ class ListOffsetResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Each topic in the response.

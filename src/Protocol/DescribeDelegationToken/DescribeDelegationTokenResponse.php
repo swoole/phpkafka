@@ -14,7 +14,7 @@ class DescribeDelegationTokenResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The tokens.
@@ -28,7 +28,7 @@ class DescribeDelegationTokenResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     public function __construct()
     {

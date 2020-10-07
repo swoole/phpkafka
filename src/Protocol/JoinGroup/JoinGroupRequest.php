@@ -14,14 +14,14 @@ class JoinGroupRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The coordinator considers the consumer dead if it receives no heartbeat after this timeout in milliseconds.
      *
      * @var int
      */
-    protected $sessionTimeoutMs;
+    protected $sessionTimeoutMs = 0;
 
     /**
      * The maximum time in milliseconds that the coordinator will wait for each member to rejoin when rebalancing the group.
@@ -35,7 +35,7 @@ class JoinGroupRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The unique identifier of the consumer instance provided by end user.
@@ -49,7 +49,7 @@ class JoinGroupRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $protocolType;
+    protected $protocolType = '';
 
     /**
      * The list of protocols that the member supports.

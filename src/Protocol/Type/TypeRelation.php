@@ -18,15 +18,17 @@ class TypeRelation
 
     public const TYPE_RELATION = [
         // kafka type => phptype, uncompactType, compactType, nullableType, compactNullableType
-        '[]'      => ['array', 'ArrayInt32', 'CompactArray', 'ArrayInt32', 'CompactArray'],
-        'bool'    => ['bool', 'Boolean', 'Boolean', 'Boolean', 'Boolean'],
-        'float64' => ['float', 'Float64', 'Float64', 'Float64', 'Float64'],
-        'int8'    => ['int', 'Int8', 'Int8', 'Int8', 'Int8'],
-        'int16'   => ['int', 'Int16', 'Int16', 'Int16', 'Int16'],
-        'int32'   => ['int', 'Int32', 'Int32', 'Int32', 'Int32'],
-        'int64'   => ['int', 'Int64', 'Int64', 'Int64', 'Int64'],
-        'string'  => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
-        'bytes'   => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
+        '[]'          => ['array', 'ArrayInt32', 'CompactArray', 'ArrayInt32', 'CompactArray'],
+        'bool'        => ['bool', 'Boolean', 'Boolean', 'Boolean', 'Boolean'],
+        'float64'     => ['float', 'Float64', 'Float64', 'Float64', 'Float64'],
+        'int8'        => ['int', 'Int8', 'Int8', 'Int8', 'Int8'],
+        'int16'       => ['int', 'Int16', 'Int16', 'Int16', 'Int16'],
+        'int32'       => ['int', 'Int32', 'Int32', 'Int32', 'Int32'],
+        'int64'       => ['int', 'Int64', 'Int64', 'Int64', 'Int64'],
+        'string'      => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
+        'bytes'       => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
+        'varint'      => ['int', 'varint', 'varint', 'varint', 'varint'],
+        'RecordBatch' => ['\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch'],
     ];
 
     private function __construct()

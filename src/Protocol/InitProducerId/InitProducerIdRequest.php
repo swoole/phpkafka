@@ -14,14 +14,14 @@ class InitProducerIdRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $transactionalId;
+    protected $transactionalId = null;
 
     /**
      * The time in ms to wait before aborting idle transactions sent by this producer. This is only relevant if a TransactionalId has been defined.
      *
      * @var int
      */
-    protected $transactionTimeoutMs;
+    protected $transactionTimeoutMs = 0;
 
     /**
      * The producer id. This is used to disambiguate requests if a transactional id is reused following its expiration.

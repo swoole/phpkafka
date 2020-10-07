@@ -14,7 +14,7 @@ class OffsetCommitRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The generation of the group.
@@ -28,7 +28,7 @@ class OffsetCommitRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The unique identifier of the consumer instance provided by end user.

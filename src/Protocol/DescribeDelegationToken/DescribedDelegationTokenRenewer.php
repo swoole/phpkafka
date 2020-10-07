@@ -14,14 +14,14 @@ class DescribedDelegationTokenRenewer extends AbstractStruct
      *
      * @var string
      */
-    protected $principalType;
+    protected $principalType = '';
 
     /**
      * The renewer principal name.
      *
      * @var string
      */
-    protected $principalName;
+    protected $principalName = '';
 
     public function __construct()
     {

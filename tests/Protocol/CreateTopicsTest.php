@@ -33,12 +33,12 @@ class CreateTopicsTest extends TestCase
     {
         $request = new CreateTopicsRequest();
         $request->setTopics([
-            (new CreatableTopic())->setTopicName('test')
+            (new CreatableTopic())->setName('test')
                          ->setNumPartitions(3)
                          ->setReplicationFactor(-1)
                          ->setAssignments([
                              (new CreatableReplicaAssignment())->setPartitionIndex(1)
-                                                               ->setBrokerId([1, 2, 3]),
+                                                               ->setBrokerIds([1, 2, 3]),
                          ])
                          ->setConfigs([(new CreateableTopicConfig())
                             ->setName('abc')
@@ -60,12 +60,12 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'topics'       => [
                 [
-                    'topicName'         => 'test',
+                    'name'              => 'test',
                     'numPartitions'     => 3,
                     'replicationFactor' => -1,
                     'assignments'       => [[
                         'partitionIndex' => 1,
-                        'brokerId'       => [1, 2, 3],
+                        'brokerIds'      => [1, 2, 3],
                     ]],
                     'configs' => [[
                         'name'  => 'abc',
@@ -82,12 +82,12 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'topics'       => [
                 [
-                    'topicName'         => 'test',
+                    'name'              => 'test',
                     'numPartitions'     => 3,
                     'replicationFactor' => -1,
                     'assignments'       => [[
                         'partitionIndex' => 1,
-                        'brokerId'       => [1, 2, 3],
+                        'brokerIds'      => [1, 2, 3],
                     ]],
                     'configs'           => [[
                         'name'  => 'abc',
@@ -104,12 +104,12 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'topics'       => [
                 [
-                    'topicName'         => 'test',
+                    'name'              => 'test',
                     'numPartitions'     => 3,
                     'replicationFactor' => -1,
                     'assignments'       => [[
                         'partitionIndex' => 1,
-                        'brokerId'       => [1, 2, 3],
+                        'brokerIds'      => [1, 2, 3],
                     ]],
                     'configs'           => [[
                         'name'  => 'abc',
@@ -132,7 +132,7 @@ class CreateTopicsTest extends TestCase
             ])
                                ->setErrorCode(0)
                                ->setErrorMessage('message')
-                               ->setTopicName('test')
+                               ->setName('test')
                                ->setNumPartitions(3)
                                ->setReplicationFactor(1)
                                ->setTopicConfigErrorCode(11),
@@ -152,7 +152,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => null,
             'topics'         => [[
-                'topicName'            => 'test',
+                'name'                 => 'test',
                 'errorCode'            => 0,
                 'errorMessage'         => null,
                 'numPartitions'        => -1,
@@ -167,7 +167,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => null,
             'topics'         => [[
-                'topicName'            => 'test',
+                'name'                 => 'test',
                 'errorCode'            => 0,
                 'errorMessage'         => 'message',
                 'numPartitions'        => -1,
@@ -182,7 +182,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'topics'         => [[
-                'topicName'            => 'test',
+                'name'                 => 'test',
                 'errorCode'            => 0,
                 'errorMessage'         => 'message',
                 'numPartitions'        => -1,
@@ -197,7 +197,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'topics'         => [[
-                'topicName'         => 'test',
+                'name'              => 'test',
                 'errorCode'         => 0,
                 'errorMessage'      => 'message',
                 'numPartitions'     => 3,

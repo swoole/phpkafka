@@ -14,7 +14,7 @@ class ForgottenTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The partitions indexes to forget.
@@ -27,7 +27,7 @@ class ForgottenTopic extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [7, 8, 9, 10, 11], [], [], [], null),
+                new ProtocolField('name', 'string', false, [7, 8, 9, 10, 11], [], [], [], null),
                 new ProtocolField('forgottenPartitionIndexes', 'int32', true, [7, 8, 9, 10, 11], [], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -40,14 +40,14 @@ class ForgottenTopic extends AbstractStruct
         return [];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

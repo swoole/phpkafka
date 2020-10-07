@@ -14,7 +14,7 @@ class ReassignablePartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The replicas to place the partitions on, or null to cancel a pending reassignment for this partition.

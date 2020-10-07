@@ -14,7 +14,7 @@ class DeleteRecordsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Each topic that we wanted to delete records from.

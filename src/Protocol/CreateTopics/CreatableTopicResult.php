@@ -14,28 +14,28 @@ class CreatableTopicResult extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * Optional topic config error returned if configs are not returned in the response.
      *
      * @var int
      */
-    protected $topicConfigErrorCode;
+    protected $topicConfigErrorCode = 0;
 
     /**
      * Number of partitions of the topic.
@@ -56,13 +56,13 @@ class CreatableTopicResult extends AbstractStruct
      *
      * @var CreatableTopicConfigs[]|null
      */
-    protected $configs;
+    protected $configs = null;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('errorMessage', 'string', false, [1, 2, 3, 4, 5], [5], [0, 1, 2, 3, 4, 5], [], null),
                 new ProtocolField('numPartitions', 'int32', false, [5], [5], [], [], null),
@@ -80,14 +80,14 @@ class CreatableTopicResult extends AbstractStruct
         return [5];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

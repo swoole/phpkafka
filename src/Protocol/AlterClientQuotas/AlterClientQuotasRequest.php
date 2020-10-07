@@ -21,7 +21,7 @@ class AlterClientQuotasRequest extends AbstractRequest
      *
      * @var bool
      */
-    protected $validateOnly;
+    protected $validateOnly = false;
 
     public function __construct()
     {

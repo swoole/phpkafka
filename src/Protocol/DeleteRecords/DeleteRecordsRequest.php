@@ -21,7 +21,7 @@ class DeleteRecordsRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $timeoutMs;
+    protected $timeoutMs = 0;
 
     public function __construct()
     {

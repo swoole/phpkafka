@@ -14,14 +14,14 @@ class RenewDelegationTokenRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $hmac;
+    protected $hmac = '';
 
     /**
      * The renewal time period in milliseconds.
      *
      * @var int
      */
-    protected $renewPeriodMs;
+    protected $renewPeriodMs = 0;
 
     public function __construct()
     {

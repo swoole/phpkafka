@@ -14,21 +14,21 @@ class ComponentData extends AbstractStruct
      *
      * @var string
      */
-    protected $entityType;
+    protected $entityType = '';
 
     /**
      * How to match the entity {0 = exact name, 1 = default name, 2 = any specified name}.
      *
      * @var int
      */
-    protected $matchType;
+    protected $matchType = 0;
 
     /**
      * The string to match against, or null if unused for the match type.
      *
      * @var string|null
      */
-    protected $match;
+    protected $match = null;
 
     public function __construct()
     {

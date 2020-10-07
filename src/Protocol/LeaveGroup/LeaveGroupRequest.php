@@ -14,14 +14,14 @@ class LeaveGroupRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The member ID to remove from the group.
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * List of leaving member identities.

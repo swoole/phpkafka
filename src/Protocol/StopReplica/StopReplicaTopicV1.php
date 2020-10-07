@@ -14,7 +14,7 @@ class StopReplicaTopicV1 extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The partition indexes.
@@ -27,7 +27,7 @@ class StopReplicaTopicV1 extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [1, 2], [2, 3], [], [], null),
+                new ProtocolField('name', 'string', false, [1, 2], [2, 3], [], [], null),
                 new ProtocolField('partitionIndexes', 'int32', true, [1, 2], [2, 3], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -40,14 +40,14 @@ class StopReplicaTopicV1 extends AbstractStruct
         return [2, 3];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

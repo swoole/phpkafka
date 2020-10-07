@@ -14,14 +14,14 @@ class DescribeAclsResource extends AbstractStruct
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The resource name.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     /**
      * The resource pattern type.

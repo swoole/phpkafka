@@ -14,14 +14,14 @@ class ListOffsetPartitionResponse extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The partition error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The result offsets.
@@ -47,7 +47,7 @@ class ListOffsetPartitionResponse extends AbstractStruct
     /**
      * @var int
      */
-    protected $leaderEpoch;
+    protected $leaderEpoch = 0;
 
     public function __construct()
     {

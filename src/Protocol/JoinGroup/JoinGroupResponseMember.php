@@ -14,7 +14,7 @@ class JoinGroupResponseMember extends AbstractStruct
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The unique identifier of the consumer instance provided by end user.
@@ -28,7 +28,7 @@ class JoinGroupResponseMember extends AbstractStruct
      *
      * @var string
      */
-    protected $metadata;
+    protected $metadata = '';
 
     public function __construct()
     {

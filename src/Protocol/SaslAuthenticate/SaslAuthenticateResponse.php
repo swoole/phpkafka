@@ -14,21 +14,21 @@ class SaslAuthenticateResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The SASL authentication bytes from the server, as defined by the SASL mechanism.
      *
      * @var string
      */
-    protected $authBytes;
+    protected $authBytes = '';
 
     /**
      * The SASL authentication bytes from the server, as defined by the SASL mechanism.

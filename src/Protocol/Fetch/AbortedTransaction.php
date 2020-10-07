@@ -14,14 +14,14 @@ class AbortedTransaction extends AbstractStruct
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * The first offset in the aborted transaction.
      *
      * @var int
      */
-    protected $firstOffset;
+    protected $firstOffset = 0;
 
     public function __construct()
     {

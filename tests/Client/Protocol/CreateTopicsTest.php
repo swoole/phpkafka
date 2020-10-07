@@ -20,7 +20,7 @@ class CreateTopicsTest extends TestCase
         $client->connect();
         $request = new CreateTopicsRequest();
         $request->setTopics([
-            (new CreatableTopic())->setTopicName('CreateTopicsTest')->setNumPartitions(1)->setReplicationFactor(1),
+            (new CreatableTopic())->setName('CreateTopicsTest')->setNumPartitions(1)->setReplicationFactor(1),
         ]);
         $request->setTimeoutMs(10000);
         $request->setValidateOnly(true);

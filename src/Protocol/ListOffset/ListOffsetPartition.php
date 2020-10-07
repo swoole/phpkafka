@@ -14,28 +14,28 @@ class ListOffsetPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The current leader epoch.
      *
      * @var int
      */
-    protected $currentLeaderEpoch;
+    protected $currentLeaderEpoch = 0;
 
     /**
      * The current timestamp.
      *
      * @var int
      */
-    protected $timestamp;
+    protected $timestamp = 0;
 
     /**
      * The maximum number of offsets to report.
      *
      * @var int
      */
-    protected $maxNumOffsets;
+    protected $maxNumOffsets = 0;
 
     public function __construct()
     {

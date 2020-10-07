@@ -14,7 +14,7 @@ class MemberIdentity extends AbstractStruct
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The group instance ID to remove from the group.

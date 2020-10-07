@@ -14,28 +14,28 @@ class EndTxnRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $transactionalId;
+    protected $transactionalId = '';
 
     /**
      * The producer ID.
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * The current epoch associated with the producer.
      *
      * @var int
      */
-    protected $producerEpoch;
+    protected $producerEpoch = 0;
 
     /**
      * True if the transaction was committed, false if it was aborted.
      *
      * @var bool
      */
-    protected $committed;
+    protected $committed = false;
 
     public function __construct()
     {

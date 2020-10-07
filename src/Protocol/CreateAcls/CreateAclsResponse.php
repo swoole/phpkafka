@@ -14,7 +14,7 @@ class CreateAclsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The results for each ACL creation.

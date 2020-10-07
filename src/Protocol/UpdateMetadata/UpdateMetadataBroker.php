@@ -14,21 +14,21 @@ class UpdateMetadataBroker extends AbstractStruct
      *
      * @var int
      */
-    protected $brokerId;
+    protected $id = 0;
 
     /**
      * The broker hostname.
      *
      * @var string
      */
-    protected $v0Host;
+    protected $v0Host = '';
 
     /**
      * The broker port.
      *
      * @var int
      */
-    protected $v0Port;
+    protected $v0Port = 0;
 
     /**
      * The broker endpoints.
@@ -42,13 +42,13 @@ class UpdateMetadataBroker extends AbstractStruct
      *
      * @var string|null
      */
-    protected $rack;
+    protected $rack = null;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
+                new ProtocolField('id', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('v0Host', 'string', false, [0], [6], [], [], null),
                 new ProtocolField('v0Port', 'int32', false, [0], [6], [], [], null),
                 new ProtocolField('endpoints', UpdateMetadataEndpoint::class, true, [1, 2, 3, 4, 5, 6], [6], [], [], null),
@@ -64,14 +64,14 @@ class UpdateMetadataBroker extends AbstractStruct
         return [6];
     }
 
-    public function getBrokerId(): int
+    public function getId(): int
     {
-        return $this->brokerId;
+        return $this->id;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setId(int $id): self
     {
-        $this->brokerId = $brokerId;
+        $this->id = $id;
 
         return $this;
     }

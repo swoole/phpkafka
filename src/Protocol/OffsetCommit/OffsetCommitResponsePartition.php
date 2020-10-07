@@ -14,14 +14,14 @@ class OffsetCommitResponsePartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {

@@ -14,14 +14,14 @@ class DeletableGroupResult extends AbstractStruct
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The deletion error, or 0 if the deletion succeeded.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {

@@ -14,7 +14,7 @@ class AlterClientQuotasResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The quota configuration entries to alter.

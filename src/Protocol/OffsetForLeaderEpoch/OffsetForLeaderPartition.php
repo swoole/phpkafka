@@ -14,7 +14,7 @@ class OffsetForLeaderPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * An epoch used to fence consumers/replicas with old metadata.  If the epoch provided by the client is larger than the current epoch known to the broker, then the UNKNOWN_LEADER_EPOCH error code will be returned. If the provided epoch is smaller, then the FENCED_LEADER_EPOCH error code will be returned.
@@ -28,7 +28,7 @@ class OffsetForLeaderPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $leaderEpoch;
+    protected $leaderEpoch = 0;
 
     public function __construct()
     {

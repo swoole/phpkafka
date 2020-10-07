@@ -14,7 +14,7 @@ class BatchIndexAndErrorMessage extends AbstractStruct
      *
      * @var int
      */
-    protected $batchIndex;
+    protected $batchIndex = 0;
 
     /**
      * The error message of the record that caused the batch to be dropped.

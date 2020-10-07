@@ -14,7 +14,7 @@ class ControlledShutdownResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The partitions that the broker still leads.

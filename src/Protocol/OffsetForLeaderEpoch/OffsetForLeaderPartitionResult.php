@@ -14,14 +14,14 @@ class OffsetForLeaderPartitionResult extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The partition index.
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The leader epoch of the partition.
@@ -35,7 +35,7 @@ class OffsetForLeaderPartitionResult extends AbstractStruct
      *
      * @var int
      */
-    protected $endOffset;
+    protected $endOffset = 0;
 
     public function __construct()
     {

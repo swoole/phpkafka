@@ -14,21 +14,21 @@ class DeleteRecordsPartitionResult extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The partition low water mark.
      *
      * @var int
      */
-    protected $lowWatermark;
+    protected $lowWatermark = 0;
 
     /**
      * The deletion error code, or 0 if the deletion succeeded.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {

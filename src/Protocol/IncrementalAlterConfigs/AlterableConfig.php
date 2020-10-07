@@ -14,21 +14,21 @@ class AlterableConfig extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The type (Set, Delete, Append, Subtract) of operation.
      *
      * @var int
      */
-    protected $configOperation;
+    protected $configOperation = 0;
 
     /**
      * The value to set for the configuration key.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     public function __construct()
     {

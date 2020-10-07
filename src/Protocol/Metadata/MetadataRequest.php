@@ -14,7 +14,7 @@ class MetadataRequest extends AbstractRequest
      *
      * @var MetadataRequestTopic[]|null
      */
-    protected $topics;
+    protected $topics = null;
 
     /**
      * If this is true, the broker may auto-create topics that we requested which do not already exist, if it is configured to do so.
@@ -28,14 +28,14 @@ class MetadataRequest extends AbstractRequest
      *
      * @var bool
      */
-    protected $includeClusterAuthorizedOperations;
+    protected $includeClusterAuthorizedOperations = false;
 
     /**
      * Whether to include topic authorized operations.
      *
      * @var bool
      */
-    protected $includeTopicAuthorizedOperations;
+    protected $includeTopicAuthorizedOperations = false;
 
     public function __construct()
     {

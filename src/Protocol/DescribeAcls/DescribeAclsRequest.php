@@ -14,14 +14,14 @@ class DescribeAclsRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $resourceTypeFilter;
+    protected $resourceTypeFilter = 0;
 
     /**
      * The resource name, or null to match any resource name.
      *
      * @var string|null
      */
-    protected $resourceNameFilter;
+    protected $resourceNameFilter = null;
 
     /**
      * The resource pattern to match.
@@ -35,28 +35,28 @@ class DescribeAclsRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $principalFilter;
+    protected $principalFilter = null;
 
     /**
      * The host to match, or null to match any host.
      *
      * @var string|null
      */
-    protected $hostFilter;
+    protected $hostFilter = null;
 
     /**
      * The operation to match.
      *
      * @var int
      */
-    protected $operation;
+    protected $operation = 0;
 
     /**
      * The permission type to match.
      *
      * @var int
      */
-    protected $permissionType;
+    protected $permissionType = 0;
 
     public function __construct()
     {

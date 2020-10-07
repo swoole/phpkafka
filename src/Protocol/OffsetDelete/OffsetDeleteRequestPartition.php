@@ -14,7 +14,7 @@ class OffsetDeleteRequestPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     public function __construct()
     {

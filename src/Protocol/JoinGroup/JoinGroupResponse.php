@@ -14,14 +14,14 @@ class JoinGroupResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The generation ID of the group.
@@ -42,21 +42,21 @@ class JoinGroupResponse extends AbstractResponse
      *
      * @var string|null
      */
-    protected $protocolName;
+    protected $protocolName = null;
 
     /**
      * The leader of the group.
      *
      * @var string
      */
-    protected $leader;
+    protected $leader = '';
 
     /**
      * The member ID assigned by the group coordinator.
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * @var JoinGroupResponseMember[]

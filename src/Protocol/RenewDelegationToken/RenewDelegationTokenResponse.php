@@ -14,21 +14,21 @@ class RenewDelegationTokenResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The timestamp in milliseconds at which this token expires.
      *
      * @var int
      */
-    protected $expiryTimestampMs;
+    protected $expiryTimestampMs = 0;
 
     /**
      * The duration in milliseconds for which the request was throttled due to a quota violation, or zero if the request did not violate any quota.
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     public function __construct()
     {

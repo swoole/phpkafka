@@ -14,14 +14,14 @@ class DescribeLogDirsResult extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The absolute log directory path.
      *
      * @var string
      */
-    protected $logDir;
+    protected $logDir = '';
 
     /**
      * Each topic.

@@ -14,7 +14,7 @@ class AlterReplicaLogDirTopicResult extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The results for each partition.

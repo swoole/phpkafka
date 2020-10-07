@@ -21,7 +21,7 @@ class CreateDelegationTokenRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $maxLifetimeMs;
+    protected $maxLifetimeMs = 0;
 
     public function __construct()
     {

@@ -14,27 +14,27 @@ class CreatePartitionsTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The new partition count.
      *
      * @var int
      */
-    protected $count;
+    protected $count = 0;
 
     /**
      * The new partition assignments.
      *
      * @var CreatePartitionsAssignment[]|null
      */
-    protected $assignments;
+    protected $assignments = null;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2], [2], [], [], null),
                 new ProtocolField('count', 'int32', false, [0, 1, 2], [2], [], [], null),
                 new ProtocolField('assignments', CreatePartitionsAssignment::class, true, [0, 1, 2], [2], [0, 1, 2], [], null),
             ];
@@ -48,14 +48,14 @@ class CreatePartitionsTopic extends AbstractStruct
         return [2];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

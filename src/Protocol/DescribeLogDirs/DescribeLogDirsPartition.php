@@ -14,28 +14,28 @@ class DescribeLogDirsPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The size of the log segments in this partition in bytes.
      *
      * @var int
      */
-    protected $partitionSize;
+    protected $partitionSize = 0;
 
     /**
      * The lag of the log's LEO w.r.t. partition's HW (if it is the current log for the partition) or current replica's LEO (if it is the future log for the partition).
      *
      * @var int
      */
-    protected $offsetLag;
+    protected $offsetLag = 0;
 
     /**
      * True if this log is created by AlterReplicaLogDirsRequest and will replace the current log of the replica in the future.
      *
      * @var bool
      */
-    protected $isFutureKey;
+    protected $isFutureKey = false;
 
     public function __construct()
     {

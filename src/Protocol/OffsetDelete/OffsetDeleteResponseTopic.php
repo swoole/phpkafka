@@ -14,7 +14,7 @@ class OffsetDeleteResponseTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The responses for each partition in the topic.

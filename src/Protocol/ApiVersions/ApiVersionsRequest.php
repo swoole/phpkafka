@@ -14,14 +14,14 @@ class ApiVersionsRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $clientSoftwareName;
+    protected $clientSoftwareName = '';
 
     /**
      * The version of the client.
      *
      * @var string
      */
-    protected $clientSoftwareVersion;
+    protected $clientSoftwareVersion = '';
 
     public function __construct()
     {

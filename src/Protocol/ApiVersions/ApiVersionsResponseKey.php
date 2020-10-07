@@ -14,21 +14,21 @@ class ApiVersionsResponseKey extends AbstractStruct
      *
      * @var int
      */
-    protected $apiKey;
+    protected $apiKey = 0;
 
     /**
      * The minimum supported version, inclusive.
      *
      * @var int
      */
-    protected $minVersion;
+    protected $minVersion = 0;
 
     /**
      * The maximum supported version, inclusive.
      *
      * @var int
      */
-    protected $maxVersion;
+    protected $maxVersion = 0;
 
     public function __construct()
     {

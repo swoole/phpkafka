@@ -14,7 +14,7 @@ class OffsetForLeaderEpochResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Each topic we fetched offsets for.

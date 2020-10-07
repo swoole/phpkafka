@@ -14,7 +14,7 @@ class ApiVersionsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The APIs supported by the broker.
@@ -28,7 +28,7 @@ class ApiVersionsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     public function __construct()
     {

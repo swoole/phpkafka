@@ -14,14 +14,14 @@ class UpdateMetadataRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $brokerId;
+    protected $controllerId = 0;
 
     /**
      * The controller epoch.
      *
      * @var int
      */
-    protected $controllerEpoch;
+    protected $controllerEpoch = 0;
 
     /**
      * The broker epoch.
@@ -53,7 +53,7 @@ class UpdateMetadataRequest extends AbstractRequest
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
+                new ProtocolField('controllerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('controllerEpoch', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('brokerEpoch', 'int64', false, [5, 6], [6], [], [], null),
                 new ProtocolField('ungroupedPartitionStates', UpdateMetadataPartitionState::class, true, [0, 1, 2, 3, 4], [6], [], [], null),
@@ -80,14 +80,14 @@ class UpdateMetadataRequest extends AbstractRequest
         return [6];
     }
 
-    public function getBrokerId(): int
+    public function getControllerId(): int
     {
-        return $this->brokerId;
+        return $this->controllerId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setControllerId(int $controllerId): self
     {
-        $this->brokerId = $brokerId;
+        $this->controllerId = $controllerId;
 
         return $this;
     }

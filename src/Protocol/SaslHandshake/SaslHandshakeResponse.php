@@ -14,7 +14,7 @@ class SaslHandshakeResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The mechanisms enabled in the server.

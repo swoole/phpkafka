@@ -14,42 +14,42 @@ class FindCoordinatorResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The node id.
      *
      * @var int
      */
-    protected $brokerId;
+    protected $nodeId = 0;
 
     /**
      * The host name.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The port.
      *
      * @var int
      */
-    protected $port;
+    protected $port = 0;
 
     public function __construct()
     {
@@ -58,7 +58,7 @@ class FindCoordinatorResponse extends AbstractResponse
                 new ProtocolField('throttleTimeMs', 'int32', false, [1, 2, 3], [3], [], [], null),
                 new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3], [3], [], [], null),
                 new ProtocolField('errorMessage', 'string', false, [1, 2, 3], [3], [1, 2, 3], [], null),
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3], [3], [], [], null),
+                new ProtocolField('nodeId', 'int32', false, [0, 1, 2, 3], [3], [], [], null),
                 new ProtocolField('host', 'string', false, [0, 1, 2, 3], [3], [], [], null),
                 new ProtocolField('port', 'int32', false, [0, 1, 2, 3], [3], [], [], null),
             ];
@@ -113,14 +113,14 @@ class FindCoordinatorResponse extends AbstractResponse
         return $this;
     }
 
-    public function getBrokerId(): int
+    public function getNodeId(): int
     {
-        return $this->brokerId;
+        return $this->nodeId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setNodeId(int $nodeId): self
     {
-        $this->brokerId = $brokerId;
+        $this->nodeId = $nodeId;
 
         return $this;
     }

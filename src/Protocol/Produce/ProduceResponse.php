@@ -21,7 +21,7 @@ class ProduceResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     public function __construct()
     {

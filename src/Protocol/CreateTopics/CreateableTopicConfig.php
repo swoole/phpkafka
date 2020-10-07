@@ -14,14 +14,14 @@ class CreateableTopicConfig extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The configuration value.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     public function __construct()
     {

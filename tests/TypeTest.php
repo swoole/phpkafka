@@ -19,7 +19,6 @@ use Longyan\Kafka\Protocol\Type\String16;
 use Longyan\Kafka\Protocol\Type\UInt32;
 use Longyan\Kafka\Protocol\Type\UVarInt;
 use Longyan\Kafka\Protocol\Type\VarInt;
-use Longyan\Kafka\Protocol\Type\VarLong;
 use PHPUnit\Framework\TestCase;
 
 class TypeTest extends TestCase
@@ -175,37 +174,16 @@ class TypeTest extends TestCase
     public function testVarInt()
     {
         foreach ([
-            VarInt::MIN_VALUE => 10,
+            VarInt::MIN_VALUE => 5,
             VarInt::MAX_VALUE => 5,
             2 => 1,
-            16383 => 2,
-            2097151 => 3,
-            268435455 => 4,
+            16383 => 3,
+            2097151 => 4,
+            268435455 => 5,
         ] as $number => $exceptedSize) {
             $encodeResult = VarInt::pack($number);
+            $this->assertEquals($exceptedSize, \strlen($encodeResult), 'number ' . $number);
             $this->assertEquals($number, VarInt::unpack($encodeResult, $size));
-            $this->assertEquals($exceptedSize, $size, 'number ' . $number);
-        }
-    }
-
-    public function testVarLong()
-    {
-        foreach ([
-            Int32::MIN_VALUE => 10,
-            Int32::MAX_VALUE => 5,
-            Int64::MIN_VALUE => 10,
-            Int64::MAX_VALUE => 9,
-            2 => 1,
-            16383 => 2,
-            2097151 => 3,
-            268435455 => 4,
-            34359738367 => 5,
-            4398046511103 => 6,
-            562949953421311 => 7,
-            72057594037927935 => 8,
-        ] as $number => $exceptedSize) {
-            $encodeResult = VarLong::pack($number);
-            $this->assertEquals($number, VarLong::unpack($encodeResult, $size));
             $this->assertEquals($exceptedSize, $size, 'number ' . $number);
         }
     }

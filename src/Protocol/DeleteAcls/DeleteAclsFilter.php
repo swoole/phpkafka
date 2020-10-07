@@ -14,14 +14,14 @@ class DeleteAclsFilter extends AbstractStruct
      *
      * @var int
      */
-    protected $resourceTypeFilter;
+    protected $resourceTypeFilter = 0;
 
     /**
      * The resource name.
      *
      * @var string|null
      */
-    protected $resourceNameFilter;
+    protected $resourceNameFilter = null;
 
     /**
      * The pattern type.
@@ -35,28 +35,28 @@ class DeleteAclsFilter extends AbstractStruct
      *
      * @var string|null
      */
-    protected $principalFilter;
+    protected $principalFilter = null;
 
     /**
      * The host filter, or null to accept all hosts.
      *
      * @var string|null
      */
-    protected $hostFilter;
+    protected $hostFilter = null;
 
     /**
      * The ACL operation.
      *
      * @var int
      */
-    protected $operation;
+    protected $operation = 0;
 
     /**
      * The permission type.
      *
      * @var int
      */
-    protected $permissionType;
+    protected $permissionType = 0;
 
     public function __construct()
     {

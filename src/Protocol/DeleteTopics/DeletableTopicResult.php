@@ -14,20 +14,20 @@ class DeletableTopicResult extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The deletion error, or 0 if the deletion succeeded.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2, 3, 4], [4], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3, 4], [4], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -40,14 +40,14 @@ class DeletableTopicResult extends AbstractStruct
         return [4];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

@@ -14,14 +14,14 @@ class OffsetFetchRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * Each topic we would like to fetch offsets for, or null to fetch offsets for all topics.
      *
      * @var OffsetFetchRequestTopic[]|null
      */
-    protected $topics;
+    protected $topics = null;
 
     /**
      * Whether broker should hold on returning unstable offsets but set a retriable error code for the partition.

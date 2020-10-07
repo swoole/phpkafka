@@ -24,7 +24,7 @@ class DeleteTopicsTest extends TestCase
     public function testPackRequest()
     {
         $request = new DeleteTopicsRequest();
-        $request->setTopicName(['aaa', 'bbb', 'ccc']);
+        $request->setTopicNames(['aaa', 'bbb', 'ccc']);
         $request->setTimeoutMs(10000);
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V0, bin2hex($request->pack()));
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V4, bin2hex($request->pack(4)));
@@ -36,15 +36,15 @@ class DeleteTopicsTest extends TestCase
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V0), $size, 0);
         $this->assertEquals(23, $size);
         $this->assertEquals([
-            'topicName' => ['aaa', 'bbb', 'ccc'],
-            'timeoutMs' => 10000,
+            'topicNames' => ['aaa', 'bbb', 'ccc'],
+            'timeoutMs'  => 10000,
         ], $request->toArray());
 
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V4), $size, 4);
         $this->assertEquals(18, $size);
         $this->assertEquals([
-            'topicName' => ['aaa', 'bbb', 'ccc'],
-            'timeoutMs' => 10000,
+            'topicNames' => ['aaa', 'bbb', 'ccc'],
+            'timeoutMs'  => 10000,
         ], $request->toArray());
     }
 
@@ -53,9 +53,9 @@ class DeleteTopicsTest extends TestCase
         $response = new DeleteTopicsResponse();
         $response->setThrottleTimeMs(10000);
         $response->setResponses([
-            (new DeletableTopicResult())->setTopicName('aaa')->setErrorCode(0),
-            (new DeletableTopicResult())->setTopicName('bbb')->setErrorCode(123),
-            (new DeletableTopicResult())->setTopicName('ccc')->setErrorCode(0),
+            (new DeletableTopicResult())->setName('aaa')->setErrorCode(0),
+            (new DeletableTopicResult())->setName('bbb')->setErrorCode(123),
+            (new DeletableTopicResult())->setName('ccc')->setErrorCode(0),
         ]);
 
         $this->assertEquals(self::ENCODE_RESPONSE_RESULT_V0, bin2hex($response->pack()));
@@ -71,9 +71,9 @@ class DeleteTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => null,
             'responses'      => [
-                ['topicName' => 'aaa', 'errorCode' => 0],
-                ['topicName' => 'bbb', 'errorCode' => 123],
-                ['topicName' => 'ccc', 'errorCode' => 0],
+                ['name' => 'aaa', 'errorCode' => 0],
+                ['name' => 'bbb', 'errorCode' => 123],
+                ['name' => 'ccc', 'errorCode' => 0],
             ],
         ], $response->toArray());
 
@@ -82,9 +82,9 @@ class DeleteTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'responses'      => [
-                ['topicName' => 'aaa', 'errorCode' => 0],
-                ['topicName' => 'bbb', 'errorCode' => 123],
-                ['topicName' => 'ccc', 'errorCode' => 0],
+                ['name' => 'aaa', 'errorCode' => 0],
+                ['name' => 'bbb', 'errorCode' => 123],
+                ['name' => 'ccc', 'errorCode' => 0],
             ],
         ], $response->toArray());
 
@@ -93,9 +93,9 @@ class DeleteTopicsTest extends TestCase
         $this->assertEquals([
             'throttleTimeMs' => 10000,
             'responses'      => [
-                ['topicName' => 'aaa', 'errorCode' => 0],
-                ['topicName' => 'bbb', 'errorCode' => 123],
-                ['topicName' => 'ccc', 'errorCode' => 0],
+                ['name' => 'aaa', 'errorCode' => 0],
+                ['name' => 'bbb', 'errorCode' => 123],
+                ['name' => 'ccc', 'errorCode' => 0],
             ],
         ], $response->toArray());
     }

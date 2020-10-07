@@ -14,35 +14,35 @@ class LeaderAndIsrPartitionState extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The partition index.
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The controller epoch.
      *
      * @var int
      */
-    protected $controllerEpoch;
+    protected $controllerEpoch = 0;
 
     /**
      * The broker ID of the leader.
      *
      * @var int
      */
-    protected $brokerId;
+    protected $leader = 0;
 
     /**
      * The leader epoch.
      *
      * @var int
      */
-    protected $leaderEpoch;
+    protected $leaderEpoch = 0;
 
     /**
      * The in-sync replica IDs.
@@ -56,7 +56,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
      *
      * @var int
      */
-    protected $zkVersion;
+    protected $zkVersion = 0;
 
     /**
      * The replica IDs.
@@ -93,7 +93,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
                 new ProtocolField('topicName', 'string', false, [0, 1], [4], [], [], null),
                 new ProtocolField('partitionIndex', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('controllerEpoch', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
+                new ProtocolField('leader', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('leaderEpoch', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('isr', 'int32', true, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('zkVersion', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
@@ -148,14 +148,14 @@ class LeaderAndIsrPartitionState extends AbstractStruct
         return $this;
     }
 
-    public function getBrokerId(): int
+    public function getLeader(): int
     {
-        return $this->brokerId;
+        return $this->leader;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setLeader(int $leader): self
     {
-        $this->brokerId = $brokerId;
+        $this->leader = $leader;
 
         return $this;
     }

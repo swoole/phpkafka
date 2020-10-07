@@ -14,7 +14,7 @@ class OngoingPartitionReassignment extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The current replica set.

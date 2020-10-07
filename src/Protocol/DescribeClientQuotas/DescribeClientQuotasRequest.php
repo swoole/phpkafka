@@ -21,7 +21,7 @@ class DescribeClientQuotasRequest extends AbstractRequest
      *
      * @var bool
      */
-    protected $strict;
+    protected $strict = false;
 
     public function __construct()
     {

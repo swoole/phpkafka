@@ -17,7 +17,8 @@ define('KAFKA_PROTOCOL_DEST_PATH', dirname(__DIR__) . '/src/Protocol');
         }
         $pathname = $jsonFile->getPathname();
         var_dump($pathname);
-        $generator = new MessageGenerator($pathname);
+        $data = json5_decode(file_get_contents($pathname));
+        $generator = new MessageGenerator($data);
         $generators[$generator->getApiKey()] = $generator;
         $generator->generate();
     }

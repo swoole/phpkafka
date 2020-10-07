@@ -14,7 +14,7 @@ class OffsetDeleteRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The topics to delete offsets for.

@@ -14,7 +14,7 @@ class OffsetDeleteRequestTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * Each partition to delete offsets for.

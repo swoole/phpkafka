@@ -14,14 +14,14 @@ class ElectLeadersResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The top level response error code.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The election results, or an empty array if the requester did not have permission and the request asks for all partitions.

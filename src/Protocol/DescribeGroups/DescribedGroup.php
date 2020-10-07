@@ -14,35 +14,35 @@ class DescribedGroup extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The group ID string.
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The group state string, or the empty string.
      *
      * @var string
      */
-    protected $groupState;
+    protected $groupState = '';
 
     /**
      * The group protocol type, or the empty string.
      *
      * @var string
      */
-    protected $protocolType;
+    protected $protocolType = '';
 
     /**
      * The group protocol data, or the empty string.
      *
      * @var string
      */
-    protected $protocolData;
+    protected $protocolData = '';
 
     /**
      * The group members.

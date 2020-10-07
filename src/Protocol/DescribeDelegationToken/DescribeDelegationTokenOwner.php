@@ -14,14 +14,14 @@ class DescribeDelegationTokenOwner extends AbstractStruct
      *
      * @var string
      */
-    protected $principalType;
+    protected $principalType = '';
 
     /**
      * The owner principal name.
      *
      * @var string
      */
-    protected $principalName;
+    protected $principalName = '';
 
     public function __construct()
     {

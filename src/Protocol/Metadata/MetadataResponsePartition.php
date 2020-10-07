@@ -14,21 +14,21 @@ class MetadataResponsePartition extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The partition index.
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The ID of the leader broker.
      *
      * @var int
      */
-    protected $brokerId;
+    protected $leaderId = 0;
 
     /**
      * The leader epoch of this partition.
@@ -42,7 +42,7 @@ class MetadataResponsePartition extends AbstractStruct
      *
      * @var int32[]
      */
-    protected $brokerId = [];
+    protected $replicaNodes = [];
 
     /**
      * The set of nodes that are in sync with the leader for this partition.
@@ -64,9 +64,9 @@ class MetadataResponsePartition extends AbstractStruct
             self::$maps[self::class] = [
                 new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('partitionIndex', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
+                new ProtocolField('leaderId', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('leaderEpoch', 'int32', false, [7, 8, 9], [9], [], [], null),
-                new ProtocolField('brokerId', 'int32', true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
+                new ProtocolField('replicaNodes', 'int32', true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('isrNodes', 'int32', true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('offlineReplicas', 'int32', true, [5, 6, 7, 8, 9], [9], [], [], null),
             ];
@@ -104,14 +104,14 @@ class MetadataResponsePartition extends AbstractStruct
         return $this;
     }
 
-    public function getBrokerId(): int
+    public function getLeaderId(): int
     {
-        return $this->brokerId;
+        return $this->leaderId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setLeaderId(int $leaderId): self
     {
-        $this->brokerId = $brokerId;
+        $this->leaderId = $leaderId;
 
         return $this;
     }
@@ -131,17 +131,17 @@ class MetadataResponsePartition extends AbstractStruct
     /**
      * @return int32[]
      */
-    public function getBrokerId(): array
+    public function getReplicaNodes(): array
     {
-        return $this->brokerId;
+        return $this->replicaNodes;
     }
 
     /**
-     * @param int32[] $brokerId
+     * @param int32[] $replicaNodes
      */
-    public function setBrokerId(array $brokerId): self
+    public function setReplicaNodes(array $replicaNodes): self
     {
-        $this->brokerId = $brokerId;
+        $this->replicaNodes = $replicaNodes;
 
         return $this;
     }

@@ -14,28 +14,28 @@ class RequestHeader extends AbstractRequestHeader
      *
      * @var int
      */
-    protected $requestApiKey;
+    protected $requestApiKey = 0;
 
     /**
      * The API version of this request.
      *
      * @var int
      */
-    protected $requestApiVersion;
+    protected $requestApiVersion = 0;
 
     /**
      * The correlation ID of this request.
      *
      * @var int
      */
-    protected $correlationId;
+    protected $correlationId = 0;
 
     /**
      * The client ID string.
      *
      * @var string|null
      */
-    protected $clientId;
+    protected $clientId = null;
 
     public function __construct()
     {

@@ -31,8 +31,10 @@ jobs:
         docker-compose up -d swoole && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
         docker ps -a && docker ps
 
-    - name: composer update
-      run: docker exec swoole composer update
+    - name: prepare
+      run: |
+        docker exec swoole composer update
+        docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
 
     - name: php-test
       run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer test

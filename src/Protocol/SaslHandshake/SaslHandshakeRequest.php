@@ -14,7 +14,7 @@ class SaslHandshakeRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $mechanism;
+    protected $mechanism = '';
 
     public function __construct()
     {

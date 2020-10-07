@@ -14,21 +14,21 @@ class ListedGroup extends AbstractStruct
      *
      * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * The group protocol type.
      *
      * @var string
      */
-    protected $protocolType;
+    protected $protocolType = '';
 
     /**
      * The group state name.
      *
      * @var string
      */
-    protected $groupState;
+    protected $groupState = '';
 
     public function __construct()
     {

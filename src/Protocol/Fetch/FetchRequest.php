@@ -14,21 +14,21 @@ class FetchRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $replicaId;
+    protected $replicaId = 0;
 
     /**
      * The maximum time in milliseconds to wait for the response.
      *
      * @var int
      */
-    protected $maxWait;
+    protected $maxWait = 0;
 
     /**
      * The minimum bytes to accumulate in the response.
      *
      * @var int
      */
-    protected $minBytes;
+    protected $minBytes = 0;
 
     /**
      * The maximum bytes to fetch.  See KIP-74 for cases where this limit may not be honored.

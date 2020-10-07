@@ -14,14 +14,14 @@ class ExpireDelegationTokenRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $hmac;
+    protected $hmac = '';
 
     /**
      * The expiry time period in milliseconds.
      *
      * @var int
      */
-    protected $expiryTimePeriodMs;
+    protected $expiryTimePeriodMs = 0;
 
     public function __construct()
     {

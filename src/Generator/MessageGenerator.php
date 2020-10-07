@@ -9,11 +9,6 @@ class MessageGenerator extends AbstractGenerator
     /**
      * @var string
      */
-    protected $jsonFileName;
-
-    /**
-     * @var string
-     */
     protected $dirName;
 
     /**
@@ -36,22 +31,16 @@ class MessageGenerator extends AbstractGenerator
      */
     protected $apiKey;
 
-    public function __construct(string $jsonFileName)
+    public function __construct(\stdClass $data)
     {
         $this->messageGenerator = $this;
-        $this->jsonFileName = $jsonFileName;
-        $this->data = $data = json5_decode(file_get_contents($jsonFileName));
+        $this->data = $data;
         $this->apiName = $this->parseApiName($data);
         $this->dirName = \dirname(__DIR__) . '/Protocol/' . $this->apiName;
         $this->validVersions = $this->parseVersionsToArray($data->validVersions);
         $this->maxSupportVersion = $maxSupportVersion = max(0, ...$this->validVersions);
         $this->flexibleVersions = isset($data->flexibleVersions) ? $this->parseVersionsToArray($data->flexibleVersions, $maxSupportVersion) : [];
         $this->apiKey = $this->data->apiKey ?? -1;
-    }
-
-    public function getJsonFileName(): string
-    {
-        return $this->jsonFileName;
     }
 
     public function getDirName(): string
@@ -141,6 +130,19 @@ public function getFlexibleVersions(): array
 
 CODE;
                 break;
+            case 'struct':
+                $extendsClassName = 'AbstractStruct';
+                $constructMethod .= <<<CODE
+
+public function getFlexibleVersions(): array
+{
+    return {$flexibleVersionsStr};
+}
+
+CODE;
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Invalid type %s', $this->data->type));
         }
 
         $classContent = <<<CODE
@@ -182,7 +184,7 @@ CODE;
 
     public function generateStruct(string $type, \stdClass $field): void
     {
-        $generator = new StructGenerator($this, $field);
+        $generator = new SubStructGenerator($this, $field);
         $generator->generate();
         $this->generatedTypes[$type] = true;
     }
@@ -190,7 +192,7 @@ CODE;
     protected function parseApiName(\stdClass $data): string
     {
         $matches = null;
-        if (preg_match('/^(.+)(Request|Response|(?<header>Header))$/', $data->name, $matches) <= 0) {
+        if (preg_match('/^(.+)(Request|Response|Struct|(?<header>Header))$/', $data->name, $matches) <= 0) {
             throw new \RuntimeException(sprintf('Invalid name %s', $data->name));
         }
 

@@ -14,28 +14,28 @@ class DescribeConfigsResourceResult extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The configuration value.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * True if the configuration is read-only.
      *
      * @var bool
      */
-    protected $readOnly;
+    protected $readOnly = false;
 
     /**
      * True if the configuration is not set.
      *
      * @var bool
      */
-    protected $isDefault;
+    protected $isDefault = false;
 
     /**
      * The configuration source.
@@ -49,7 +49,7 @@ class DescribeConfigsResourceResult extends AbstractStruct
      *
      * @var bool
      */
-    protected $isSensitive;
+    protected $isSensitive = false;
 
     /**
      * The synonyms for this configuration key.
@@ -70,7 +70,7 @@ class DescribeConfigsResourceResult extends AbstractStruct
      *
      * @var string|null
      */
-    protected $documentation;
+    protected $documentation = null;
 
     public function __construct()
     {

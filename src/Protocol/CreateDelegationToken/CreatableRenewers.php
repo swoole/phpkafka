@@ -14,14 +14,14 @@ class CreatableRenewers extends AbstractStruct
      *
      * @var string
      */
-    protected $principalType;
+    protected $principalType = '';
 
     /**
      * The name of the Kafka principal.
      *
      * @var string
      */
-    protected $principalName;
+    protected $principalName = '';
 
     public function __construct()
     {

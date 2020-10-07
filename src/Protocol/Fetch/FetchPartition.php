@@ -14,7 +14,7 @@ class FetchPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The current leader epoch of the partition.
@@ -28,7 +28,7 @@ class FetchPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $fetchOffset;
+    protected $fetchOffset = 0;
 
     /**
      * The earliest available offset of the follower replica.  The field is only used when the request is sent by the follower.
@@ -42,7 +42,7 @@ class FetchPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $maxBytes;
+    protected $maxBytes = 0;
 
     public function __construct()
     {

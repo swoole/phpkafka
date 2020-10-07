@@ -14,21 +14,21 @@ class MemberResponse extends AbstractStruct
      *
      * @var string
      */
-    protected $memberId;
+    protected $memberId = '';
 
     /**
      * The group instance ID to remove from the group.
      *
      * @var string|null
      */
-    protected $groupInstanceId;
+    protected $groupInstanceId = null;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {

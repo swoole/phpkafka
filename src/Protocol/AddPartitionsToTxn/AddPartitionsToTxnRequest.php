@@ -14,21 +14,21 @@ class AddPartitionsToTxnRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $transactionalId;
+    protected $transactionalId = '';
 
     /**
      * Current producer id in use by the transactional id.
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * Current epoch associated with the producer id.
      *
      * @var int
      */
-    protected $producerEpoch;
+    protected $producerEpoch = 0;
 
     /**
      * The partitions to add to the transaction.

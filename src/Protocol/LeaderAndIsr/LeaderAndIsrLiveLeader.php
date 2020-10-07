@@ -14,21 +14,21 @@ class LeaderAndIsrLiveLeader extends AbstractStruct
      *
      * @var int
      */
-    protected $brokerId;
+    protected $brokerId = 0;
 
     /**
      * The leader's hostname.
      *
      * @var string
      */
-    protected $hostName;
+    protected $hostName = '';
 
     /**
      * The leader's port.
      *
      * @var int
      */
-    protected $port;
+    protected $port = 0;
 
     public function __construct()
     {

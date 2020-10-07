@@ -14,63 +14,63 @@ class UpdateMetadataPartitionState extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The partition index.
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The controller epoch.
      *
      * @var int
      */
-    protected $controllerEpoch;
+    protected $controllerEpoch = 0;
 
     /**
      * The ID of the broker which is the current partition leader.
      *
      * @var int
      */
-    protected $brokerId;
+    protected $leader = 0;
 
     /**
      * The leader epoch of this partition.
      *
      * @var int
      */
-    protected $leaderEpoch;
+    protected $leaderEpoch = 0;
 
     /**
      * The brokers which are in the ISR for this partition.
      *
      * @var int32[]
      */
-    protected $brokerId = [];
+    protected $isr = [];
 
     /**
      * The Zookeeper version.
      *
      * @var int
      */
-    protected $zkVersion;
+    protected $zkVersion = 0;
 
     /**
      * All the replicas of this partition.
      *
      * @var int32[]
      */
-    protected $brokerId = [];
+    protected $replicas = [];
 
     /**
      * The replicas of this partition which are offline.
      *
      * @var int32[]
      */
-    protected $brokerId = [];
+    protected $offlineReplicas = [];
 
     public function __construct()
     {
@@ -79,12 +79,12 @@ class UpdateMetadataPartitionState extends AbstractStruct
                 new ProtocolField('topicName', 'string', false, [0, 1, 2, 3, 4], [6], [], [], null),
                 new ProtocolField('partitionIndex', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('controllerEpoch', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
+                new ProtocolField('leader', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('leaderEpoch', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
-                new ProtocolField('brokerId', 'int32', true, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
+                new ProtocolField('isr', 'int32', true, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
                 new ProtocolField('zkVersion', 'int32', false, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
-                new ProtocolField('brokerId', 'int32', true, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
-                new ProtocolField('brokerId', 'int32', true, [4, 5, 6], [6], [], [], null),
+                new ProtocolField('replicas', 'int32', true, [0, 1, 2, 3, 4, 5, 6], [6], [], [], null),
+                new ProtocolField('offlineReplicas', 'int32', true, [4, 5, 6], [6], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -132,14 +132,14 @@ class UpdateMetadataPartitionState extends AbstractStruct
         return $this;
     }
 
-    public function getBrokerId(): int
+    public function getLeader(): int
     {
-        return $this->brokerId;
+        return $this->leader;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setLeader(int $leader): self
     {
-        $this->brokerId = $brokerId;
+        $this->leader = $leader;
 
         return $this;
     }
@@ -159,17 +159,17 @@ class UpdateMetadataPartitionState extends AbstractStruct
     /**
      * @return int32[]
      */
-    public function getBrokerId(): array
+    public function getIsr(): array
     {
-        return $this->brokerId;
+        return $this->isr;
     }
 
     /**
-     * @param int32[] $brokerId
+     * @param int32[] $isr
      */
-    public function setBrokerId(array $brokerId): self
+    public function setIsr(array $isr): self
     {
-        $this->brokerId = $brokerId;
+        $this->isr = $isr;
 
         return $this;
     }
@@ -189,17 +189,17 @@ class UpdateMetadataPartitionState extends AbstractStruct
     /**
      * @return int32[]
      */
-    public function getBrokerId(): array
+    public function getReplicas(): array
     {
-        return $this->brokerId;
+        return $this->replicas;
     }
 
     /**
-     * @param int32[] $brokerId
+     * @param int32[] $replicas
      */
-    public function setBrokerId(array $brokerId): self
+    public function setReplicas(array $replicas): self
     {
-        $this->brokerId = $brokerId;
+        $this->replicas = $replicas;
 
         return $this;
     }
@@ -207,17 +207,17 @@ class UpdateMetadataPartitionState extends AbstractStruct
     /**
      * @return int32[]
      */
-    public function getBrokerId(): array
+    public function getOfflineReplicas(): array
     {
-        return $this->brokerId;
+        return $this->offlineReplicas;
     }
 
     /**
-     * @param int32[] $brokerId
+     * @param int32[] $offlineReplicas
      */
-    public function setBrokerId(array $brokerId): self
+    public function setOfflineReplicas(array $offlineReplicas): self
     {
-        $this->brokerId = $brokerId;
+        $this->offlineReplicas = $offlineReplicas;
 
         return $this;
     }

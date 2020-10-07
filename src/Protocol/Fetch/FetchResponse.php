@@ -14,14 +14,14 @@ class FetchResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The top level response error code.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The fetch session ID, or 0 if this is not part of a fetch session.

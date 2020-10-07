@@ -14,14 +14,14 @@ class JoinGroupRequestProtocol extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The protocol metadata.
      *
      * @var string
      */
-    protected $metadata;
+    protected $metadata = '';
 
     public function __construct()
     {

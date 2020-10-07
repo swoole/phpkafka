@@ -14,28 +14,28 @@ class DescribeConfigsResult extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if we were able to successfully describe the configurations.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The resource type.
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The resource name.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     /**
      * Each listed configuration.

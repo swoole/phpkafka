@@ -14,14 +14,14 @@ class StopReplicaPartitionV0 extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The partition index.
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     public function __construct()
     {

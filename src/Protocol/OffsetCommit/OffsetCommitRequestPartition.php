@@ -14,14 +14,14 @@ class OffsetCommitRequestPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The message offset to be committed.
      *
      * @var int
      */
-    protected $committedOffset;
+    protected $committedOffset = 0;
 
     /**
      * The leader epoch of this partition.
@@ -42,7 +42,7 @@ class OffsetCommitRequestPartition extends AbstractStruct
      *
      * @var string|null
      */
-    protected $committedMetadata;
+    protected $committedMetadata = null;
 
     public function __construct()
     {

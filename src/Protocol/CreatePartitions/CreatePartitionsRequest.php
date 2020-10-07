@@ -21,14 +21,14 @@ class CreatePartitionsRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $timeoutMs;
+    protected $timeoutMs = 0;
 
     /**
      * If true, then validate the request, but don't actually increase the number of partitions.
      *
      * @var bool
      */
-    protected $validateOnly;
+    protected $validateOnly = false;
 
     public function __construct()
     {

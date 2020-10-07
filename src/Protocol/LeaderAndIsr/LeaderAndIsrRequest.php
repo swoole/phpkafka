@@ -14,14 +14,14 @@ class LeaderAndIsrRequest extends AbstractRequest
      *
      * @var int
      */
-    protected $brokerId;
+    protected $controllerId = 0;
 
     /**
      * The current controller epoch.
      *
      * @var int
      */
-    protected $controllerEpoch;
+    protected $controllerEpoch = 0;
 
     /**
      * The current broker epoch.
@@ -55,7 +55,7 @@ class LeaderAndIsrRequest extends AbstractRequest
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('brokerId', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
+                new ProtocolField('controllerId', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('controllerEpoch', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('brokerEpoch', 'int64', false, [2, 3, 4], [4], [], [], null),
                 new ProtocolField('ungroupedPartitionStates', LeaderAndIsrPartitionState::class, true, [0, 1], [4], [], [], null),
@@ -82,14 +82,14 @@ class LeaderAndIsrRequest extends AbstractRequest
         return [4];
     }
 
-    public function getBrokerId(): int
+    public function getControllerId(): int
     {
-        return $this->brokerId;
+        return $this->controllerId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setControllerId(int $controllerId): self
     {
-        $this->brokerId = $brokerId;
+        $this->controllerId = $controllerId;
 
         return $this;
     }

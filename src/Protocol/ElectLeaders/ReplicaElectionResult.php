@@ -14,7 +14,7 @@ class ReplicaElectionResult extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topic = '';
 
     /**
      * The results for each partition.
@@ -27,7 +27,7 @@ class ReplicaElectionResult extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('topic', 'string', false, [0, 1, 2], [2], [], [], null),
                 new ProtocolField('partitionResult', PartitionResult::class, true, [0, 1, 2], [2], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -40,14 +40,14 @@ class ReplicaElectionResult extends AbstractStruct
         return [2];
     }
 
-    public function getTopicName(): string
+    public function getTopic(): string
     {
-        return $this->topicName;
+        return $this->topic;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setTopic(string $topic): self
     {
-        $this->topicName = $topicName;
+        $this->topic = $topic;
 
         return $this;
     }

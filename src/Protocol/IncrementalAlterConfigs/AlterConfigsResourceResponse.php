@@ -14,28 +14,28 @@ class AlterConfigsResourceResponse extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The resource error message, or null if there was no error.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The resource type.
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The resource name.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     public function __construct()
     {

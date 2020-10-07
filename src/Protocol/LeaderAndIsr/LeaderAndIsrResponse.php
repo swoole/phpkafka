@@ -14,7 +14,7 @@ class LeaderAndIsrResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * Each partition.

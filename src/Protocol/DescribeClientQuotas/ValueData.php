@@ -14,14 +14,14 @@ class ValueData extends AbstractStruct
      *
      * @var string
      */
-    protected $key;
+    protected $key = '';
 
     /**
      * The quota configuration value.
      *
      * @var float
      */
-    protected $value;
+    protected $value = 0;
 
     public function __construct()
     {

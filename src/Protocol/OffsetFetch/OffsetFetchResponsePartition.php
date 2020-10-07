@@ -14,14 +14,14 @@ class OffsetFetchResponsePartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The committed message offset.
      *
      * @var int
      */
-    protected $committedOffset;
+    protected $committedOffset = 0;
 
     /**
      * The leader epoch.
@@ -35,14 +35,14 @@ class OffsetFetchResponsePartition extends AbstractStruct
      *
      * @var string|null
      */
-    protected $metadata;
+    protected $metadata = null;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     public function __construct()
     {

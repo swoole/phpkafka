@@ -14,14 +14,14 @@ class AclCreation extends AbstractStruct
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The resource name for the ACL.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     /**
      * The pattern type for the ACL.
@@ -35,28 +35,28 @@ class AclCreation extends AbstractStruct
      *
      * @var string
      */
-    protected $principal;
+    protected $principal = '';
 
     /**
      * The host for the ACL.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The operation type for the ACL (read, write, etc.).
      *
      * @var int
      */
-    protected $operation;
+    protected $operation = 0;
 
     /**
      * The permission type for the ACL (allow, deny, etc.).
      *
      * @var int
      */
-    protected $permissionType;
+    protected $permissionType = 0;
 
     public function __construct()
     {

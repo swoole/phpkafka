@@ -14,20 +14,20 @@ class DeleteTopicsRequest extends AbstractRequest
      *
      * @var string[]
      */
-    protected $topicName = [];
+    protected $topicNames = [];
 
     /**
      * The length of time in milliseconds to wait for the deletions to complete.
      *
      * @var int
      */
-    protected $timeoutMs;
+    protected $timeoutMs = 0;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', true, [0, 1, 2, 3, 4], [4], [], [], null),
+                new ProtocolField('topicNames', 'string', true, [0, 1, 2, 3, 4], [4], [], [], null),
                 new ProtocolField('timeoutMs', 'int32', false, [0, 1, 2, 3, 4], [4], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -53,17 +53,17 @@ class DeleteTopicsRequest extends AbstractRequest
     /**
      * @return string[]
      */
-    public function getTopicName(): array
+    public function getTopicNames(): array
     {
-        return $this->topicName;
+        return $this->topicNames;
     }
 
     /**
-     * @param string[] $topicName
+     * @param string[] $topicNames
      */
-    public function setTopicName(array $topicName): self
+    public function setTopicNames(array $topicNames): self
     {
-        $this->topicName = $topicName;
+        $this->topicNames = $topicNames;
 
         return $this;
     }

@@ -14,7 +14,7 @@ class CreateTopicsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Results for each topic we tried to create.

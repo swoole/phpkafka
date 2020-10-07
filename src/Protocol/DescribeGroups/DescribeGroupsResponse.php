@@ -14,7 +14,7 @@ class DescribeGroupsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Each described group.

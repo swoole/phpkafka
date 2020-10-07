@@ -14,7 +14,7 @@ class StopReplicaPartitionState extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The leader epoch.
@@ -28,7 +28,7 @@ class StopReplicaPartitionState extends AbstractStruct
      *
      * @var bool
      */
-    protected $deletePartition;
+    protected $deletePartition = false;
 
     public function __construct()
     {

@@ -14,7 +14,7 @@ class CreatePartitionsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The partition creation results for each topic.

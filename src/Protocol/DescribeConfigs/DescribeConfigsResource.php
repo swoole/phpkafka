@@ -14,21 +14,21 @@ class DescribeConfigsResource extends AbstractStruct
      *
      * @var int
      */
-    protected $resourceType;
+    protected $resourceType = 0;
 
     /**
      * The resource name.
      *
      * @var string
      */
-    protected $resourceName;
+    protected $resourceName = '';
 
     /**
      * The configuration keys to list, or null to list all configuration keys.
      *
      * @var string[]|null
      */
-    protected $configurationKeys;
+    protected $configurationKeys = null;
 
     public function __construct()
     {

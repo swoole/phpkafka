@@ -14,7 +14,7 @@ class SaslAuthenticateRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $authBytes;
+    protected $authBytes = '';
 
     public function __construct()
     {

@@ -14,21 +14,21 @@ class PartitionProduceData extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The record data to be produced.
      *
-     * @var string|null
+     * @var \Longyan\Kafka\Protocol\RecordBatch\RecordBatch|null
      */
-    protected $records;
+    protected $records = null;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
                 new ProtocolField('partitionIndex', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [], [], null),
-                new ProtocolField('records', 'bytes', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [0, 1, 2, 3, 4, 5, 6, 7, 8], [], null),
+                new ProtocolField('records', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [0, 1, 2, 3, 4, 5, 6, 7, 8], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -52,12 +52,12 @@ class PartitionProduceData extends AbstractStruct
         return $this;
     }
 
-    public function getRecords(): ?string
+    public function getRecords(): ?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch
     {
         return $this->records;
     }
 
-    public function setRecords(?string $records): self
+    public function setRecords(?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch $records): self
     {
         $this->records = $records;
 

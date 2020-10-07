@@ -14,7 +14,7 @@ class FindCoordinatorRequest extends AbstractRequest
      *
      * @var string
      */
-    protected $key;
+    protected $key = '';
 
     /**
      * The coordinator key type.  (Group, transaction, etc.).

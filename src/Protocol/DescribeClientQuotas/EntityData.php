@@ -14,14 +14,14 @@ class EntityData extends AbstractStruct
      *
      * @var string
      */
-    protected $entityType;
+    protected $entityType = '';
 
     /**
      * The entity name, or null if the default.
      *
      * @var string|null
      */
-    protected $entityName;
+    protected $entityName = null;
 
     public function __construct()
     {

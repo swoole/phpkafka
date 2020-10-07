@@ -14,14 +14,14 @@ class MetadataResponseTopic extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The topic name.
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * True if the topic is internal.
@@ -49,7 +49,7 @@ class MetadataResponseTopic extends AbstractStruct
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
                 new ProtocolField('errorCode', 'int16', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
-                new ProtocolField('topicName', 'string', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('isInternal', 'bool', false, [1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('partitions', MetadataResponsePartition::class, true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('topicAuthorizedOperations', 'int32', false, [8, 9], [9], [], [], null),
@@ -76,14 +76,14 @@ class MetadataResponseTopic extends AbstractStruct
         return $this;
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

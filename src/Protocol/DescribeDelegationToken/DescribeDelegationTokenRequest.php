@@ -14,7 +14,7 @@ class DescribeDelegationTokenRequest extends AbstractRequest
      *
      * @var DescribeDelegationTokenOwner[]|null
      */
-    protected $owners;
+    protected $owners = null;
 
     public function __construct()
     {

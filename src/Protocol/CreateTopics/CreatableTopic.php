@@ -14,21 +14,21 @@ class CreatableTopic extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $name = '';
 
     /**
      * The number of partitions to create in the topic, or -1 if we are either specifying a manual partition assignment or using the default partitions.
      *
      * @var int
      */
-    protected $numPartitions;
+    protected $numPartitions = 0;
 
     /**
      * The number of replicas to create for each partition in the topic, or -1 if we are either specifying a manual partition assignment or using the default replication factor.
      *
      * @var int
      */
-    protected $replicationFactor;
+    protected $replicationFactor = 0;
 
     /**
      * The manual partition assignment, or the empty array if we are using automatic assignment.
@@ -48,7 +48,7 @@ class CreatableTopic extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('name', 'string', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('numPartitions', 'int32', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('replicationFactor', 'int16', false, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('assignments', CreatableReplicaAssignment::class, true, [0, 1, 2, 3, 4, 5], [5], [], [], null),
@@ -64,14 +64,14 @@ class CreatableTopic extends AbstractStruct
         return [5];
     }
 
-    public function getTopicName(): string
+    public function getName(): string
     {
-        return $this->topicName;
+        return $this->name;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setName(string $name): self
     {
-        $this->topicName = $topicName;
+        $this->name = $name;
 
         return $this;
     }

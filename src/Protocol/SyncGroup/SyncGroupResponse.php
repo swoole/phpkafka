@@ -14,14 +14,14 @@ class SyncGroupResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The error code, or 0 if there was no error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The group protocol type.
@@ -42,7 +42,7 @@ class SyncGroupResponse extends AbstractResponse
      *
      * @var string
      */
-    protected $assignment;
+    protected $assignment = '';
 
     public function __construct()
     {

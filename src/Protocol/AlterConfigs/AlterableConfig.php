@@ -14,14 +14,14 @@ class AlterableConfig extends AbstractStruct
      *
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * The value to set for the configuration key.
      *
      * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     public function __construct()
     {

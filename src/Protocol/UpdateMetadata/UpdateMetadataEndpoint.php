@@ -14,28 +14,28 @@ class UpdateMetadataEndpoint extends AbstractStruct
      *
      * @var int
      */
-    protected $port;
+    protected $port = 0;
 
     /**
      * The hostname of this endpoint.
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The listener name.
      *
      * @var string
      */
-    protected $listener;
+    protected $listener = '';
 
     /**
      * The security protocol type.
      *
      * @var int
      */
-    protected $securityProtocol;
+    protected $securityProtocol = 0;
 
     public function __construct()
     {

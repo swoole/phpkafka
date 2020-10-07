@@ -14,7 +14,7 @@ class DeleteTopicsResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * The results for each topic we tried to delete.

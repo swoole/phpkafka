@@ -14,21 +14,21 @@ class OpData extends AbstractStruct
      *
      * @var string
      */
-    protected $key;
+    protected $key = '';
 
     /**
      * The value to set, otherwise ignored if the value is to be removed.
      *
      * @var float
      */
-    protected $value;
+    protected $value = 0;
 
     /**
      * Whether the quota configuration value should be removed, otherwise set.
      *
      * @var bool
      */
-    protected $remove;
+    protected $remove = false;
 
     public function __construct()
     {

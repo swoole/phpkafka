@@ -14,7 +14,7 @@ class WritableTxnMarkerResult extends AbstractStruct
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * The results by topic.

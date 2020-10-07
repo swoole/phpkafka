@@ -14,7 +14,7 @@ class MetadataResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $throttleTimeMs;
+    protected $throttleTimeMs = 0;
 
     /**
      * Each broker in the response.
@@ -35,7 +35,7 @@ class MetadataResponse extends AbstractResponse
      *
      * @var int
      */
-    protected $brokerId = -1;
+    protected $controllerId = -1;
 
     /**
      * Each topic in the response.
@@ -58,7 +58,7 @@ class MetadataResponse extends AbstractResponse
                 new ProtocolField('throttleTimeMs', 'int32', false, [3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('brokers', MetadataResponseBroker::class, true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('clusterId', 'string', false, [2, 3, 4, 5, 6, 7, 8, 9], [9], [2, 3, 4, 5, 6, 7, 8, 9], [], null),
-                new ProtocolField('brokerId', 'int32', false, [1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
+                new ProtocolField('controllerId', 'int32', false, [1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('topics', MetadataResponseTopic::class, true, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9], [], [], null),
                 new ProtocolField('clusterAuthorizedOperations', 'int32', false, [8, 9], [9], [], [], null),
             ];
@@ -119,14 +119,14 @@ class MetadataResponse extends AbstractResponse
         return $this;
     }
 
-    public function getBrokerId(): int
+    public function getControllerId(): int
     {
-        return $this->brokerId;
+        return $this->controllerId;
     }
 
-    public function setBrokerId(int $brokerId): self
+    public function setControllerId(int $controllerId): self
     {
-        $this->brokerId = $brokerId;
+        $this->controllerId = $controllerId;
 
         return $this;
     }

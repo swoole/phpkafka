@@ -14,20 +14,20 @@ class DescribeGroupsRequest extends AbstractRequest
      *
      * @var string[]
      */
-    protected $groupId = [];
+    protected $groups = [];
 
     /**
      * Whether to include authorized operations.
      *
      * @var bool
      */
-    protected $includeAuthorizedOperations;
+    protected $includeAuthorizedOperations = false;
 
     public function __construct()
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('groupId', 'string', true, [0, 1, 2, 3, 4, 5], [5], [], [], null),
+                new ProtocolField('groups', 'string', true, [0, 1, 2, 3, 4, 5], [5], [], [], null),
                 new ProtocolField('includeAuthorizedOperations', 'bool', false, [3, 4, 5], [5], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -53,17 +53,17 @@ class DescribeGroupsRequest extends AbstractRequest
     /**
      * @return string[]
      */
-    public function getGroupId(): array
+    public function getGroups(): array
     {
-        return $this->groupId;
+        return $this->groups;
     }
 
     /**
-     * @param string[] $groupId
+     * @param string[] $groups
      */
-    public function setGroupId(array $groupId): self
+    public function setGroups(array $groups): self
     {
-        $this->groupId = $groupId;
+        $this->groups = $groups;
 
         return $this;
     }

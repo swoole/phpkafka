@@ -14,14 +14,14 @@ class DeleteAclsFilterResult extends AbstractStruct
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The error message, or null if the filter succeeded.
      *
      * @var string|null
      */
-    protected $errorMessage;
+    protected $errorMessage = null;
 
     /**
      * The ACLs which matched this filter.

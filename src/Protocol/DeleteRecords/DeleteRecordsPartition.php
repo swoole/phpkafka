@@ -14,14 +14,14 @@ class DeleteRecordsPartition extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The deletion offset.
      *
      * @var int
      */
-    protected $offset;
+    protected $offset = 0;
 
     public function __construct()
     {

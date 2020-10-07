@@ -14,21 +14,21 @@ class FetchablePartitionResponse extends AbstractStruct
      *
      * @var int
      */
-    protected $partitionIndex;
+    protected $partitionIndex = 0;
 
     /**
      * The error code, or 0 if there was no fetch error.
      *
      * @var int
      */
-    protected $errorCode;
+    protected $errorCode = 0;
 
     /**
      * The current high water mark.
      *
      * @var int
      */
-    protected $highWatermark;
+    protected $highWatermark = 0;
 
     /**
      * The last stable offset (or LSO) of the partition. This is the last offset such that the state of all transactional records prior to this offset have been decided (ABORTED or COMMITTED).
@@ -49,21 +49,21 @@ class FetchablePartitionResponse extends AbstractStruct
      *
      * @var AbortedTransaction[]|null
      */
-    protected $aborted;
+    protected $aborted = null;
 
     /**
      * The preferred read replica for the consumer to use on its next fetch request.
      *
      * @var int
      */
-    protected $preferredReadReplica;
+    protected $preferredReadReplica = 0;
 
     /**
      * The record data.
      *
-     * @var string|null
+     * @var \Longyan\Kafka\Protocol\RecordBatch\RecordBatch|null
      */
-    protected $records;
+    protected $records = null;
 
     public function __construct()
     {
@@ -76,7 +76,7 @@ class FetchablePartitionResponse extends AbstractStruct
                 new ProtocolField('logStartOffset', 'int64', false, [5, 6, 7, 8, 9, 10, 11], [], [], [], null),
                 new ProtocolField('aborted', AbortedTransaction::class, true, [4, 5, 6, 7, 8, 9, 10, 11], [], [4, 5, 6, 7, 8, 9, 10, 11], [], null),
                 new ProtocolField('preferredReadReplica', 'int32', false, [11], [], [], [], null),
-                new ProtocolField('records', 'bytes', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], null),
+                new ProtocolField('records', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -178,12 +178,12 @@ class FetchablePartitionResponse extends AbstractStruct
         return $this;
     }
 
-    public function getRecords(): ?string
+    public function getRecords(): ?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch
     {
         return $this->records;
     }
 
-    public function setRecords(?string $records): self
+    public function setRecords(?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch $records): self
     {
         $this->records = $records;
 

@@ -14,7 +14,7 @@ class UpdateMetadataTopicState extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topicName = '';
 
     /**
      * The partition that we would like to update.

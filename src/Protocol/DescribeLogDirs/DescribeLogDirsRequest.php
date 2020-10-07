@@ -14,7 +14,7 @@ class DescribeLogDirsRequest extends AbstractRequest
      *
      * @var DescribableLogDirTopic[]|null
      */
-    protected $topics;
+    protected $topics = null;
 
     public function __construct()
     {

@@ -14,7 +14,7 @@ class TopicPartitions extends AbstractStruct
      *
      * @var string
      */
-    protected $topicName;
+    protected $topic = '';
 
     /**
      * The partitions of this topic whose leader should be elected.
@@ -27,7 +27,7 @@ class TopicPartitions extends AbstractStruct
     {
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
-                new ProtocolField('topicName', 'string', false, [0, 1, 2], [2], [], [], null),
+                new ProtocolField('topic', 'string', false, [0, 1, 2], [2], [], [], null),
                 new ProtocolField('partitionId', 'int32', true, [0, 1, 2], [2], [], [], null),
             ];
             self::$taggedFieldses[self::class] = [
@@ -40,14 +40,14 @@ class TopicPartitions extends AbstractStruct
         return [2];
     }
 
-    public function getTopicName(): string
+    public function getTopic(): string
     {
-        return $this->topicName;
+        return $this->topic;
     }
 
-    public function setTopicName(string $topicName): self
+    public function setTopic(string $topic): self
     {
-        $this->topicName = $topicName;
+        $this->topic = $topic;
 
         return $this;
     }

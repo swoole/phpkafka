@@ -14,21 +14,21 @@ class WritableTxnMarker extends AbstractStruct
      *
      * @var int
      */
-    protected $producerId;
+    protected $producerId = 0;
 
     /**
      * The current epoch associated with the producer ID.
      *
      * @var int
      */
-    protected $producerEpoch;
+    protected $producerEpoch = 0;
 
     /**
      * The result of the transaction to write to the partitions (false = ABORT, true = COMMIT).
      *
      * @var bool
      */
-    protected $transactionResult;
+    protected $transactionResult = false;
 
     /**
      * Each topic that we want to write transaction marker(s) for.
@@ -42,7 +42,7 @@ class WritableTxnMarker extends AbstractStruct
      *
      * @var int
      */
-    protected $coordinatorEpoch;
+    protected $coordinatorEpoch = 0;
 
     public function __construct()
     {
