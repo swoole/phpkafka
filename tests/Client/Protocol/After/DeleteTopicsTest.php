@@ -2,25 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client\Protocol;
+namespace Longyan\Kafka\Test\Client\Protocol\After;
 
 use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\Metadata\MetadataRequest;
-use Longyan\Kafka\Protocol\Metadata\MetadataRequestTopic;
-use Longyan\Kafka\Protocol\Metadata\MetadataResponse;
+use Longyan\Kafka\Protocol\DeleteTopics\DeleteTopicsRequest;
+use Longyan\Kafka\Protocol\DeleteTopics\DeleteTopicsResponse;
 use Longyan\Kafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
 
-class MetadataTest extends TestCase
+class DeleteTopicsTest extends TestCase
 {
     public function testRequest()
     {
         $client = TestUtil::createKafkaClient();
         $client->connect();
-        $request = new MetadataRequest();
-        $request->setTopics([
-            (new MetadataRequestTopic())->setName('test'),
-        ]);
+        $request = new DeleteTopicsRequest();
+        $request->setTopicNames(['CreateTopicsTest']);
+        $request->setTimeoutMs(10000);
         $correlationId = $client->send($request);
         $this->assertGreaterThan(0, $correlationId);
 
@@ -37,11 +35,11 @@ class MetadataTest extends TestCase
         /** @var ClientInterface $client */
         [$client, $correlationId] = $args;
         try {
-            /** @var MetadataResponse $response */
+            /** @var DeleteTopicsResponse $response */
             $response = $client->recv($correlationId);
-            $topics = $response->getTopics();
-            $this->assertCount(1, $topics);
-            $this->assertEquals('test', $topics[0]->getName());
+            $responses = $response->getResponses();
+            $this->assertCount(1, $responses);
+            $this->assertEquals('CreateTopicsTest', $responses[0]->getName());
         } finally {
             $client->close();
         }

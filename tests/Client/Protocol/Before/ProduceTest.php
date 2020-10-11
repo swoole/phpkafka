@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client\Protocol;
+namespace Longyan\Kafka\Test\Client\Protocol\Before;
 
 use Longyan\Kafka\Client\ClientInterface;
 use Longyan\Kafka\Protocol\Produce\PartitionProduceData;
