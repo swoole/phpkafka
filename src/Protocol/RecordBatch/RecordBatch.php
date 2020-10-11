@@ -112,6 +112,9 @@ class RecordBatch extends AbstractStruct
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
         $length = Int32::unpack($data, $tmpSize);
+        if ($length <= 0) {
+            return;
+        }
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
 
@@ -171,6 +174,31 @@ class RecordBatch extends AbstractStruct
         $this->records = ArrayInt32::unpack($data, $tmpSize, Record::class);
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
+    }
+
+    public function toArray(): array
+    {
+        $array = [
+            'baseOffset'           => $this->baseOffset,
+            'batchLength'          => $this->batchLength,
+            'partitionLeaderEpoch' => $this->partitionLeaderEpoch,
+            'magic'                => $this->magic,
+            'crc'                  => $this->crc,
+            'attributes'           => $this->attributes->getValue(),
+            'lastOffsetDelta'      => $this->lastOffsetDelta,
+            'firstTimestamp'       => $this->firstTimestamp,
+            'maxTimestamp'         => $this->maxTimestamp,
+            'producerId'           => $this->producerId,
+            'producerEpoch'        => $this->producerEpoch,
+            'baseSequence'         => $this->baseSequence,
+        ];
+        $records = [];
+        foreach ($this->records as $record) {
+            $records[] = $record->toArray();
+        }
+        $array['records'] = $records;
+
+        return $array;
     }
 
     public function getFlexibleVersions(): array

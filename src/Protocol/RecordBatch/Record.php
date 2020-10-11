@@ -101,18 +101,45 @@ class Record extends AbstractStruct
         $size += $tmpSize;
 
         $len = VarInt::unpack($data, $tmpSize);
-        $this->key = substr($data, 0, $len);
-        $data = substr($data, $tmpSize + $len);
+        if ($len > 0) {
+            $this->key = substr($data, $tmpSize, $len);
+            $data = substr($data, $tmpSize + $len);
+        } else {
+            $data = substr($data, $tmpSize);
+        }
         $size += $tmpSize;
 
         $len = VarInt::unpack($data, $tmpSize);
-        $this->value = substr($data, 0, $len);
-        $data = substr($data, $tmpSize + $len);
+        if ($len > 0) {
+            $this->value = substr($data, $tmpSize, $len);
+            $data = substr($data, $tmpSize + $len);
+        } else {
+            $data = substr($data, $tmpSize);
+        }
         $size += $tmpSize;
 
-        $this->headers = CompactArray::unpack($data, $tmpSize, RecordHeader::class);
+        $this->headers = CompactArray::unpack($data, $tmpSize, RecordHeader::class) ?? [];
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
+    }
+
+    public function toArray(): array
+    {
+        $array = [
+            'length'         => $this->length,
+            'attributes'     => $this->attributes,
+            'timestampDelta' => $this->timestampDelta,
+            'offsetDelta'    => $this->offsetDelta,
+            'key'            => $this->key,
+            'value'          => $this->value,
+        ];
+        $headers = [];
+        foreach ($this->headers as $header) {
+            $headers[] = $header->toArray();
+        }
+        $array['headers'] = $headers;
+
+        return $array;
     }
 
     public function getLength(): int
