@@ -16,28 +16,28 @@ class CompactArray extends AbstractType
     public static function pack(?array $array, ?string $elementType = null, int $apiVersion = 0): string
     {
         if (null === $array) {
-            $length = 0;
+            $result = UVarInt::pack(0);
         } else {
             $length = \count($array) + 1;
-        }
-        $result = UVarInt::pack($length);
-        foreach ($array as $item) {
-            if (null === $elementType) {
-                if ($item instanceof AbstractStruct) {
-                    $result .= $item->pack($apiVersion);
+            $result = UVarInt::pack($length);
+            foreach ($array as $item) {
+                if (null === $elementType) {
+                    if ($item instanceof AbstractStruct) {
+                        $result .= $item->pack($apiVersion);
+                    } else {
+                        throw new InvalidArgumentException('Unrecognized element type in array');
+                    }
                 } else {
-                    throw new InvalidArgumentException('Unrecognized element type in array');
+                    if (is_subclass_of($elementType, AbstractStruct::class)) {
+                        $result .= $item->pack($apiVersion);
+                        continue;
+                    }
+                    if (is_subclass_of($elementType, AbstractType::class)) {
+                        $result .= $elementType::pack($item);
+                        continue;
+                    }
+                    throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
                 }
-            } else {
-                if (is_subclass_of($elementType, AbstractStruct::class)) {
-                    $result .= $item->pack($apiVersion);
-                    continue;
-                }
-                if (is_subclass_of($elementType, AbstractType::class)) {
-                    $result .= $elementType::pack($item);
-                    continue;
-                }
-                throw new InvalidArgumentException(sprintf('Invalid type %s', $elementType));
             }
         }
 
@@ -54,8 +54,8 @@ class CompactArray extends AbstractType
                 $size += $tmpSize;
                 $value = substr($value, $tmpSize);
                 if (is_subclass_of($elementType, AbstractStruct::class)) {
-                    /* @var AbstractStruct $item */
-                    $array[] = $item = new $elementType();
+                    /** @var AbstractStruct $item */
+                    $item = $array[] = new $elementType();
                     $item->unpack($value, $tmpSize, $apiVersion);
                     continue;
                 }

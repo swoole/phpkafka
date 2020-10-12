@@ -58,8 +58,8 @@ class ArrayInt32 extends AbstractType
                     $size += $tmpSize;
                     $value = substr($value, $tmpSize);
                     if (is_subclass_of($elementType, AbstractStruct::class)) {
-                        /* @var AbstractStruct $item */
-                        $array[] = $item = new $elementType();
+                        /** @var AbstractStruct $item */
+                        $item = $array[] = new $elementType();
                         $item->unpack($value, $tmpSize, $apiVersion);
                         continue;
                     }

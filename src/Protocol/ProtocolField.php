@@ -82,8 +82,6 @@ class ProtocolField
     }
 
     /**
-     * Get the value of flexibleVersions.
-     *
      * @return int[]
      */
     public function getFlexibleVersions(): array

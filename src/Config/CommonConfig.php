@@ -9,12 +9,12 @@ class CommonConfig extends AbstractConfig
     /**
      * @var float
      */
-    private $sendTimeout = -1;
+    protected $sendTimeout = -1;
 
     /**
      * @var float
      */
-    private $recvTimeout = -1;
+    protected $recvTimeout = -1;
 
     /**
      * The client ID string.
