@@ -129,7 +129,7 @@ class SyncClient implements ClientInterface
      *
      * If successful, return the correlationId
      */
-    public function send(AbstractRequest $request, ?RequestHeader $header = null): int
+    public function send(AbstractRequest $request, ?RequestHeader $header = null, bool $hasResponse = true): int
     {
         $apiKey = $request->getRequestApiKey();
         if (null === $header) {
@@ -142,11 +142,14 @@ class SyncClient implements ClientInterface
         $kafkaRequest = new KafkaRequest($request, $header);
         $this->socket->send($kafkaRequest->pack());
         $correlationId = $header->getCorrelationId();
-        $this->waitResponseMaps[$correlationId] = [
-            'apiKey'           => $apiKey,
-            'apiVersion'       => $header->getRequestApiVersion(),
-            'flexibleVersions' => $request->getFlexibleVersions(),
-        ];
+
+        if ($hasResponse) {
+            $this->waitResponseMaps[$correlationId] = [
+                'apiKey'           => $apiKey,
+                'apiVersion'       => $header->getRequestApiVersion(),
+                'flexibleVersions' => $request->getFlexibleVersions(),
+            ];
+        }
 
         return $correlationId;
     }
@@ -168,6 +171,13 @@ class SyncClient implements ClientInterface
         unset($this->waitResponseMaps[$correlationId]);
 
         return $result;
+    }
+
+    public function sendRecv(AbstractRequest $request, ?RequestHeader $requestHeader = null, ?ResponseHeader &$responseHeader = null): AbstractResponse
+    {
+        $correlationId = $this->send($request, $requestHeader);
+
+        return $this->recv($correlationId, $responseHeader);
     }
 
     protected function updateApiVersions()

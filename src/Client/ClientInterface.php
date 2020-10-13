@@ -45,7 +45,9 @@ interface ClientInterface
      *
      * If successful, return the correlationId
      */
-    public function send(AbstractRequest $request, ?RequestHeader $header = null): int;
+    public function send(AbstractRequest $request, ?RequestHeader $header = null, bool $hasResponse = true): int;
 
     public function recv(?int $correlationId, ?ResponseHeader &$header = null): AbstractResponse;
+
+    public function sendRecv(AbstractRequest $request, ?RequestHeader $requestHeader = null, ?ResponseHeader &$responseHeader = null): AbstractResponse;
 }

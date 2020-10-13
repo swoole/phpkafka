@@ -16,9 +16,14 @@
         <testsuite name="protocol">
             <directory suffix=".php">tests/Protocol</directory>
         </testsuite>
-        <testsuite name="client">
-            <directory suffix=".php">tests/Client/Before</directory>
-            <directory suffix=".php">tests/Client/After</directory>
+        <testsuite name="clientBefore">
+            <directory suffix=".php">tests/Client/Protocol/Before</directory>
+        </testsuite>
+        <testsuite name="clientAfter">
+            <directory suffix=".php">tests/Client/Protocol/After</directory>
+        </testsuite>
+        <testsuite name="tests">
+            <file>tests/ProducerTest.php</file>
         </testsuite>
     </testsuites>
 
