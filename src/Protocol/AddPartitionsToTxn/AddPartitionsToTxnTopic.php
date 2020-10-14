@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\AddPartitionsToTxn;
+namespace longlang\phpkafka\Protocol\AddPartitionsToTxn;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class AddPartitionsToTxnTopic extends AbstractStruct
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
 use Google\CRC32\CRC32;
-use Longyan\Kafka\Protocol\Type\Int32;
-use Longyan\Kafka\Protocol\Type\Int64;
-use Longyan\Kafka\Protocol\Type\UInt32;
+use longlang\phpkafka\Protocol\Type\Int32;
+use longlang\phpkafka\Protocol\Type\Int64;
+use longlang\phpkafka\Protocol\Type\UInt32;
 
 class ProtocolUtil
 {

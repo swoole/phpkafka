@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
-use Longyan\Kafka\Protocol\Type\AbstractType;
-use Longyan\Kafka\Protocol\Type\ArrayInt32;
-use Longyan\Kafka\Protocol\Type\CompactArray;
-use Longyan\Kafka\Protocol\Type\TypeRelation;
-use Longyan\Kafka\Protocol\Type\UVarInt;
+use longlang\phpkafka\Protocol\Type\AbstractType;
+use longlang\phpkafka\Protocol\Type\ArrayInt32;
+use longlang\phpkafka\Protocol\Type\CompactArray;
+use longlang\phpkafka\Protocol\Type\TypeRelation;
+use longlang\phpkafka\Protocol\Type\UVarInt;
 
 abstract class AbstractStruct implements \JsonSerializable
 {
@@ -239,6 +239,6 @@ abstract class AbstractStruct implements \JsonSerializable
             throw new \InvalidArgumentException(sprintf('Invalid type %s', $type));
         }
 
-        return '\Longyan\Kafka\Protocol\Type\\' . TypeRelation::TYPE_RELATION[$type][$index];
+        return '\longlang\phpkafka\Protocol\Type\\' . TypeRelation::TYPE_RELATION[$type][$index];
     }
 }

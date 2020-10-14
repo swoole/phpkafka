@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Socket;
+namespace longlang\phpkafka\Socket;
 
-use Longyan\Kafka\Config\CommonConfig;
+use longlang\phpkafka\Config\CommonConfig;
 
 interface SocketInterface
 {

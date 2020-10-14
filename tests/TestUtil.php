@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test;
+namespace longlang\phpkafka\Test;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Client\SyncClient;
-use Longyan\Kafka\Config\CommonConfig;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Client\SyncClient;
+use longlang\phpkafka\Config\CommonConfig;
 
 class TestUtil
 {

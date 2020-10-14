@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Consumer;
+namespace longlang\phpkafka\Consumer;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Broker;
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Group\GroupManager;
-use Longyan\Kafka\Group\ProtocolType;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\Fetch\FetchableTopic;
-use Longyan\Kafka\Protocol\Fetch\FetchPartition;
-use Longyan\Kafka\Protocol\Fetch\FetchRequest;
-use Longyan\Kafka\Protocol\Fetch\FetchResponse;
+use longlang\phpkafka\Broker;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Group\GroupManager;
+use longlang\phpkafka\Group\ProtocolType;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\Fetch\FetchableTopic;
+use longlang\phpkafka\Protocol\Fetch\FetchPartition;
+use longlang\phpkafka\Protocol\Fetch\FetchRequest;
+use longlang\phpkafka\Protocol\Fetch\FetchResponse;
 
 class Consumer
 {

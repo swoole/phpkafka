@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Client;
+namespace longlang\phpkafka\Client;
 
-use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
-use Longyan\Kafka\Protocol\ResponseHeader\ResponseHeader;
-use Longyan\Kafka\Socket\SocketInterface;
-use Longyan\Kafka\Socket\StreamSocket;
+use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\RequestHeader\RequestHeader;
+use longlang\phpkafka\Protocol\ResponseHeader\ResponseHeader;
+use longlang\phpkafka\Socket\SocketInterface;
+use longlang\phpkafka\Socket\StreamSocket;
 
 interface ClientInterface
 {
@@ -25,12 +25,12 @@ interface ClientInterface
     public function getSocket(): SocketInterface;
 
     /**
-     * @param \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
+     * @param \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
      */
     public function setApiKeys(array $apiKeys): self;
 
     /**
-     * @return \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[]|null
+     * @return \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]|null
      */
     public function getApiKeys(): ?array;
 

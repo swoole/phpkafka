@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\LeaderAndIsr;
+namespace longlang\phpkafka\Protocol\LeaderAndIsr;
 
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class LeaderAndIsrRequest extends AbstractRequest
 {

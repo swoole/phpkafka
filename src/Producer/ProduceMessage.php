@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Producer;
+namespace longlang\phpkafka\Producer;
 
 class ProduceMessage
 {

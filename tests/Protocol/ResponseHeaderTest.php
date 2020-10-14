@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Protocol;
+namespace longlang\phpkafka\Test\Protocol;
 
-use Longyan\Kafka\Protocol\ResponseHeader\ResponseHeader;
+use longlang\phpkafka\Protocol\ResponseHeader\ResponseHeader;
 use PHPUnit\Framework\TestCase;
 
 class ResponseHeaderTest extends TestCase

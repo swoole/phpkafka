@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test;
+namespace longlang\phpkafka\Test;
 
-use Longyan\Kafka\Producer\ProduceMessage;
-use Longyan\Kafka\Producer\Producer;
-use Longyan\Kafka\Producer\ProducerConfig;
+use longlang\phpkafka\Producer\ProduceMessage;
+use longlang\phpkafka\Producer\Producer;
+use longlang\phpkafka\Producer\ProducerConfig;
 use PHPUnit\Framework\TestCase;
 
 class ProducerTest extends TestCase

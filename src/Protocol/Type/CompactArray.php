@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Type;
+namespace longlang\phpkafka\Protocol\Type;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\AbstractStruct;
 
 class CompactArray extends AbstractType
 {

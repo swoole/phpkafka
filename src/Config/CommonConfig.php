@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Config;
+namespace longlang\phpkafka\Config;
 
 class CommonConfig extends AbstractConfig
 {

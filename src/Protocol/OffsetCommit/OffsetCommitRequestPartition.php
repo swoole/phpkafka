@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\OffsetCommit;
+namespace longlang\phpkafka\Protocol\OffsetCommit;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class OffsetCommitRequestPartition extends AbstractStruct
 {

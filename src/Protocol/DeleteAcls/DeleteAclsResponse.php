@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\DeleteAcls;
+namespace longlang\phpkafka\Protocol\DeleteAcls;
 
-use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class DeleteAclsResponse extends AbstractResponse
 {

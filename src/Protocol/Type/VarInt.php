@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Type;
+namespace longlang\phpkafka\Protocol\Type;
 
-use Longyan\Kafka\Protocol\ProtocolUtil;
+use longlang\phpkafka\Protocol\ProtocolUtil;
 
 class VarInt extends AbstractType
 {

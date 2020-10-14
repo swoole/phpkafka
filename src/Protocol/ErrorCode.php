@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
-use Longyan\Kafka\Exception\KafkaErrorException;
+use longlang\phpkafka\Exception\KafkaErrorException;
 
 class ErrorCode
 {

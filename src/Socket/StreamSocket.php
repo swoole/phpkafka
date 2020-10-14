@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Socket;
+namespace longlang\phpkafka\Socket;
 
-use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Exception\ConnectionException;
-use Longyan\Kafka\Exception\SocketException;
+use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Exception\ConnectionException;
+use longlang\phpkafka\Exception\SocketException;
 
 class StreamSocket implements SocketInterface
 {
@@ -35,7 +35,7 @@ class StreamSocket implements SocketInterface
     protected $port;
 
     /**
-     * @var \Longyan\Kafka\Config\CommonConfig|null
+     * @var \longlang\phpkafka\Config\CommonConfig|null
      */
     protected $config;
 

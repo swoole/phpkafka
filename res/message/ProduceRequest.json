@@ -79,7 +79,7 @@
             },
             {
               "name": "Records",
-              "type": "\\Longyan\\Kafka\\Protocol\\RecordBatch\\RecordBatch",
+              "type": "\\longlang\\phpkafka\\Protocol\\RecordBatch\\RecordBatch",
               "versions": "0+",
               "nullableVersions": "0+",
               "about": "The record data to be produced."

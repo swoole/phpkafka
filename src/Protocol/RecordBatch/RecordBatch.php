@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\RecordBatch;
+namespace longlang\phpkafka\Protocol\RecordBatch;
 
-use Longyan\Kafka\Exception\CRC32Exception;
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolUtil;
-use Longyan\Kafka\Protocol\Type\ArrayInt32;
-use Longyan\Kafka\Protocol\Type\Int16;
-use Longyan\Kafka\Protocol\Type\Int32;
-use Longyan\Kafka\Protocol\Type\Int64;
-use Longyan\Kafka\Protocol\Type\Int8;
-use Longyan\Kafka\Protocol\Type\String32;
+use longlang\phpkafka\Exception\CRC32Exception;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolUtil;
+use longlang\phpkafka\Protocol\Type\ArrayInt32;
+use longlang\phpkafka\Protocol\Type\Int16;
+use longlang\phpkafka\Protocol\Type\Int32;
+use longlang\phpkafka\Protocol\Type\Int64;
+use longlang\phpkafka\Protocol\Type\Int8;
+use longlang\phpkafka\Protocol\Type\String32;
 
 class RecordBatch extends AbstractStruct
 {

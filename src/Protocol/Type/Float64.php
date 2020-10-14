@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Type;
+namespace longlang\phpkafka\Protocol\Type;
 
 class Float64 extends AbstractType
 {

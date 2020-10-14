@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Produce;
+namespace longlang\phpkafka\Protocol\Produce;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class PartitionProduceData extends AbstractStruct
 {
@@ -19,7 +19,7 @@ class PartitionProduceData extends AbstractStruct
     /**
      * The record data to be produced.
      *
-     * @var \Longyan\Kafka\Protocol\RecordBatch\RecordBatch|null
+     * @var \longlang\phpkafka\Protocol\RecordBatch\RecordBatch|null
      */
     protected $records = null;
 
@@ -28,7 +28,7 @@ class PartitionProduceData extends AbstractStruct
         if (!isset(self::$maps[self::class])) {
             self::$maps[self::class] = [
                 new ProtocolField('partitionIndex', 'int32', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [], [], null),
-                new ProtocolField('records', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [0, 1, 2, 3, 4, 5, 6, 7, 8], [], null),
+                new ProtocolField('records', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8], [], [0, 1, 2, 3, 4, 5, 6, 7, 8], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -52,12 +52,12 @@ class PartitionProduceData extends AbstractStruct
         return $this;
     }
 
-    public function getRecords(): ?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch
+    public function getRecords(): ?\longlang\phpkafka\Protocol\RecordBatch\RecordBatch
     {
         return $this->records;
     }
 
-    public function setRecords(?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch $records): self
+    public function setRecords(?\longlang\phpkafka\Protocol\RecordBatch\RecordBatch $records): self
     {
         $this->records = $records;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\DescribeDelegationToken;
+namespace longlang\phpkafka\Protocol\DescribeDelegationToken;
 
-use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class DescribeDelegationTokenResponse extends AbstractResponse
 {

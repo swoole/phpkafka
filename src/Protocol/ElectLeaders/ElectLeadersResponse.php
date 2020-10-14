@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\ElectLeaders;
+namespace longlang\phpkafka\Protocol\ElectLeaders;
 
-use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class ElectLeadersResponse extends AbstractResponse
 {

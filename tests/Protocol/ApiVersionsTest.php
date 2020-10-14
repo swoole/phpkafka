@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Protocol;
+namespace longlang\phpkafka\Test\Protocol;
 
-use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsRequest;
-use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponse;
-use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponseKey;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsRequest;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponse;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponseKey;
 use PHPUnit\Framework\TestCase;
 
 class ApiVersionsTest extends TestCase

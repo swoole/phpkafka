@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Produce;
+namespace longlang\phpkafka\Protocol\Produce;
 
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class ProduceRequest extends AbstractRequest
 {

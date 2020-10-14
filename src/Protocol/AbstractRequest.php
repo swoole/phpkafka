@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
 abstract class AbstractRequest extends AbstractProtocol
 {

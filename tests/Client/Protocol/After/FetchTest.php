@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client\Protocol\After;
+namespace longlang\phpkafka\Test\Client\Protocol\After;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\Fetch\FetchableTopic;
-use Longyan\Kafka\Protocol\Fetch\FetchPartition;
-use Longyan\Kafka\Protocol\Fetch\FetchRequest;
-use Longyan\Kafka\Protocol\Fetch\FetchResponse;
-use Longyan\Kafka\Test\TestUtil;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\Fetch\FetchableTopic;
+use longlang\phpkafka\Protocol\Fetch\FetchPartition;
+use longlang\phpkafka\Protocol\Fetch\FetchRequest;
+use longlang\phpkafka\Protocol\Fetch\FetchResponse;
+use longlang\phpkafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
 
 class FetchTest extends TestCase

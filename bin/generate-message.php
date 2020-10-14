@@ -1,6 +1,6 @@
 <?php
 
-use Longyan\Kafka\Generator\MessageGenerator;
+use longlang\phpkafka\Generator\MessageGenerator;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -59,7 +59,7 @@ CODE;
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
 abstract class AbstractApiKeys
 {

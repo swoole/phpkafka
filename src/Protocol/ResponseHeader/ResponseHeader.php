@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\ResponseHeader;
+namespace longlang\phpkafka\Protocol\ResponseHeader;
 
-use Longyan\Kafka\Protocol\AbstractResponseHeader;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractResponseHeader;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class ResponseHeader extends AbstractResponseHeader
 {

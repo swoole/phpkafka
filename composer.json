@@ -1,5 +1,5 @@
 {
-    "name": "longyan/kafka",
+    "name": "longlang/phpkafka",
     "description": "A kafka client. Support php-fpm and Swoole.",
     "require": {
         "php": ">=7.1",
@@ -11,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Longyan\\Kafka\\": "src"
+            "longlang\\phpkafka\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Longyan\\Kafka\\Test\\": "tests"
+            "longlang\\phpkafka\\Test\\": "tests"
         }
     },
     "scripts": {

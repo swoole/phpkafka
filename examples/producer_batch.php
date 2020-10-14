@@ -1,8 +1,8 @@
 <?php
 
-use Longyan\Kafka\Producer\ProduceMessage;
-use Longyan\Kafka\Producer\Producer;
-use Longyan\Kafka\Producer\ProducerConfig;
+use longlang\phpkafka\Producer\ProduceMessage;
+use longlang\phpkafka\Producer\Producer;
+use longlang\phpkafka\Producer\ProducerConfig;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

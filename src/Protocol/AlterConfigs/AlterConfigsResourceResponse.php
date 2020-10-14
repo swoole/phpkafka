@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\AlterConfigs;
+namespace longlang\phpkafka\Protocol\AlterConfigs;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class AlterConfigsResourceResponse extends AbstractStruct
 {

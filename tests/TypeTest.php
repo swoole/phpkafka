@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test;
+namespace longlang\phpkafka\Test;
 
-use Longyan\Kafka\Protocol\Type\ArrayInt32;
-use Longyan\Kafka\Protocol\Type\Boolean;
-use Longyan\Kafka\Protocol\Type\CompactArray;
-use Longyan\Kafka\Protocol\Type\CompactNullableString;
-use Longyan\Kafka\Protocol\Type\CompactString;
-use Longyan\Kafka\Protocol\Type\Float64;
-use Longyan\Kafka\Protocol\Type\Int16;
-use Longyan\Kafka\Protocol\Type\Int32;
-use Longyan\Kafka\Protocol\Type\Int64;
-use Longyan\Kafka\Protocol\Type\Int8;
-use Longyan\Kafka\Protocol\Type\NullableString;
-use Longyan\Kafka\Protocol\Type\String16;
-use Longyan\Kafka\Protocol\Type\UInt32;
-use Longyan\Kafka\Protocol\Type\UVarInt;
-use Longyan\Kafka\Protocol\Type\VarInt;
+use longlang\phpkafka\Protocol\Type\ArrayInt32;
+use longlang\phpkafka\Protocol\Type\Boolean;
+use longlang\phpkafka\Protocol\Type\CompactArray;
+use longlang\phpkafka\Protocol\Type\CompactNullableString;
+use longlang\phpkafka\Protocol\Type\CompactString;
+use longlang\phpkafka\Protocol\Type\Float64;
+use longlang\phpkafka\Protocol\Type\Int16;
+use longlang\phpkafka\Protocol\Type\Int32;
+use longlang\phpkafka\Protocol\Type\Int64;
+use longlang\phpkafka\Protocol\Type\Int8;
+use longlang\phpkafka\Protocol\Type\NullableString;
+use longlang\phpkafka\Protocol\Type\String16;
+use longlang\phpkafka\Protocol\Type\UInt32;
+use longlang\phpkafka\Protocol\Type\UVarInt;
+use longlang\phpkafka\Protocol\Type\VarInt;
 use PHPUnit\Framework\TestCase;
 
 class TypeTest extends TestCase

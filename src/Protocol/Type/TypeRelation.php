@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Type;
+namespace longlang\phpkafka\Protocol\Type;
 
 class TypeRelation
 {
@@ -28,7 +28,7 @@ class TypeRelation
         'string'      => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
         'bytes'       => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
         'varint'      => ['int', 'varint', 'varint', 'varint', 'varint'],
-        'RecordBatch' => ['\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch'],
+        'RecordBatch' => ['\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch'],
     ];
 
     private function __construct()

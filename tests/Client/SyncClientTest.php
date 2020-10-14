@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client;
+namespace longlang\phpkafka\Test\Client;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Test\TestUtil;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
 
 class SyncClientTest extends TestCase

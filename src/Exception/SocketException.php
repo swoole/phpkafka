@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Exception;
+namespace longlang\phpkafka\Exception;
 
 class SocketException extends \Exception
 {

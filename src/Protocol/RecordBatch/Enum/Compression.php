@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\RecordBatch\Enum;
+namespace longlang\phpkafka\Protocol\RecordBatch\Enum;
 
 class Compression
 {

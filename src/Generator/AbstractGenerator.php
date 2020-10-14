@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Generator;
+namespace longlang\phpkafka\Generator;
 
-use Longyan\Kafka\Protocol\Type\TypeRelation;
+use longlang\phpkafka\Protocol\Type\TypeRelation;
 
 abstract class AbstractGenerator
 {

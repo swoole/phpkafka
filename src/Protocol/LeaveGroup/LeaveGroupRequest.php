@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\LeaveGroup;
+namespace longlang\phpkafka\Protocol\LeaveGroup;
 
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class LeaveGroupRequest extends AbstractRequest
 {

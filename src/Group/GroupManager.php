@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Group;
+namespace longlang\phpkafka\Group;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\JoinGroup\JoinGroupRequest;
-use Longyan\Kafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
-use Longyan\Kafka\Protocol\JoinGroup\JoinGroupResponse;
-use Longyan\Kafka\Protocol\LeaveGroup\LeaveGroupRequest;
-use Longyan\Kafka\Protocol\LeaveGroup\LeaveGroupResponse;
-use Longyan\Kafka\Protocol\LeaveGroup\MemberIdentity;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequest;
+use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
+use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponse;
+use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupRequest;
+use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupResponse;
+use longlang\phpkafka\Protocol\LeaveGroup\MemberIdentity;
 
 class GroupManager
 {

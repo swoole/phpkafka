@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\TxnOffsetCommit;
+namespace longlang\phpkafka\Protocol\TxnOffsetCommit;
 
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class TxnOffsetCommitRequest extends AbstractRequest
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client\Protocol\Before;
+namespace longlang\phpkafka\Test\Client\Protocol\Before;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\Metadata\MetadataRequest;
-use Longyan\Kafka\Protocol\Metadata\MetadataRequestTopic;
-use Longyan\Kafka\Protocol\Metadata\MetadataResponse;
-use Longyan\Kafka\Test\TestUtil;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
+use longlang\phpkafka\Protocol\Metadata\MetadataRequestTopic;
+use longlang\phpkafka\Protocol\Metadata\MetadataResponse;
+use longlang\phpkafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
 
 class MetadataTest extends TestCase

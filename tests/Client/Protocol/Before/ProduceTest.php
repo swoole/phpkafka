@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Client\Protocol\Before;
+namespace longlang\phpkafka\Test\Client\Protocol\Before;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\Produce\PartitionProduceData;
-use Longyan\Kafka\Protocol\Produce\ProduceRequest;
-use Longyan\Kafka\Protocol\Produce\ProduceResponse;
-use Longyan\Kafka\Protocol\Produce\TopicProduceData;
-use Longyan\Kafka\Protocol\RecordBatch\Record;
-use Longyan\Kafka\Protocol\RecordBatch\RecordBatch;
-use Longyan\Kafka\Test\TestUtil;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Protocol\Produce\PartitionProduceData;
+use longlang\phpkafka\Protocol\Produce\ProduceRequest;
+use longlang\phpkafka\Protocol\Produce\ProduceResponse;
+use longlang\phpkafka\Protocol\Produce\TopicProduceData;
+use longlang\phpkafka\Protocol\RecordBatch\Record;
+use longlang\phpkafka\Protocol\RecordBatch\RecordBatch;
+use longlang\phpkafka\Test\TestUtil;
 use PHPUnit\Framework\TestCase;
 
 class ProduceTest extends TestCase

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka;
+namespace longlang\phpkafka;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Consumer\ConsumerConfig;
-use Longyan\Kafka\Producer\ProducerConfig;
-use Longyan\Kafka\Protocol\Metadata\MetadataRequest;
-use Longyan\Kafka\Protocol\Metadata\MetadataResponse;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Consumer\ConsumerConfig;
+use longlang\phpkafka\Producer\ProducerConfig;
+use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
+use longlang\phpkafka\Protocol\Metadata\MetadataResponse;
 
 class Broker
 {

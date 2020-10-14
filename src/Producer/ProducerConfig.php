@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Producer;
+namespace longlang\phpkafka\Producer;
 
-use Longyan\Kafka\Client\SyncClient;
-use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Socket\StreamSocket;
+use longlang\phpkafka\Client\SyncClient;
+use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Socket\StreamSocket;
 
 class ProducerConfig extends CommonConfig
 {

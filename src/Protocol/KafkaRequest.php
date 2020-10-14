@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
-use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
-use Longyan\Kafka\Protocol\Type\Int32;
+use longlang\phpkafka\Protocol\RequestHeader\RequestHeader;
+use longlang\phpkafka\Protocol\Type\Int32;
 
 class KafkaRequest
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Protocol;
+namespace longlang\phpkafka\Test\Protocol;
 
-use Longyan\Kafka\Protocol\DeleteTopics\DeletableTopicResult;
-use Longyan\Kafka\Protocol\DeleteTopics\DeleteTopicsRequest;
-use Longyan\Kafka\Protocol\DeleteTopics\DeleteTopicsResponse;
+use longlang\phpkafka\Protocol\DeleteTopics\DeletableTopicResult;
+use longlang\phpkafka\Protocol\DeleteTopics\DeleteTopicsRequest;
+use longlang\phpkafka\Protocol\DeleteTopics\DeleteTopicsResponse;
 use PHPUnit\Framework\TestCase;
 
 class DeleteTopicsTest extends TestCase

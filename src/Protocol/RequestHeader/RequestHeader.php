@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\RequestHeader;
+namespace longlang\phpkafka\Protocol\RequestHeader;
 
-use Longyan\Kafka\Protocol\AbstractRequestHeader;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractRequestHeader;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class RequestHeader extends AbstractRequestHeader
 {

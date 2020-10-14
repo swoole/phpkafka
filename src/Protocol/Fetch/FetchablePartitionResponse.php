@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\Fetch;
+namespace longlang\phpkafka\Protocol\Fetch;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class FetchablePartitionResponse extends AbstractStruct
 {
@@ -61,7 +61,7 @@ class FetchablePartitionResponse extends AbstractStruct
     /**
      * The record data.
      *
-     * @var \Longyan\Kafka\Protocol\RecordBatch\RecordBatch|null
+     * @var \longlang\phpkafka\Protocol\RecordBatch\RecordBatch|null
      */
     protected $records = null;
 
@@ -76,7 +76,7 @@ class FetchablePartitionResponse extends AbstractStruct
                 new ProtocolField('logStartOffset', 'int64', false, [5, 6, 7, 8, 9, 10, 11], [], [], [], null),
                 new ProtocolField('aborted', AbortedTransaction::class, true, [4, 5, 6, 7, 8, 9, 10, 11], [], [4, 5, 6, 7, 8, 9, 10, 11], [], null),
                 new ProtocolField('preferredReadReplica', 'int32', false, [11], [], [], [], null),
-                new ProtocolField('records', '\Longyan\Kafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], null),
+                new ProtocolField('records', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', false, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [], null),
             ];
             self::$taggedFieldses[self::class] = [
             ];
@@ -178,12 +178,12 @@ class FetchablePartitionResponse extends AbstractStruct
         return $this;
     }
 
-    public function getRecords(): ?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch
+    public function getRecords(): ?\longlang\phpkafka\Protocol\RecordBatch\RecordBatch
     {
         return $this->records;
     }
 
-    public function setRecords(?\Longyan\Kafka\Protocol\RecordBatch\RecordBatch $records): self
+    public function setRecords(?\longlang\phpkafka\Protocol\RecordBatch\RecordBatch $records): self
     {
         $this->records = $records;
 

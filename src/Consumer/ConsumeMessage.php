@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Consumer;
+namespace longlang\phpkafka\Consumer;
 
 class ConsumeMessage
 {

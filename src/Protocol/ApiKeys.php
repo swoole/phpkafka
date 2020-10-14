@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol;
+namespace longlang\phpkafka\Protocol;
 
 class ApiKeys extends AbstractApiKeys
 {
@@ -12,7 +12,7 @@ class ApiKeys extends AbstractApiKeys
         if (!$name) {
             throw new \RuntimeException(sprintf('Could not found api keys %d', $protocol));
         }
-        $class = 'Longyan\Kafka\Protocol\\' . $name . '\\' . $name . 'Response';
+        $class = 'longlang\phpkafka\Protocol\\' . $name . '\\' . $name . 'Response';
         /** @var AbstractResponse $instance */
         $instance = new $class();
         if ($data) {

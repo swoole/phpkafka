@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Generator;
+namespace longlang\phpkafka\Generator;
 
 class MessageGenerator extends AbstractGenerator
 {
@@ -150,10 +150,10 @@ CODE;
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\\{$this->apiName};
+namespace longlang\phpkafka\Protocol\\{$this->apiName};
 
-use Longyan\Kafka\Protocol\\{$extendsClassName};
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\\{$extendsClassName};
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class {$className} extends {$extendsClassName}
 {

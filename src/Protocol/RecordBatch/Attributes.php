@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\RecordBatch;
+namespace longlang\phpkafka\Protocol\RecordBatch;
 
 /**
  * 	bit 0~2:

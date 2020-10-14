@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Consumer;
+namespace longlang\phpkafka\Consumer;
 
-use Longyan\Kafka\Client\ClientInterface;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\OffsetCommit\OffsetCommitRequest;
-use Longyan\Kafka\Protocol\OffsetCommit\OffsetCommitRequestPartition;
-use Longyan\Kafka\Protocol\OffsetCommit\OffsetCommitRequestTopic;
-use Longyan\Kafka\Protocol\OffsetCommit\OffsetCommitResponse;
-use Longyan\Kafka\Protocol\OffsetFetch\OffsetFetchRequest;
-use Longyan\Kafka\Protocol\OffsetFetch\OffsetFetchRequestTopic;
-use Longyan\Kafka\Protocol\OffsetFetch\OffsetFetchResponse;
+use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequest;
+use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequestPartition;
+use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequestTopic;
+use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitResponse;
+use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchRequest;
+use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchRequestTopic;
+use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchResponse;
 
 class OffsetManager
 {

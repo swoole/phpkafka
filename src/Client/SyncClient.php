@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Client;
+namespace longlang\phpkafka\Client;
 
 use InvalidArgumentException;
-use Longyan\Kafka\Config\CommonConfig;
-use Longyan\Kafka\Exception\UnsupportedApiKeyException;
-use Longyan\Kafka\Exception\UnsupportedApiVersionException;
-use Longyan\Kafka\Protocol\AbstractRequest;
-use Longyan\Kafka\Protocol\AbstractResponse;
-use Longyan\Kafka\Protocol\ApiKeys;
-use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsRequest;
-use Longyan\Kafka\Protocol\ApiVersions\ApiVersionsResponse;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\KafkaRequest;
-use Longyan\Kafka\Protocol\RequestHeader\RequestHeader;
-use Longyan\Kafka\Protocol\ResponseHeader\ResponseHeader;
-use Longyan\Kafka\Protocol\Type\Int32;
-use Longyan\Kafka\Socket\SocketInterface;
-use Longyan\Kafka\Socket\StreamSocket;
+use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Exception\UnsupportedApiKeyException;
+use longlang\phpkafka\Exception\UnsupportedApiVersionException;
+use longlang\phpkafka\Protocol\AbstractRequest;
+use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\ApiKeys;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsRequest;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponse;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\KafkaRequest;
+use longlang\phpkafka\Protocol\RequestHeader\RequestHeader;
+use longlang\phpkafka\Protocol\ResponseHeader\ResponseHeader;
+use longlang\phpkafka\Protocol\Type\Int32;
+use longlang\phpkafka\Socket\SocketInterface;
+use longlang\phpkafka\Socket\StreamSocket;
 
 class SyncClient implements ClientInterface
 {
@@ -29,7 +29,7 @@ class SyncClient implements ClientInterface
     private $socket;
 
     /**
-     * @var \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[]
+     * @var \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]
      */
     private $apiKeys;
 
@@ -69,7 +69,7 @@ class SyncClient implements ClientInterface
     }
 
     /**
-     * @param \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
+     * @param \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
      */
     public function setApiKeys(array $apiKeys): ClientInterface
     {
@@ -83,7 +83,7 @@ class SyncClient implements ClientInterface
     }
 
     /**
-     * @return \Longyan\Kafka\Protocol\ApiVersions\ApiKeys[]|null
+     * @return \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]|null
      */
     public function getApiKeys(): ?array
     {

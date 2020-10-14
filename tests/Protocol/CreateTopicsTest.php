@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test\Protocol;
+namespace longlang\phpkafka\Test\Protocol;
 
-use Longyan\Kafka\Protocol\CreateTopics\CreatableReplicaAssignment;
-use Longyan\Kafka\Protocol\CreateTopics\CreatableTopic;
-use Longyan\Kafka\Protocol\CreateTopics\CreatableTopicConfigs;
-use Longyan\Kafka\Protocol\CreateTopics\CreatableTopicResult;
-use Longyan\Kafka\Protocol\CreateTopics\CreateableTopicConfig;
-use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsRequest;
-use Longyan\Kafka\Protocol\CreateTopics\CreateTopicsResponse;
+use longlang\phpkafka\Protocol\CreateTopics\CreatableReplicaAssignment;
+use longlang\phpkafka\Protocol\CreateTopics\CreatableTopic;
+use longlang\phpkafka\Protocol\CreateTopics\CreatableTopicConfigs;
+use longlang\phpkafka\Protocol\CreateTopics\CreatableTopicResult;
+use longlang\phpkafka\Protocol\CreateTopics\CreateableTopicConfig;
+use longlang\phpkafka\Protocol\CreateTopics\CreateTopicsRequest;
+use longlang\phpkafka\Protocol\CreateTopics\CreateTopicsResponse;
 use PHPUnit\Framework\TestCase;
 
 class CreateTopicsTest extends TestCase

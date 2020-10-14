@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\OffsetForLeaderEpoch;
+namespace longlang\phpkafka\Protocol\OffsetForLeaderEpoch;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\ProtocolField;
 
 class OffsetForLeaderPartitionResult extends AbstractStruct
 {

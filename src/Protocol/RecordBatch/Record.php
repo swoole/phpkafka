@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Protocol\RecordBatch;
+namespace longlang\phpkafka\Protocol\RecordBatch;
 
-use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\Type\CompactArray;
-use Longyan\Kafka\Protocol\Type\Int8;
-use Longyan\Kafka\Protocol\Type\VarInt;
+use longlang\phpkafka\Protocol\AbstractStruct;
+use longlang\phpkafka\Protocol\Type\CompactArray;
+use longlang\phpkafka\Protocol\Type\Int8;
+use longlang\phpkafka\Protocol\Type\VarInt;
 
 class Record extends AbstractStruct
 {

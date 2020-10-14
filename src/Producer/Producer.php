@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Producer;
+namespace longlang\phpkafka\Producer;
 
-use Longyan\Kafka\Broker;
-use Longyan\Kafka\Protocol\ErrorCode;
-use Longyan\Kafka\Protocol\Produce\PartitionProduceData;
-use Longyan\Kafka\Protocol\Produce\ProduceRequest;
-use Longyan\Kafka\Protocol\Produce\ProduceResponse;
-use Longyan\Kafka\Protocol\Produce\TopicProduceData;
-use Longyan\Kafka\Protocol\RecordBatch\Record;
-use Longyan\Kafka\Protocol\RecordBatch\RecordBatch;
+use longlang\phpkafka\Broker;
+use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\Produce\PartitionProduceData;
+use longlang\phpkafka\Protocol\Produce\ProduceRequest;
+use longlang\phpkafka\Protocol\Produce\ProduceResponse;
+use longlang\phpkafka\Protocol\Produce\TopicProduceData;
+use longlang\phpkafka\Protocol\RecordBatch\Record;
+use longlang\phpkafka\Protocol\RecordBatch\RecordBatch;
 
 class Producer
 {

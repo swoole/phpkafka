@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Longyan\Kafka\Test;
+namespace longlang\phpkafka\Test;
 
-use Longyan\Kafka\Consumer\ConsumeMessage;
-use Longyan\Kafka\Consumer\Consumer;
-use Longyan\Kafka\Consumer\ConsumerConfig;
+use longlang\phpkafka\Consumer\ConsumeMessage;
+use longlang\phpkafka\Consumer\Consumer;
+use longlang\phpkafka\Consumer\ConsumerConfig;
 use PHPUnit\Framework\TestCase;
 
 class ConsumerTest extends TestCase
