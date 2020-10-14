@@ -19,7 +19,7 @@ class AddPartitionsToTxnTopic extends AbstractStruct
     /**
      * The partition indexes to add to the transaction.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitions = [];
 
@@ -53,7 +53,7 @@ class AddPartitionsToTxnTopic extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitions(): array
     {
@@ -61,7 +61,7 @@ class AddPartitionsToTxnTopic extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitions
+     * @param int[] $partitions
      */
     public function setPartitions(array $partitions): self
     {

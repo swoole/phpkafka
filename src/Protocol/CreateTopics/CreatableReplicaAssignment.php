@@ -19,7 +19,7 @@ class CreatableReplicaAssignment extends AbstractStruct
     /**
      * The brokers to place the partition on.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $brokerIds = [];
 
@@ -53,7 +53,7 @@ class CreatableReplicaAssignment extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getBrokerIds(): array
     {
@@ -61,7 +61,7 @@ class CreatableReplicaAssignment extends AbstractStruct
     }
 
     /**
-     * @param int32[] $brokerIds
+     * @param int[] $brokerIds
      */
     public function setBrokerIds(array $brokerIds): self
     {

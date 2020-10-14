@@ -80,6 +80,7 @@ abstract class AbstractGenerator
                 $phpType = $type;
                 $typeWithNamespace = "'{$type}'";
             } else {
+                $phpType = null;
                 $hasGenerated = $this->messageGenerator->hasGenerated($type);
                 if (!$hasGenerated && !isset($field->fields)) {
                     throw new \RuntimeException(sprintf('Unsupport type %s', $type));
@@ -92,7 +93,7 @@ abstract class AbstractGenerator
             $ucPropertyName = ucfirst($propertyName);
             $about = $field->about ?? '';
             if ($isArray) {
-                $phpCommentType = $type . '[]';
+                $phpCommentType = ($phpType ?? $type) . '[]';
                 $phpType = 'array';
             } else {
                 $phpCommentType = $phpType;
@@ -216,6 +217,8 @@ CODE;
                 default:
                     return 'null';
             }
+        } elseif ('null' === $default) {
+            return 'null';
         } else {
             switch ($phpType) {
                 case 'bool':

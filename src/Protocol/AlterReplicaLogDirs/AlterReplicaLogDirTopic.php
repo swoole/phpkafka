@@ -19,7 +19,7 @@ class AlterReplicaLogDirTopic extends AbstractStruct
     /**
      * The partition indexes.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitions = [];
 
@@ -53,7 +53,7 @@ class AlterReplicaLogDirTopic extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitions(): array
     {
@@ -61,7 +61,7 @@ class AlterReplicaLogDirTopic extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitions
+     * @param int[] $partitions
      */
     public function setPartitions(array $partitions): self
     {

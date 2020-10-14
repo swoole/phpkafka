@@ -19,7 +19,7 @@ class TopicPartitions extends AbstractStruct
     /**
      * The partitions of this topic whose leader should be elected.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitionId = [];
 
@@ -53,7 +53,7 @@ class TopicPartitions extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitionId(): array
     {
@@ -61,7 +61,7 @@ class TopicPartitions extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitionId
+     * @param int[] $partitionId
      */
     public function setPartitionId(array $partitionId): self
     {

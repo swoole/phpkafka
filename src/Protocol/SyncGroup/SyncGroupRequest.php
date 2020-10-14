@@ -35,21 +35,21 @@ class SyncGroupRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * The group protocol type.
      *
      * @var string|null
      */
-    protected $protocolType = 'null';
+    protected $protocolType = null;
 
     /**
      * The group protocol name.
      *
      * @var string|null
      */
-    protected $protocolName = 'null';
+    protected $protocolName = null;
 
     /**
      * Each assignment.

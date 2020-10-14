@@ -47,7 +47,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     /**
      * The in-sync replica IDs.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $isr = [];
 
@@ -61,21 +61,21 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     /**
      * The replica IDs.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $replicas = [];
 
     /**
      * The replica IDs that we are adding this partition to, or null if no replicas are being added.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $addingReplicas = [];
 
     /**
      * The replica IDs that we are removing this partition from, or null if no replicas are being removed.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $removingReplicas = [];
 
@@ -173,7 +173,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getIsr(): array
     {
@@ -181,7 +181,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $isr
+     * @param int[] $isr
      */
     public function setIsr(array $isr): self
     {
@@ -203,7 +203,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getReplicas(): array
     {
@@ -211,7 +211,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $replicas
+     * @param int[] $replicas
      */
     public function setReplicas(array $replicas): self
     {
@@ -221,7 +221,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getAddingReplicas(): array
     {
@@ -229,7 +229,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $addingReplicas
+     * @param int[] $addingReplicas
      */
     public function setAddingReplicas(array $addingReplicas): self
     {
@@ -239,7 +239,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getRemovingReplicas(): array
     {
@@ -247,7 +247,7 @@ class LeaderAndIsrPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $removingReplicas
+     * @param int[] $removingReplicas
      */
     public function setRemovingReplicas(array $removingReplicas): self
     {

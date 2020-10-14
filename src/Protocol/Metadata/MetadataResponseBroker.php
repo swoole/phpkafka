@@ -35,7 +35,7 @@ class MetadataResponseBroker extends AbstractStruct
      *
      * @var string|null
      */
-    protected $rack = 'null';
+    protected $rack = null;
 
     public function __construct()
     {

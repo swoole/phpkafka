@@ -28,14 +28,14 @@ class SyncGroupResponse extends AbstractResponse
      *
      * @var string|null
      */
-    protected $protocolType = 'null';
+    protected $protocolType = null;
 
     /**
      * The group protocol name.
      *
      * @var string|null
      */
-    protected $protocolName = 'null';
+    protected $protocolName = null;
 
     /**
      * The member assignment.

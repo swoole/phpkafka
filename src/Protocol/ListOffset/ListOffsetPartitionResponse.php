@@ -26,7 +26,7 @@ class ListOffsetPartitionResponse extends AbstractStruct
     /**
      * The result offsets.
      *
-     * @var int64[]
+     * @var int[]
      */
     protected $oldStyleOffsets = [];
 
@@ -95,7 +95,7 @@ class ListOffsetPartitionResponse extends AbstractStruct
     }
 
     /**
-     * @return int64[]
+     * @return int[]
      */
     public function getOldStyleOffsets(): array
     {
@@ -103,7 +103,7 @@ class ListOffsetPartitionResponse extends AbstractStruct
     }
 
     /**
-     * @param int64[] $oldStyleOffsets
+     * @param int[] $oldStyleOffsets
      */
     public function setOldStyleOffsets(array $oldStyleOffsets): self
     {

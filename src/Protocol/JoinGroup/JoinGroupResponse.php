@@ -35,7 +35,7 @@ class JoinGroupResponse extends AbstractResponse
      *
      * @var string|null
      */
-    protected $protocolType = 'null';
+    protected $protocolType = null;
 
     /**
      * The group protocol selected by the coordinator.

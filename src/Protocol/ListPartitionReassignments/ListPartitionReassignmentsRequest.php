@@ -21,7 +21,7 @@ class ListPartitionReassignmentsRequest extends AbstractRequest
      *
      * @var ListPartitionReassignmentsTopics[]|null
      */
-    protected $topics = 'null';
+    protected $topics = null;
 
     public function __construct()
     {

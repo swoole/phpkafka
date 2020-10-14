@@ -28,7 +28,7 @@ class CreatePartitionsTopicResult extends AbstractStruct
      *
      * @var string|null
      */
-    protected $errorMessage = 'null';
+    protected $errorMessage = null;
 
     public function __construct()
     {

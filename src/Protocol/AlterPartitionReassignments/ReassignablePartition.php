@@ -19,9 +19,9 @@ class ReassignablePartition extends AbstractStruct
     /**
      * The replicas to place the partitions on, or null to cancel a pending reassignment for this partition.
      *
-     * @var int32[]|null
+     * @var int[]|null
      */
-    protected $replicas = 'null';
+    protected $replicas = null;
 
     public function __construct()
     {
@@ -53,7 +53,7 @@ class ReassignablePartition extends AbstractStruct
     }
 
     /**
-     * @return int32[]|null
+     * @return int[]|null
      */
     public function getReplicas(): ?array
     {
@@ -61,7 +61,7 @@ class ReassignablePartition extends AbstractStruct
     }
 
     /**
-     * @param int32[]|null $replicas
+     * @param int[]|null $replicas
      */
     public function setReplicas(?array $replicas): self
     {

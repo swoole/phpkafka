@@ -40,21 +40,21 @@ class MetadataResponsePartition extends AbstractStruct
     /**
      * The set of all nodes that host this partition.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $replicaNodes = [];
 
     /**
      * The set of nodes that are in sync with the leader for this partition.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $isrNodes = [];
 
     /**
      * The set of offline replicas of this partition.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $offlineReplicas = [];
 
@@ -129,7 +129,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getReplicaNodes(): array
     {
@@ -137,7 +137,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @param int32[] $replicaNodes
+     * @param int[] $replicaNodes
      */
     public function setReplicaNodes(array $replicaNodes): self
     {
@@ -147,7 +147,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getIsrNodes(): array
     {
@@ -155,7 +155,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @param int32[] $isrNodes
+     * @param int[] $isrNodes
      */
     public function setIsrNodes(array $isrNodes): self
     {
@@ -165,7 +165,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getOfflineReplicas(): array
     {
@@ -173,7 +173,7 @@ class MetadataResponsePartition extends AbstractStruct
     }
 
     /**
-     * @param int32[] $offlineReplicas
+     * @param int[] $offlineReplicas
      */
     public function setOfflineReplicas(array $offlineReplicas): self
     {

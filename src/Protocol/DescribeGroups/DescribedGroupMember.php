@@ -21,7 +21,7 @@ class DescribedGroupMember extends AbstractStruct
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * The client ID used in the member's latest join group request.

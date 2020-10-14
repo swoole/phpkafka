@@ -19,7 +19,7 @@ class WritableTxnMarkerTopic extends AbstractStruct
     /**
      * The indexes of the partitions to write transaction markers for.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitionIndexes = [];
 
@@ -53,7 +53,7 @@ class WritableTxnMarkerTopic extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitionIndexes(): array
     {
@@ -61,7 +61,7 @@ class WritableTxnMarkerTopic extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitionIndexes
+     * @param int[] $partitionIndexes
      */
     public function setPartitionIndexes(array $partitionIndexes): self
     {

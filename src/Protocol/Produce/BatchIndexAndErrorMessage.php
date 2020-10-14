@@ -21,7 +21,7 @@ class BatchIndexAndErrorMessage extends AbstractStruct
      *
      * @var string|null
      */
-    protected $batchIndexErrorMessage = 'null';
+    protected $batchIndexErrorMessage = null;
 
     public function __construct()
     {

@@ -28,7 +28,7 @@ class MetadataResponse extends AbstractResponse
      *
      * @var string|null
      */
-    protected $clusterId = 'null';
+    protected $clusterId = null;
 
     /**
      * The ID of the controller broker.

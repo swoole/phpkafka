@@ -56,7 +56,7 @@ class TxnOffsetCommitRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * Each topic that we want to commit offsets for.

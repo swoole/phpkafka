@@ -47,7 +47,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     /**
      * The brokers which are in the ISR for this partition.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $isr = [];
 
@@ -61,14 +61,14 @@ class UpdateMetadataPartitionState extends AbstractStruct
     /**
      * All the replicas of this partition.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $replicas = [];
 
     /**
      * The replicas of this partition which are offline.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $offlineReplicas = [];
 
@@ -157,7 +157,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getIsr(): array
     {
@@ -165,7 +165,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $isr
+     * @param int[] $isr
      */
     public function setIsr(array $isr): self
     {
@@ -187,7 +187,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getReplicas(): array
     {
@@ -195,7 +195,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $replicas
+     * @param int[] $replicas
      */
     public function setReplicas(array $replicas): self
     {
@@ -205,7 +205,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getOfflineReplicas(): array
     {
@@ -213,7 +213,7 @@ class UpdateMetadataPartitionState extends AbstractStruct
     }
 
     /**
-     * @param int32[] $offlineReplicas
+     * @param int[] $offlineReplicas
      */
     public function setOfflineReplicas(array $offlineReplicas): self
     {

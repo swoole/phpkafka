@@ -21,7 +21,7 @@ class MemberIdentity extends AbstractStruct
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     public function __construct()
     {

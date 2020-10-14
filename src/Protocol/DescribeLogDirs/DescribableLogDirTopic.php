@@ -19,7 +19,7 @@ class DescribableLogDirTopic extends AbstractStruct
     /**
      * The partition indxes.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitionIndex = [];
 
@@ -53,7 +53,7 @@ class DescribableLogDirTopic extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitionIndex(): array
     {
@@ -61,7 +61,7 @@ class DescribableLogDirTopic extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitionIndex
+     * @param int[] $partitionIndex
      */
     public function setPartitionIndex(array $partitionIndex): self
     {

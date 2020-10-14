@@ -12,7 +12,7 @@ class CreatePartitionsAssignment extends AbstractStruct
     /**
      * The assigned broker IDs.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $brokerIds = [];
 
@@ -33,7 +33,7 @@ class CreatePartitionsAssignment extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getBrokerIds(): array
     {
@@ -41,7 +41,7 @@ class CreatePartitionsAssignment extends AbstractStruct
     }
 
     /**
-     * @param int32[] $brokerIds
+     * @param int[] $brokerIds
      */
     public function setBrokerIds(array $brokerIds): self
     {

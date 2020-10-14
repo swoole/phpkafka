@@ -19,7 +19,7 @@ class ForgottenTopic extends AbstractStruct
     /**
      * The partitions indexes to forget.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $forgottenPartitionIndexes = [];
 
@@ -53,7 +53,7 @@ class ForgottenTopic extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getForgottenPartitionIndexes(): array
     {
@@ -61,7 +61,7 @@ class ForgottenTopic extends AbstractStruct
     }
 
     /**
-     * @param int32[] $forgottenPartitionIndexes
+     * @param int[] $forgottenPartitionIndexes
      */
     public function setForgottenPartitionIndexes(array $forgottenPartitionIndexes): self
     {

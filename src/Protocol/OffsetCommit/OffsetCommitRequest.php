@@ -35,7 +35,7 @@ class OffsetCommitRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * The time period in ms to retain the offset.

@@ -21,7 +21,7 @@ class JoinGroupResponseMember extends AbstractStruct
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * The group member metadata.

@@ -19,7 +19,7 @@ class ListPartitionReassignmentsTopics extends AbstractStruct
     /**
      * The partitions to list partition reassignments for.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $partitionIndexes = [];
 
@@ -53,7 +53,7 @@ class ListPartitionReassignmentsTopics extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getPartitionIndexes(): array
     {
@@ -61,7 +61,7 @@ class ListPartitionReassignmentsTopics extends AbstractStruct
     }
 
     /**
-     * @param int32[] $partitionIndexes
+     * @param int[] $partitionIndexes
      */
     public function setPartitionIndexes(array $partitionIndexes): self
     {

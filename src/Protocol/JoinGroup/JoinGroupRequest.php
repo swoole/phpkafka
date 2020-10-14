@@ -42,7 +42,7 @@ class JoinGroupRequest extends AbstractRequest
      *
      * @var string|null
      */
-    protected $groupInstanceId = 'null';
+    protected $groupInstanceId = null;
 
     /**
      * The unique name the for class of protocols implemented by the group we want to join.

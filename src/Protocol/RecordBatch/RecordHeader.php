@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Longyan\Kafka\Protocol\RecordBatch;
 
 use Longyan\Kafka\Protocol\AbstractStruct;
-use Longyan\Kafka\Protocol\ProtocolField;
 use Longyan\Kafka\Protocol\Type\VarInt;
 
 class RecordHeader extends AbstractStruct

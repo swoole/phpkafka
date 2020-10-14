@@ -19,21 +19,21 @@ class OngoingPartitionReassignment extends AbstractStruct
     /**
      * The current replica set.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $replicas = [];
 
     /**
      * The set of replicas we are currently adding.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $addingReplicas = [];
 
     /**
      * The set of replicas we are currently removing.
      *
-     * @var int32[]
+     * @var int[]
      */
     protected $removingReplicas = [];
 
@@ -69,7 +69,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getReplicas(): array
     {
@@ -77,7 +77,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @param int32[] $replicas
+     * @param int[] $replicas
      */
     public function setReplicas(array $replicas): self
     {
@@ -87,7 +87,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getAddingReplicas(): array
     {
@@ -95,7 +95,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @param int32[] $addingReplicas
+     * @param int[] $addingReplicas
      */
     public function setAddingReplicas(array $addingReplicas): self
     {
@@ -105,7 +105,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @return int32[]
+     * @return int[]
      */
     public function getRemovingReplicas(): array
     {
@@ -113,7 +113,7 @@ class OngoingPartitionReassignment extends AbstractStruct
     }
 
     /**
-     * @param int32[] $removingReplicas
+     * @param int[] $removingReplicas
      */
     public function setRemovingReplicas(array $removingReplicas): self
     {
