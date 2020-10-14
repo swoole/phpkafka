@@ -83,6 +83,9 @@ class Record extends AbstractStruct
 
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
+        if ('' === $data) {
+            return;
+        }
         $size = 0;
         $this->length = VarInt::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
@@ -102,6 +105,7 @@ class Record extends AbstractStruct
 
         $len = VarInt::unpack($data, $tmpSize);
         if ($len > 0) {
+            $size += $len;
             $this->key = substr($data, $tmpSize, $len);
             $data = substr($data, $tmpSize + $len);
         } else {
@@ -111,6 +115,7 @@ class Record extends AbstractStruct
 
         $len = VarInt::unpack($data, $tmpSize);
         if ($len > 0) {
+            $size += $len;
             $this->value = substr($data, $tmpSize, $len);
             $data = substr($data, $tmpSize + $len);
         } else {
