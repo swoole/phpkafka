@@ -65,6 +65,17 @@ class Broker
         $this->setBrokers($brokers);
     }
 
+    public function getClient(?int $brokerId = null): ClientInterface
+    {
+        if (null === $brokerId) {
+            return $this->getRandomClient();
+        } elseif (isset($this->brokers[$brokerId])) {
+            return $this->brokers[$brokerId];
+        } else {
+            throw new InvalidArgumentException(sprintf('Not found brokerId %s', $brokerId));
+        }
+    }
+
     public function getRandomClient(): ClientInterface
     {
         $brokers = $this->getBrokers();

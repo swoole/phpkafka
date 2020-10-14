@@ -36,7 +36,7 @@ class Producer
         }
     }
 
-    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], int $partitionIndex = 0)
+    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], int $partitionIndex = 0, ?int $brokerId = null)
     {
         $config = $this->config;
         $request = new ProduceRequest();
@@ -71,7 +71,7 @@ class Producer
         $request->setTopics([$topicData]);
 
         $hasResponse = 0 !== $acks;
-        $client = $this->broker->getRandomClient();
+        $client = $this->broker->getClient($brokerId);
         $correlationId = $client->send($request, null, $hasResponse);
         if (!$hasResponse) {
             return;
@@ -90,7 +90,7 @@ class Producer
      *
      * @return void
      */
-    public function sendBatch(array $messages)
+    public function sendBatch(array $messages, ?int $brokerId = null)
     {
         $config = $this->config;
         $request = new ProduceRequest();
@@ -150,7 +150,7 @@ class Producer
         $request->setTopics($topicsMap);
 
         $hasResponse = 0 !== $acks;
-        $client = $this->broker->getRandomClient();
+        $client = $this->broker->getClient($brokerId);
         $correlationId = $client->send($request, null, $hasResponse);
         if (!$hasResponse) {
             return;
