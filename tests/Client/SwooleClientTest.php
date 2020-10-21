@@ -5,15 +5,23 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Test\Client;
 
 use longlang\phpkafka\Client\ClientInterface;
-use longlang\phpkafka\Client\SyncClient;
+use longlang\phpkafka\Client\SwooleClient;
 use longlang\phpkafka\Test\TestUtil;
-use PHPUnit\Framework\TestCase;
+use Swoole\Coroutine;
 
-class SyncClientTest extends TestCase
+class SwooleClientTest extends SyncClientTest
 {
+    private function checkSwoole()
+    {
+        if (!\extension_loaded('swoole') || -1 === Coroutine::getCid()) {
+            $this->markTestSkipped();
+        }
+    }
+
     public function testClient()
     {
-        $client = TestUtil::createKafkaClient(SyncClient::class);
+        $this->checkSwoole();
+        $client = TestUtil::createKafkaClient(SwooleClient::class);
         $this->assertEquals(TestUtil::getHost(), $client->getHost());
         $this->assertEquals(TestUtil::getPort(), $client->getPort());
 
@@ -27,10 +35,9 @@ class SyncClientTest extends TestCase
      */
     public function testConnect(ClientInterface $client)
     {
-        $client->connect();
-        $this->assertTrue(true);
+        $this->checkSwoole();
 
-        return $client;
+        return parent::testConnect($client);
     }
 
     /**
@@ -40,7 +47,9 @@ class SyncClientTest extends TestCase
      */
     public function testGetApiKeys(ClientInterface $client)
     {
-        $this->assertNotEmpty($client->getApiKeys());
+        $this->checkSwoole();
+
+        return parent::testGetApiKeys($client);
     }
 
     /**
@@ -50,6 +59,8 @@ class SyncClientTest extends TestCase
      */
     public function testClose(ClientInterface $client)
     {
-        $this->assertTrue($client->close());
+        $this->checkSwoole();
+
+        return parent::testClose($client);
     }
 }

@@ -9,6 +9,11 @@ class CommonConfig extends AbstractConfig
     /**
      * @var float
      */
+    protected $connectTimeout = -1;
+
+    /**
+     * @var float
+     */
     protected $sendTimeout = -1;
 
     /**
@@ -27,6 +32,18 @@ class CommonConfig extends AbstractConfig
      * @var int
      */
     protected $maxWriteAttempts = 3;
+
+    public function getConnectTimeout(): float
+    {
+        return $this->connectTimeout;
+    }
+
+    public function setConnectTimeout(float $connectTimeout): self
+    {
+        $this->connectTimeout = $connectTimeout;
+
+        return $this;
+    }
 
     public function setSendTimeout(float $value): self
     {

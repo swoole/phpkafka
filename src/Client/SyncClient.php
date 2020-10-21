@@ -26,22 +26,22 @@ class SyncClient implements ClientInterface
     /**
      * @var SocketInterface
      */
-    private $socket;
+    protected $socket;
 
     /**
      * @var \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]
      */
-    private $apiKeys;
+    protected $apiKeys;
 
     /**
      * @var array
      */
-    private $waitResponseMaps;
+    protected $waitResponseMaps;
 
     /**
      * @var int
      */
-    private $correlationIdIncrValue = 0;
+    protected $correlationIdIncrValue = 0;
 
     public function __construct(string $host, int $port, ?CommonConfig $config = null, string $socketClass = StreamSocket::class)
     {

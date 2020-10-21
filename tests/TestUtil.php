@@ -24,12 +24,15 @@ class TestUtil
         return (int) (getenv('KAFKA_PORT') ?: 9092);
     }
 
-    public static function createKafkaClient(): ClientInterface
+    public static function createKafkaClient(string $class = null): ClientInterface
     {
         $config = new CommonConfig();
         $config->setSendTimeout(10);
         $config->setRecvTimeout(10);
+        if (null === $class) {
+            $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
+        }
 
-        return new SyncClient(self::getHost(), self::getPort(), $config);
+        return new $class(self::getHost(), self::getPort(), $config);
     }
 }

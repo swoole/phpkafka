@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Producer;
 
-use longlang\phpkafka\Client\SyncClient;
 use longlang\phpkafka\Config\CommonConfig;
-use longlang\phpkafka\Socket\StreamSocket;
 
 class ProducerConfig extends CommonConfig
 {
     /**
      * Client class.
      *
-     * @var string
+     * @var string|null
      */
-    protected $client = SyncClient::class;
+    protected $client;
 
     /**
      * Socket class.
      *
-     * @var string
+     * @var string|null
      */
-    protected $socket = StreamSocket::class;
+    protected $socket;
 
     /**
      * @var string|string[]
@@ -63,12 +61,12 @@ class ProducerConfig extends CommonConfig
      */
     protected $partitionLeaderEpoch = -1;
 
-    public function getClient(): string
+    public function getClient(): ?string
     {
         return $this->client;
     }
 
-    public function setClient(string $client): self
+    public function setClient(?string $client): self
     {
         $this->client = $client;
 
@@ -105,15 +103,12 @@ class ProducerConfig extends CommonConfig
         return $this;
     }
 
-    public function getSocket(): string
+    public function getSocket(): ?string
     {
         return $this->socket;
     }
 
-    /**
-     * @param string $socket socket class
-     */
-    public function setSocket(string $socket): self
+    public function setSocket(?string $socket): self
     {
         $this->socket = $socket;
 

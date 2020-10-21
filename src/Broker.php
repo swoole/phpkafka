@@ -10,6 +10,7 @@ use longlang\phpkafka\Consumer\ConsumerConfig;
 use longlang\phpkafka\Producer\ProducerConfig;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
 use longlang\phpkafka\Protocol\Metadata\MetadataResponse;
+use longlang\phpkafka\Util\KafkaUtil;
 
 class Broker
 {
@@ -49,9 +50,9 @@ class Broker
             throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $config->getBootstrapServer()));
         }
 
-        $clientClass = $config->getClient();
+        $clientClass = KafkaUtil::getClientClass($config->getClient());
         /** @var ClientInterface $client */
-        $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, $config->getSocket());
+        $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, KafkaUtil::getSocketClass($config->getSocket()));
         $client->connect();
         $request = new MetadataRequest();
         /** @var MetadataResponse $response */
@@ -86,10 +87,10 @@ class Broker
         }
         $config = $this->config;
         if (!isset($this->clients[$index])) {
-            $clientClass = $config->getClient();
+            $clientClass = KafkaUtil::getClientClass($config->getClient());
 
             /** @var ClientInterface $client */
-            $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, $config->getSocket());
+            $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, KafkaUtil::getSocketClass($config->getSocket()));
             $client->connect();
             $this->clients[$index] = $client;
         }

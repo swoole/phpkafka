@@ -69,17 +69,20 @@ class StreamSocket implements SocketInterface
         return $this->config;
     }
 
+    public function isConnected(): bool
+    {
+        return null !== $this->socket;
+    }
+
     public function connect(): void
     {
         $uri = sprintf('tcp://%s:%s', $this->host, $this->port);
-        $context = stream_context_create([]);
         $socket = stream_socket_client(
             $uri,
             $errno,
             $errstr,
-            $this->config->getSendTimeout(),
-            \STREAM_CLIENT_CONNECT,
-            $context
+            $this->config->getConnectTimeout(),
+            \STREAM_CLIENT_CONNECT
         );
 
         if (!\is_resource($socket)) {
@@ -100,7 +103,7 @@ class StreamSocket implements SocketInterface
         }
     }
 
-    public function send(string $data): int
+    public function send(string $data, ?float $timeout = null): int
     {
         // fwrite to a socket may be partial, so loop until we
         // are done with the entire buffer
@@ -109,9 +112,12 @@ class StreamSocket implements SocketInterface
 
         $bytesToWrite = \strlen($data);
 
+        if (null === $timeout) {
+            $timeout = $this->config->getSendTimeout();
+        }
         while ($bytesWritten < $bytesToWrite) {
             // wait for stream to become available for writing
-            $writable = $this->select([$this->socket], $this->config->getSendTimeout(), false);
+            $writable = $this->select([$this->socket], $timeout, false);
 
             if (false === $writable) {
                 throw new SocketException('Could not write ' . $bytesToWrite . ' bytes to stream');
@@ -156,13 +162,16 @@ class StreamSocket implements SocketInterface
         return $bytesWritten;
     }
 
-    public function recv(int $length): string
+    public function recv(int $length, ?float $timeout = null): string
     {
         if ($length > self::READ_MAX_LENGTH) {
             throw new SocketException(sprintf('Invalid length %d given, it should be lesser than or equals to %d', $length, self::READ_MAX_LENGTH));
         }
 
-        $readable = $this->select([$this->socket], $this->config->getRecvTimeout());
+        if (null === $timeout) {
+            $timeout = $this->config->getRecvTimeout();
+        }
+        $readable = $this->select([$this->socket], $timeout);
 
         if (false === $readable) {
             $this->close();
@@ -171,7 +180,6 @@ class StreamSocket implements SocketInterface
 
         if (0 === $readable) { // select timeout
             $res = $this->getMetaData();
-            $this->close();
 
             if (!empty($res['timed_out'])) {
                 throw new SocketException(sprintf('Timed out reading %d bytes from stream', $length));
@@ -193,7 +201,7 @@ class StreamSocket implements SocketInterface
                     throw new SocketException(sprintf('Unexpected EOF while reading %d bytes from stream (no data)', $length));
                 }
                 // Otherwise wait for bytes
-                $readable = $this->select([$this->socket], $this->config->getRecvTimeout());
+                $readable = $this->select([$this->socket], $timeout);
                 if (1 !== $readable) {
                     throw new SocketException(sprintf('Timed out while reading %d bytes from stream, %d bytes are still needed', $length, $remainingBytes));
                 }

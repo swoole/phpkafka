@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Consumer;
 
-use longlang\phpkafka\Client\SyncClient;
 use longlang\phpkafka\Config\CommonConfig;
-use longlang\phpkafka\Socket\StreamSocket;
 
 class ConsumerConfig extends CommonConfig
 {
     /**
      * Client class.
      *
-     * @var string
+     * @var string|null
      */
-    protected $client = SyncClient::class;
+    protected $client;
 
     /**
      * Socket class.
      *
-     * @var string
+     * @var string|null
      */
-    protected $socket = StreamSocket::class;
+    protected $socket;
 
     /**
      * @var string
@@ -89,27 +87,24 @@ class ConsumerConfig extends CommonConfig
      */
     protected $autoCommit = true;
 
-    public function getClient(): string
+    public function getClient(): ?string
     {
         return $this->client;
     }
 
-    public function setClient(string $client): self
+    public function setClient(?string $client): self
     {
         $this->client = $client;
 
         return $this;
     }
 
-    public function getSocket(): string
+    public function getSocket(): ?string
     {
         return $this->socket;
     }
 
-    /**
-     * @param string $socket socket class
-     */
-    public function setSocket(string $socket): self
+    public function setSocket(?string $socket): self
     {
         $this->socket = $socket;
 

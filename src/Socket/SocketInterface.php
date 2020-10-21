@@ -16,11 +16,13 @@ interface SocketInterface
 
     public function getConfig(): CommonConfig;
 
+    public function isConnected(): bool;
+
     public function connect(): void;
 
     public function close(): bool;
 
-    public function send(string $data): int;
+    public function send(string $data, ?float $timeout = null): int;
 
-    public function recv(int $length): string;
+    public function recv(int $length, ?float $timeout = null): string;
 }
