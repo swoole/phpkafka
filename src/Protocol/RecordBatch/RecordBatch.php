@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Protocol\RecordBatch;
 
 use longlang\phpkafka\Exception\CRC32Exception;
+use longlang\phpkafka\Exception\UnsupportedCompressionException;
 use longlang\phpkafka\Protocol\AbstractStruct;
 use longlang\phpkafka\Protocol\ProtocolUtil;
+use longlang\phpkafka\Protocol\RecordBatch\Enum\Compression;
 use longlang\phpkafka\Protocol\Type\ArrayInt32;
 use longlang\phpkafka\Protocol\Type\Int16;
 use longlang\phpkafka\Protocol\Type\Int32;
 use longlang\phpkafka\Protocol\Type\Int64;
 use longlang\phpkafka\Protocol\Type\Int8;
 use longlang\phpkafka\Protocol\Type\String32;
+use longlang\phpkafka\Util\LZ4;
 
 class RecordBatch extends AbstractStruct
 {
@@ -34,7 +37,7 @@ class RecordBatch extends AbstractStruct
     /**
      * @var int
      */
-    protected $magic = 0;
+    protected $magic = 2;
 
     /**
      * @var int
@@ -96,7 +99,40 @@ class RecordBatch extends AbstractStruct
         $data .= Int64::pack($this->producerId);
         $data .= Int16::pack($this->producerEpoch);
         $data .= Int32::pack($this->baseSequence);
-        $data .= ArrayInt32::pack($this->records, null, $apiVersion);
+        $compression = $this->attributes->getCompression();
+        if (Compression::NONE === $compression) {
+            $data .= ArrayInt32::pack($this->records, null, $apiVersion);
+        } else {
+            $unCompressionContent = '';
+            foreach ($this->records as $record) {
+                $unCompressionContent .= $record->pack($apiVersion);
+            }
+            $data .= Int32::pack(\count($this->records));
+            switch ($compression) {
+                case Compression::GZIP:
+                    $data .= gzencode($unCompressionContent);
+                    break;
+                case Compression::SNAPPY:
+                    if (\function_exists('snappy_compress')) {
+                        $data .= snappy_compress($unCompressionContent);
+                    } else {
+                        throw new \RuntimeException('Please install and enable snappy extension first: https://github.com/kjdev/php-ext-snappy');
+                    }
+                    break;
+                case Compression::LZ4:
+                    $data .= LZ4::compress($unCompressionContent);
+                    break;
+                case Compression::ZSTD:
+                    if (\function_exists('zstd_compress')) {
+                        $data .= zstd_compress($unCompressionContent);
+                    } else {
+                        throw new \RuntimeException('Please install and enable zstd extension first: https://github.com/kjdev/php-ext-zstd');
+                    }
+                    break;
+                default:
+                    throw new UnsupportedCompressionException(sprintf('Unsupport compression %s', $compression));
+            }
+        }
 
         $result = '';
         $result .= Int64::pack($this->baseOffset);
@@ -171,7 +207,41 @@ class RecordBatch extends AbstractStruct
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
 
-        $this->records = ArrayInt32::unpack($data, $tmpSize, Record::class);
+        $lengthBin = substr($data, 0, 4);
+        $data = substr($data, 4);
+
+        $compression = $this->attributes->getCompression();
+        if (Compression::NONE !== $compression) {
+            switch ($compression) {
+                case Compression::GZIP:
+                    $data = gzdecode($data);
+                    break;
+                case Compression::SNAPPY:
+                    if (\function_exists('snappy_uncompress')) {
+                        $data = snappy_uncompress($data);
+                    } else {
+                        throw new \RuntimeException('Please install and enable snappy extension first: https://github.com/kjdev/php-ext-snappy');
+                    }
+                    break;
+                case Compression::LZ4:
+                    if (\function_exists('lz4_uncompress')) {
+                        $data = LZ4::uncompress($data);
+                    } else {
+                        throw new \RuntimeException('Please install and enable lz4 extension first: https://github.com/kjdev/php-ext-lz4');
+                    }
+                    break;
+                case Compression::ZSTD:
+                    if (\function_exists('zstd_uncompress')) {
+                        $data = zstd_uncompress($data);
+                    } else {
+                        throw new \RuntimeException('Please install and enable zstd extension first: https://github.com/kjdev/php-ext-zstd');
+                    }
+                    break;
+                default:
+                    throw new UnsupportedCompressionException(sprintf('Unsupport compression %s', $compression));
+            }
+        }
+        $this->records = ArrayInt32::unpack($lengthBin . $data, $tmpSize, Record::class);
         $data = substr($data, $tmpSize);
         $size += $tmpSize;
     }

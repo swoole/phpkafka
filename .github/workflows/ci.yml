@@ -15,7 +15,7 @@ jobs:
     env:
       PHP_VERSION: ${{ matrix.php }}
       KAFKA_VERSION: ${{ matrix.kafka }}
-      SWOOLE_VERSION: 4.5.4
+      SWOOLE_VERSION: 4.5.5
       KAFKA_HOST: kafka-${{ matrix.kafka }}
       KAFKA_PORT: 9092
 
@@ -37,7 +37,7 @@ jobs:
         docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
 
     - name: php-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer test
+      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer test
 
     - name: swoole-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" swoole composer swoole-test
+      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer swoole-test

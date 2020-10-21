@@ -44,7 +44,12 @@ services:
 
   swoole:
     container_name: "swoole"
-    image: "phpswoole/swoole:${SWOOLE_VERSION}-php${PHP_VERSION}"
+    build:
+      context: .
+      dockerfile: ./swoole.dockerfile
+      args:
+        SWOOLE_VERSION: ${SWOOLE_VERSION}
+        PHP_VERSION: ${PHP_VERSION}
     depends_on:
       - zookeeper
     volumes:

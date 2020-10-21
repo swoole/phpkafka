@@ -56,7 +56,6 @@ class Producer
         $recordBatch->setProducerId($config->getProducerId());
         $recordBatch->setProducerEpoch($config->getProducerEpoch());
         $recordBatch->setPartitionLeaderEpoch($config->getPartitionLeaderEpoch());
-        $recordBatch->setMagic(2);
         $record = new Record();
         $record->setKey($key);
         $record->setValue($value);
@@ -126,7 +125,6 @@ class Producer
                 $partition = $partitions[] = $partitionsMap[$topicName][$partitionIndex] = new PartitionProduceData();
                 $partition->setPartitionIndex($partitionIndex);
                 $partition->setRecords($recordBatch = new RecordBatch());
-                $recordBatch->setMagic(2);
                 $recordBatch->setProducerId($config->getProducerId());
                 $recordBatch->setProducerEpoch($config->getProducerEpoch());
                 $recordBatch->setPartitionLeaderEpoch($config->getPartitionLeaderEpoch());

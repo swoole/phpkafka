@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Protocol\RecordBatch;
 
+use longlang\phpkafka\Protocol\RecordBatch\Enum\Compression;
+
 /**
  * 	bit 0~2:
  *      0: no compression
@@ -53,22 +55,21 @@ class Attributes
 
     public function setValue(int $value)
     {
-        $binString = strrev(str_pad(decbin($value), 8, '0', \STR_PAD_LEFT));
-        $this->setCompression((int) bindec(substr($binString, 0, 3)));
-        $this->setTimestampType((int) $binString[3]);
-        $this->setIsTransactional('1' === $binString[4]);
-        $this->setIsControlBatch('1' === $binString[5]);
+        $binString = (str_pad(decbin($value), 16, '0', \STR_PAD_LEFT));
+
+        $this->setIsControlBatch('1' === $binString[10]);
+        $this->setIsTransactional('1' === $binString[11]);
+        $this->setTimestampType((int) $binString[12]);
+        $this->setCompression((int) bindec(substr($binString, 13, 3)));
     }
 
     public function getValue(): int
     {
-        $binString = strrev(
-                    str_pad(decbin($this->getCompression()), 3, '0', \STR_PAD_LEFT)
-                    . $this->getTimestampType()
-                    . decbin((int) $this->getIsTransactional())
-                    . decbin((int) $this->getIsControlBatch())
-                    . str_repeat('0', 10)
-        );
+        $binString = str_repeat('0', 10)
+        . decbin((int) $this->getIsControlBatch())
+        . decbin((int) $this->getIsTransactional())
+        . decbin(min($this->getTimestampType(), 1))
+        . str_pad(decbin(min(Compression::ZSTD, $this->getCompression())), 3, '0', \STR_PAD_LEFT);
 
         return bindec($binString);
     }
