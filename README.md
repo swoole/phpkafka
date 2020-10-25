@@ -2,7 +2,7 @@
 
 [![Latest Version](https://poser.pugx.org/longlang/phpkafka/v/stable)](https://packagist.org/packages/longlang/phpkafka)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://secure.php.net/)
-[![License](https://img.shields.io/github/license/longlang/phpkafka.svg)](https://github.com/longlang/phpkafka/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/longyan/phpkafka.svg)](https://github.com/longyan/phpkafka/blob/master/LICENSE)
 
 ## 简介
 
