@@ -43,6 +43,7 @@ use longlang\phpkafka\Consumer\ConsumerConfig;
 function consume(ConsumeMessage $message)
 {
     var_dump($message->getKey() . ':' . $message->getValue());
+    // $consumer->ack($message->getPartition()); // autoCommit设为false时，手动提交
 }
 $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
@@ -70,7 +71,7 @@ while(true)
     if($message)
     {
         var_dump($message->getKey() . ':' . $message->getValue());
-        $consumer->ack($message->getPartition()); // ack
+        $consumer->ack($message->getPartition()); // 手动提交
     }
     sleep(1);
 }
