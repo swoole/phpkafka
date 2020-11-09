@@ -1,6 +1,7 @@
 {
     "name": "longlang/phpkafka",
     "description": "A kafka client. Support php-fpm and Swoole.",
+    "license": "Apache-2.0",
     "require": {
         "php": ">=7.1",
         "google/crc32": "^0.1.0",

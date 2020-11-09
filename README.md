@@ -27,7 +27,7 @@ PHP Kafka 客户端，支持 PHP-FPM、Swoole 环境使用。
 
 - PHP >= 7.1
 - Kafka >= 1.0.0
-- Swoole >= 4.5 (可选) 
+- Swoole >= 4.5 (可选)
 
 ## 安装
 
