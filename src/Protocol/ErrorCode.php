@@ -382,7 +382,7 @@ class ErrorCode
     public static function check(int $code): bool
     {
         if (self::NONE !== $code) {
-            throw new KafkaErrorException(sprintf('[%s] %s', $code, self::getMessage($code)));
+            throw new KafkaErrorException(sprintf('[%s] %s', $code, self::getMessage($code)), $code);
         }
 
         return true;
