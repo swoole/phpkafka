@@ -406,8 +406,19 @@ class ErrorCode
             self::NOT_ENOUGH_REPLICAS_AFTER_APPEND,
             self::NOT_ENOUGH_REPLICAS,
             self::OFFSET_NOT_AVAILABLE,
+            self::REQUEST_TIMED_OUT,
             self::UNKNOWN_LEADER_EPOCH,
             self::UNSTABLE_OFFSET_COMMIT,
+            self::ELECTION_NOT_NEEDED,
+            self::ELIGIBLE_LEADERS_NOT_AVAILABLE,
+            self::FENCED_LEADER_EPOCH,
+            self::KAFKA_STORAGE_ERROR,
+            self::LEADER_NOT_AVAILABLE,
+            self::LISTENER_NOT_FOUND,
+            self::NETWORK_EXCEPTION,
+            self::PREFERRED_LEADER_NOT_AVAILABLE,
+            self::REPLICA_NOT_AVAILABLE,
+            self::UNKNOWN_TOPIC_OR_PARTITION,
         ]);
     }
 }

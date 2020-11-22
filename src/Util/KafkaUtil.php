@@ -49,7 +49,9 @@ class KafkaUtil
         $errorCode = $response->getErrorCode();
         if (!ErrorCode::success($errorCode)) {
             if ($retry > 0 && ErrorCode::canRetry($errorCode)) {
-                usleep((int) ($sleep * 1000000));
+                if ($sleep > 0) {
+                    usleep((int) ($sleep * 1000000));
+                }
 
                 return self::retry($client, $request, $retry - 1, $sleep);
             }

@@ -92,7 +92,7 @@ class Consumer
         $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions(), $config->getGroupRetry(), $config->getGroupRetrySleep());
 
         $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $generationId);
-        $offsetManager->updateOffsets();
+        $offsetManager->updateOffsets($config->getOffsetRetry());
     }
 
     public function close()
@@ -147,7 +147,7 @@ class Consumer
     public function ack(int $partition)
     {
         $this->offsetManager->addFetchOffset($partition);
-        $this->offsetManager->saveOffsets($partition);
+        $this->offsetManager->saveOffsets($partition, $this->config->getOffsetRetry());
     }
 
     protected function fetchMessages()

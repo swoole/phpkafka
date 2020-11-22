@@ -13,6 +13,7 @@ use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitResponse;
 use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchRequest;
 use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchRequestTopic;
 use longlang\phpkafka\Protocol\OffsetFetch\OffsetFetchResponse;
+use longlang\phpkafka\Util\KafkaUtil;
 
 class OffsetManager
 {
@@ -71,7 +72,7 @@ class OffsetManager
         $this->generationId = $generationId;
     }
 
-    public function updateOffsets()
+    public function updateOffsets(int $retry = 0)
     {
         $request = new OffsetFetchRequest();
         $request->setGroupId($this->groupId);
@@ -80,8 +81,7 @@ class OffsetManager
         ]);
 
         /** @var OffsetFetchResponse $response */
-        $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
+        $response = KafkaUtil::retry($this->client, $request, $retry, 0);
 
         $offsets = [];
         foreach ($response->getTopics() as $topic) {
@@ -145,7 +145,7 @@ class OffsetManager
         $this->offsets[$partition] += $offset;
     }
 
-    public function saveOffsets(?int $partition = null)
+    public function saveOffsets(?int $partition = null, int $retry = 0)
     {
         $request = new OffsetCommitRequest();
         $request->setGroupId($this->groupId);
@@ -166,11 +166,19 @@ class OffsetManager
         }
         $topic->setPartitions($partitions);
 
-        /** @var OffsetCommitResponse $response */
-        $response = $this->client->sendRecv($request);
-        foreach ($response->getTopics() as $topic) {
-            foreach ($topic->getPartitions() as $partition) {
-                ErrorCode::check($partition->getErrorCode());
+        for ($i = 0; $i <= $retry; ++$i) {
+            /** @var OffsetCommitResponse $response */
+            $response = $this->client->sendRecv($request);
+            foreach ($response->getTopics() as $topic) {
+                foreach ($topic->getPartitions() as $partition) {
+                    $errorCode = $partition->getErrorCode();
+                    if (!ErrorCode::success($errorCode)) {
+                        if ($retry > 0 && ErrorCode::canRetry($errorCode)) {
+                            continue 3;
+                        }
+                        ErrorCode::check($errorCode);
+                    }
+                }
             }
         }
     }

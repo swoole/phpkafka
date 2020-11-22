@@ -92,6 +92,11 @@ class ConsumerConfig extends CommonConfig
      */
     protected $groupRetrySleep = 1;
 
+    /**
+     * @var int
+     */
+    protected $offsetRetry = 5;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -286,6 +291,18 @@ class ConsumerConfig extends CommonConfig
     public function setGroupRetrySleep(float $groupRetrySleep): self
     {
         $this->groupRetrySleep = $groupRetrySleep;
+
+        return $this;
+    }
+
+    public function getOffsetRetry(): int
+    {
+        return $this->offsetRetry;
+    }
+
+    public function setOffsetRetry(int $offsetRetry): self
+    {
+        $this->offsetRetry = $offsetRetry;
 
         return $this;
     }

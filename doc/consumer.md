@@ -31,6 +31,7 @@
 | autoCommit | 自动提交 offset | `true` |
 | groupRetry | 分组操作，匹配预设的错误码时，自动重试次数 | `5` |
 | groupRetrySleep | 分组操作重试延迟，单位：秒 | `1` |
+| offsetRetry | 偏移量操作，匹配预设的错误码时，自动重试次数 | `5` |
 
 ## 异步消费（回调）
 
