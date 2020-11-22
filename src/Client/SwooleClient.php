@@ -104,6 +104,7 @@ class SwooleClient extends SyncClient
             $this->recvChannels[$correlationId] = $channel = new Channel(1);
         }
         $data = $channel->pop($this->getConfig()->getRecvTimeout());
+        unset($this->recvChannels[$correlationId]);
         if (false === $data) {
             throw new RuntimeException('Recv data failed');
         }
