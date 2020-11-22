@@ -15,7 +15,9 @@ use longlang\phpkafka\Protocol\Type\Int32;
 use longlang\phpkafka\Protocol\Type\Int64;
 use longlang\phpkafka\Protocol\Type\Int8;
 use longlang\phpkafka\Protocol\Type\NullableString;
+use longlang\phpkafka\Protocol\Type\NullableString32;
 use longlang\phpkafka\Protocol\Type\String16;
+use longlang\phpkafka\Protocol\Type\String32;
 use longlang\phpkafka\Protocol\Type\UInt32;
 use longlang\phpkafka\Protocol\Type\UVarInt;
 use longlang\phpkafka\Protocol\Type\VarInt;
@@ -121,6 +123,19 @@ class TypeTest extends TestCase
         $this->assertEquals(2, $size);
     }
 
+    public function testNullableString32()
+    {
+        $encodeResult = NullableString32::pack(self::TEST_STRING);
+        $this->assertEquals('000000315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals(self::TEST_STRING, NullableString32::unpack($encodeResult, $size));
+        $this->assertEquals(4 + \strlen(self::TEST_STRING), $size);
+
+        $encodeResult = NullableString32::pack(null);
+        $this->assertEquals('ffffffff', bin2hex($encodeResult));
+        $this->assertNull(NullableString32::unpack($encodeResult, $size));
+        $this->assertEquals(4, $size);
+    }
+
     public function testCompactNullableString()
     {
         $encodeResult = CompactNullableString::pack(self::TEST_STRING);
@@ -140,6 +155,14 @@ class TypeTest extends TestCase
         $this->assertEquals('00315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
         $this->assertEquals(self::TEST_STRING, String16::unpack($encodeResult, $size));
         $this->assertEquals(2 + \strlen(self::TEST_STRING), $size);
+    }
+
+    public function testString32()
+    {
+        $encodeResult = String32::pack(self::TEST_STRING);
+        $this->assertEquals('000000315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
+        $this->assertEquals(self::TEST_STRING, String32::unpack($encodeResult, $size));
+        $this->assertEquals(4 + \strlen(self::TEST_STRING), $size);
     }
 
     public function testUInt32()
