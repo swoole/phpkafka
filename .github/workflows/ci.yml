@@ -15,7 +15,7 @@ jobs:
     env:
       PHP_VERSION: ${{ matrix.php }}
       KAFKA_VERSION: ${{ matrix.kafka }}
-      SWOOLE_VERSION: 4.5.8
+      SWOOLE_VERSION: 4.5.7
       KAFKA_HOST: kafka-${{ matrix.kafka }}
       KAFKA_PORT: 9092
 
