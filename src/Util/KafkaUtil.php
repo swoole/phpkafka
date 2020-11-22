@@ -21,7 +21,7 @@ class KafkaUtil
         if (null !== $clientClass) {
             return $clientClass;
         }
-        if (method_exists(Coroutine::class, 'getCid') && -1 !== Coroutine::getCid()) {
+        if (self::inSwooleCoroutine()) {
             return SwooleClient::class;
         } else {
             return SyncClient::class;
@@ -33,7 +33,7 @@ class KafkaUtil
         if (null !== $socketClass) {
             return $socketClass;
         }
-        if (method_exists(Coroutine::class, 'getCid') && -1 !== Coroutine::getCid()) {
+        if (self::inSwooleCoroutine()) {
             return SwooleSocket::class;
         } else {
             return StreamSocket::class;
@@ -59,5 +59,10 @@ class KafkaUtil
         }
 
         return $response;
+    }
+
+    public static function inSwooleCoroutine(): bool
+    {
+        return method_exists(Coroutine::class, 'getCid') && -1 !== Coroutine::getCid();
     }
 }

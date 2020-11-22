@@ -32,6 +32,7 @@
 | groupRetry | 分组操作，匹配预设的错误码时，自动重试次数 | `5` |
 | groupRetrySleep | 分组操作重试延迟，单位：秒 | `1` |
 | offsetRetry | 偏移量操作，匹配预设的错误码时，自动重试次数 | `5` |
+| groupHeartbeat | 分组心跳时间间隔，单位：秒 | `3` |
 
 ## 异步消费（回调）
 
@@ -67,11 +68,9 @@ $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
 $config->setTopic('test');
 $consumer = new Consumer($config);
-while(true)
-{
+while(true) {
     $message = $consumer->consume();
-    if($message)
-    {
+    if($message) {
         var_dump($message->getKey() . ':' . $message->getValue());
         $consumer->ack($message->getPartition()); // 手动提交
     }

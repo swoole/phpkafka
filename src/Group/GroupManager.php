@@ -9,6 +9,8 @@ use longlang\phpkafka\Group\Struct\ConsumerGroupMemberAssignment;
 use longlang\phpkafka\Group\Struct\ConsumerGroupTopic;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorRequest;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
+use longlang\phpkafka\Protocol\Heartbeat\HeartbeatRequest;
+use longlang\phpkafka\Protocol\Heartbeat\HeartbeatResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequest;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponse;
 use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupRequest;
@@ -86,6 +88,17 @@ class GroupManager
         $request->setAssignments([
             $assignment,
         ]);
+
+        return KafkaUtil::retry($this->client, $request, $retry, $sleep);
+    }
+
+    public function heartbeat(string $groupId, string $groupInstanceId, string $memberId, int $generationId, int $retry = 0, float $sleep = 0.01): HeartbeatResponse
+    {
+        $request = new HeartbeatRequest();
+        $request->setGroupId($groupId);
+        $request->setGroupInstanceId($groupInstanceId);
+        $request->setGenerationId($generationId);
+        $request->setMemberId($memberId);
 
         return KafkaUtil::retry($this->client, $request, $retry, $sleep);
     }

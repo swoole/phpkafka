@@ -97,6 +97,11 @@ class ConsumerConfig extends CommonConfig
      */
     protected $offsetRetry = 5;
 
+    /**
+     * @var float
+     */
+    protected $groupHeartbeat = 3;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -303,6 +308,18 @@ class ConsumerConfig extends CommonConfig
     public function setOffsetRetry(int $offsetRetry): self
     {
         $this->offsetRetry = $offsetRetry;
+
+        return $this;
+    }
+
+    public function getGroupHeartbeat(): float
+    {
+        return $this->groupHeartbeat;
+    }
+
+    public function setGroupHeartbeat(float $groupHeartbeat): self
+    {
+        $this->groupHeartbeat = $groupHeartbeat;
 
         return $this;
     }

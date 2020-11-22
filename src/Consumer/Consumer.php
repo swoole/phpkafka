@@ -17,6 +17,8 @@ use longlang\phpkafka\Protocol\Fetch\FetchPartition;
 use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
+use longlang\phpkafka\Util\KafkaUtil;
+use Swoole\Timer;
 
 class Consumer
 {
@@ -55,12 +57,32 @@ class Consumer
      */
     protected $memberId;
 
+    /**
+     * @var int
+     */
+    protected $generationId;
+
     private $started = false;
 
     /**
      * @var ConsumeMessage[]
      */
     private $messages = [];
+
+    /**
+     * @var bool
+     */
+    private $swooleHeartbeat;
+
+    /**
+     * @var float
+     */
+    private $lastHeartbeatTime = 0;
+
+    /**
+     * @var int|null
+     */
+    private $heartbeatTimerId;
 
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
@@ -86,13 +108,18 @@ class Consumer
         // joinGroup
         $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000), $config->getGroupRetry(), $config->getGroupRetrySleep());
         $this->memberId = $response->getMemberId();
-        $generationId = $response->getGenerationId();
+        $this->generationId = $response->getGenerationId();
 
         // syncGroup
-        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions(), $config->getGroupRetry(), $config->getGroupRetrySleep());
+        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions(), $config->getGroupRetry(), $config->getGroupRetrySleep());
 
-        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $generationId);
+        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
         $offsetManager->updateOffsets($config->getOffsetRetry());
+
+        $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
+        if ($this->swooleHeartbeat) {
+            $this->startHeartbeat();
+        }
     }
 
     public function close()
@@ -103,6 +130,7 @@ class Consumer
             $this->groupManager->leaveGroup($groupId, $this->memberId, $config->getGroupInstanceId(), $config->getGroupRetry(), $config->getGroupRetrySleep());
         }
         $this->broker->close();
+        $this->stopHeartbeat();
     }
 
     public function start()
@@ -152,6 +180,9 @@ class Consumer
 
     protected function fetchMessages()
     {
+        if (!$this->swooleHeartbeat) {
+            $this->checkBeartbeat();
+        }
         $config = $this->config;
         $request = new FetchRequest();
         $request->setReplicaId($config->getReplicaId());
@@ -201,5 +232,35 @@ class Consumer
     public function getBroker()
     {
         return $this->broker;
+    }
+
+    protected function startHeartbeat()
+    {
+        $this->heartbeatTimerId = Timer::tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
+            $this->heartbeat();
+        });
+    }
+
+    protected function stopHeartbeat()
+    {
+        if ($this->heartbeatTimerId) {
+            Timer::clear($this->heartbeatTimerId);
+            $this->heartbeatTimerId = null;
+        }
+    }
+
+    protected function heartbeat()
+    {
+        $config = $this->config;
+        $this->groupManager->heartbeat($config->getGroupId(), $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+    }
+
+    protected function checkBeartbeat()
+    {
+        $time = microtime(true);
+        if ($time - $this->lastHeartbeatTime >= $this->config->getGroupHeartbeat()) {
+            $this->lastHeartbeatTime = $time;
+            $this->heartbeat();
+        }
     }
 }
