@@ -82,6 +82,16 @@ class ConsumerConfig extends CommonConfig
      */
     protected $autoCommit = true;
 
+    /**
+     * @var int
+     */
+    protected $groupRetry = 5;
+
+    /**
+     * @var float
+     */
+    protected $groupRetrySleep = 1;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -252,6 +262,30 @@ class ConsumerConfig extends CommonConfig
     public function setAutoCommit(bool $autoCommit): self
     {
         $this->autoCommit = $autoCommit;
+
+        return $this;
+    }
+
+    public function getGroupRetry(): int
+    {
+        return $this->groupRetry;
+    }
+
+    public function setGroupRetry(int $groupRetry): self
+    {
+        $this->groupRetry = $groupRetry;
+
+        return $this;
+    }
+
+    public function getGroupRetrySleep(): float
+    {
+        return $this->groupRetrySleep;
+    }
+
+    public function setGroupRetrySleep(float $groupRetrySleep): self
+    {
+        $this->groupRetrySleep = $groupRetrySleep;
 
         return $this;
     }

@@ -387,4 +387,27 @@ class ErrorCode
 
         return true;
     }
+
+    public static function success(int $code): bool
+    {
+        return self::NONE === $code;
+    }
+
+    public static function canRetry(int $code): bool
+    {
+        return \in_array($code, [
+            self::COORDINATOR_LOAD_IN_PROGRESS,
+            self::COORDINATOR_NOT_AVAILABLE,
+            self::CORRUPT_MESSAGE,
+            self::FETCH_SESSION_ID_NOT_FOUND,
+            self::INVALID_FETCH_SESSION_EPOCH,
+            self::NOT_CONTROLLER,
+            self::NOT_COORDINATOR,
+            self::NOT_ENOUGH_REPLICAS_AFTER_APPEND,
+            self::NOT_ENOUGH_REPLICAS,
+            self::OFFSET_NOT_AVAILABLE,
+            self::UNKNOWN_LEADER_EPOCH,
+            self::UNSTABLE_OFFSET_COMMIT,
+        ]);
+    }
 }

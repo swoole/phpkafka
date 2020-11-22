@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use longlang\phpkafka\Broker;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Consumer\Struct\ConsumerGroupMemberMetadata;
-use longlang\phpkafka\Exception\KafkaErrorException;
+use longlang\phpkafka\Group\CoordinatorType;
 use longlang\phpkafka\Group\GroupManager;
 use longlang\phpkafka\Group\ProtocolType;
 use longlang\phpkafka\Protocol\ErrorCode;
@@ -73,20 +73,7 @@ class Consumer
         $groupId = $config->getGroupId();
 
         // findCoordinator
-        while (true) {
-            try {
-                $response = $groupManager->findCoordinator($groupId);
-                break;
-            } catch (KafkaErrorException $kafkaException) {
-                if (!\in_array($kafkaException->getCode(), [
-                    ErrorCode::COORDINATOR_LOAD_IN_PROGRESS,
-                    ErrorCode::COORDINATOR_NOT_AVAILABLE,
-                ])) {
-                    throw $kafkaException;
-                }
-                usleep(10000); // sleep 10 ms
-            }
-        }
+        $response = $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
 
         $metadata = new ConsumerGroupMemberMetadata();
         $metadata->setTopics([$config->getTopic()]);
@@ -97,12 +84,12 @@ class Consumer
         ];
 
         // joinGroup
-        $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000));
+        $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000), $config->getGroupRetry(), $config->getGroupRetrySleep());
         $this->memberId = $response->getMemberId();
         $generationId = $response->getGenerationId();
 
         // syncGroup
-        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions());
+        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions(), $config->getGroupRetry(), $config->getGroupRetrySleep());
 
         $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $generationId);
         $offsetManager->updateOffsets();
@@ -113,7 +100,7 @@ class Consumer
         $config = $this->config;
         $groupId = $config->getGroupId();
         if (null !== $groupId) {
-            $this->groupManager->leaveGroup($groupId, $this->memberId, $config->getGroupInstanceId());
+            $this->groupManager->leaveGroup($groupId, $this->memberId, $config->getGroupInstanceId(), $config->getGroupRetry(), $config->getGroupRetrySleep());
         }
         $this->broker->close();
     }

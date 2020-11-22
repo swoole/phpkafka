@@ -7,7 +7,6 @@ namespace longlang\phpkafka\Group;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Group\Struct\ConsumerGroupMemberAssignment;
 use longlang\phpkafka\Group\Struct\ConsumerGroupTopic;
-use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorRequest;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequest;
@@ -18,6 +17,7 @@ use longlang\phpkafka\Protocol\LeaveGroup\MemberIdentity;
 use longlang\phpkafka\Protocol\SyncGroup\SyncGroupRequest;
 use longlang\phpkafka\Protocol\SyncGroup\SyncGroupRequestAssignment;
 use longlang\phpkafka\Protocol\SyncGroup\SyncGroupResponse;
+use longlang\phpkafka\Util\KafkaUtil;
 
 class GroupManager
 {
@@ -31,20 +31,16 @@ class GroupManager
         $this->client = $client;
     }
 
-    public function findCoordinator(string $key, int $keyType = CoordinatorType::GROUP): FindCoordinatorResponse
+    public function findCoordinator(string $key, int $keyType = CoordinatorType::GROUP, int $retry = 0, float $sleep = 0.01): FindCoordinatorResponse
     {
         $request = new FindCoordinatorRequest();
         $request->setKey($key);
         $request->setKeyType($keyType);
 
-        /** @var FindCoordinatorResponse $response */
-        $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
-
-        return $response;
+        return KafkaUtil::retry($this->client, $request, $retry, $sleep);
     }
 
-    public function joinGroup(string $groupId, string $memberId, string $protocolType, ?string $groupInstanceId = null, array $protocols = [], int $sessionTimeoutMs = 60000, int $rebalanceTimeoutMs = -1): JoinGroupResponse
+    public function joinGroup(string $groupId, string $memberId, string $protocolType, ?string $groupInstanceId = null, array $protocols = [], int $sessionTimeoutMs = 60000, int $rebalanceTimeoutMs = -1, int $retry = 0, float $sleep = 0.01): JoinGroupResponse
     {
         $request = new JoinGroupRequest();
         $request->setGroupId($groupId);
@@ -55,14 +51,10 @@ class GroupManager
         $request->setSessionTimeoutMs($sessionTimeoutMs);
         $request->setRebalanceTimeoutMs($rebalanceTimeoutMs);
 
-        /** @var JoinGroupResponse $response */
-        $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
-
-        return $response;
+        return KafkaUtil::retry($this->client, $request, $retry, $sleep);
     }
 
-    public function leaveGroup(string $groupId, string $memberId, ?string $groupInstanceId): LeaveGroupResponse
+    public function leaveGroup(string $groupId, string $memberId, ?string $groupInstanceId, int $retry = 0, float $sleep = 0.01): LeaveGroupResponse
     {
         $request = new LeaveGroupRequest();
         $request->setGroupId($groupId);
@@ -71,14 +63,10 @@ class GroupManager
             (new MemberIdentity())->setMemberId($memberId)->setGroupInstanceId($groupInstanceId),
         ]);
 
-        /** @var LeaveGroupResponse $response */
-        $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
-
-        return $response;
+        return KafkaUtil::retry($this->client, $request, $retry, $sleep);
     }
 
-    public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, string $topicName, array $partitions): SyncGroupResponse
+    public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, string $topicName, array $partitions, int $retry = 0, float $sleep = 0.01): SyncGroupResponse
     {
         $request = new SyncGroupRequest();
         $request->setGroupId($groupId);
@@ -99,11 +87,7 @@ class GroupManager
             $assignment,
         ]);
 
-        /** @var SyncGroupResponse $response */
-        $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
-
-        return $response;
+        return KafkaUtil::retry($this->client, $request, $retry, $sleep);
     }
 
     public function getClient(): ClientInterface
