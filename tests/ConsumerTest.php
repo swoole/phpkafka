@@ -16,13 +16,15 @@ class ConsumerTest extends TestCase
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
         $config->setTopic('test');
+        $config->setGroupId('testGroup');
+        $config->setClientId('test');
         $config->setInterval(0.1);
         $consumer = new Consumer($config, function (ConsumeMessage $message) {
             $consumer = $message->getConsumer();
             $this->assertNotEmpty($message->getValue());
             $consumer->stop();
-            $consumer->close();
         });
         $consumer->start();
+        $consumer->close();
     }
 }

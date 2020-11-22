@@ -22,7 +22,6 @@
 | groupId | 分组 ID | `null` |
 | memberId | 用户 ID | `null` |
 | groupInstanceId | 分组实例 ID | `null` |
-| protocols | 协议列表 | `[]` |
 | sessionTimeout | 如果超时后没有收到心跳信号，则协调器会认为该用户死亡。（单位：秒，支持小数） | `60` |
 | rebalanceTimeout | 重新平衡组时，协调器等待每个成员重新加入的最长时间（单位：秒，支持小数）。 | `60` |
 | topic | 主题名称 | `null` |

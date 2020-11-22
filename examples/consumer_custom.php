@@ -8,12 +8,12 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
 $config->setTopic('test');
+$config->setGroupId('testGroup');
+$config->setClientId('test');
 $consumer = new Consumer($config);
-while(true)
-{
+while (true) {
     $message = $consumer->consume();
-    if($message)
-    {
+    if ($message) {
         var_dump($message->getKey() . ':' . $message->getValue());
         $consumer->ack($message->getPartition()); // ack
     }

@@ -5,13 +5,19 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Group;
 
 use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Group\Struct\ConsumerGroupMemberAssignment;
+use longlang\phpkafka\Group\Struct\ConsumerGroupTopic;
 use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorRequest;
+use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequest;
-use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponse;
 use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupRequest;
 use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupResponse;
 use longlang\phpkafka\Protocol\LeaveGroup\MemberIdentity;
+use longlang\phpkafka\Protocol\SyncGroup\SyncGroupRequest;
+use longlang\phpkafka\Protocol\SyncGroup\SyncGroupRequestAssignment;
+use longlang\phpkafka\Protocol\SyncGroup\SyncGroupResponse;
 
 class GroupManager
 {
@@ -25,6 +31,19 @@ class GroupManager
         $this->client = $client;
     }
 
+    public function findCoordinator(string $key, int $keyType = CoordinatorType::GROUP): FindCoordinatorResponse
+    {
+        $request = new FindCoordinatorRequest();
+        $request->setKey($key);
+        $request->setKeyType($keyType);
+
+        /** @var FindCoordinatorResponse $response */
+        $response = $this->client->sendRecv($request);
+        ErrorCode::check($response->getErrorCode());
+
+        return $response;
+    }
+
     public function joinGroup(string $groupId, string $memberId, string $protocolType, ?string $groupInstanceId = null, array $protocols = [], int $sessionTimeoutMs = 60000, int $rebalanceTimeoutMs = -1): JoinGroupResponse
     {
         $request = new JoinGroupRequest();
@@ -32,11 +51,7 @@ class GroupManager
         $request->setGroupInstanceId($groupInstanceId);
         $request->setMemberId($memberId);
         $request->setProtocolType($protocolType);
-        $protocolsMap = [];
-        foreach ($protocols as $k => $v) {
-            $protocolsMap[] = (new JoinGroupRequestProtocol())->setName($k)->setMetadata($v);
-        }
-        $request->setProtocols($protocolsMap);
+        $request->setProtocols($protocols);
         $request->setSessionTimeoutMs($sessionTimeoutMs);
         $request->setRebalanceTimeoutMs($rebalanceTimeoutMs);
 
@@ -57,6 +72,34 @@ class GroupManager
         ]);
 
         /** @var LeaveGroupResponse $response */
+        $response = $this->client->sendRecv($request);
+        ErrorCode::check($response->getErrorCode());
+
+        return $response;
+    }
+
+    public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, string $topicName, array $partitions): SyncGroupResponse
+    {
+        $request = new SyncGroupRequest();
+        $request->setGroupId($groupId);
+        $request->setGroupInstanceId($groupInstanceId);
+        $request->setMemberId($memberId);
+        $request->setGenerationId($generationId);
+        $request->setProtocolName($protocolName);
+        $request->setProtocolType($protocolType);
+        $assignment = new SyncGroupRequestAssignment();
+        $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
+        $consumerGroupTopic = new ConsumerGroupTopic();
+        $consumerGroupTopic->setTopicName($topicName);
+        $consumerGroupTopic->setPartitions($partitions);
+        $consumerGroupMemberAssignment->setTopics([$consumerGroupTopic]);
+        $assignment->setMemberId($memberId);
+        $assignment->setAssignment($consumerGroupMemberAssignment->pack());
+        $request->setAssignments([
+            $assignment,
+        ]);
+
+        /** @var SyncGroupResponse $response */
         $response = $this->client->sendRecv($request);
         ErrorCode::check($response->getErrorCode());
 

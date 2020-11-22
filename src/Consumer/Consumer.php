@@ -7,6 +7,8 @@ namespace longlang\phpkafka\Consumer;
 use InvalidArgumentException;
 use longlang\phpkafka\Broker;
 use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Consumer\Struct\ConsumerGroupMemberMetadata;
+use longlang\phpkafka\Exception\KafkaErrorException;
 use longlang\phpkafka\Group\GroupManager;
 use longlang\phpkafka\Group\ProtocolType;
 use longlang\phpkafka\Protocol\ErrorCode;
@@ -14,6 +16,7 @@ use longlang\phpkafka\Protocol\Fetch\FetchableTopic;
 use longlang\phpkafka\Protocol\Fetch\FetchPartition;
 use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
+use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
 
 class Consumer
 {
@@ -47,6 +50,11 @@ class Consumer
      */
     protected $client;
 
+    /**
+     * @var string
+     */
+    protected $memberId;
+
     private $started = false;
 
     /**
@@ -63,10 +71,40 @@ class Consumer
         $this->client = $client = $broker->getClient();
         $this->groupManager = $groupManager = new GroupManager($client);
         $groupId = $config->getGroupId();
-        if (null !== $groupId) {
-            $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $config->getProtocols(), (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000));
+
+        // findCoordinator
+        while (true) {
+            try {
+                $response = $groupManager->findCoordinator($groupId);
+                break;
+            } catch (KafkaErrorException $kafkaException) {
+                if (!\in_array($kafkaException->getCode(), [
+                    ErrorCode::COORDINATOR_LOAD_IN_PROGRESS,
+                    ErrorCode::COORDINATOR_NOT_AVAILABLE,
+                ])) {
+                    throw $kafkaException;
+                }
+                usleep(10000); // sleep 10 ms
+            }
         }
-        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $config->getGroupId() ?? '', $config->getGroupInstanceId(), $config->getMemberId());
+
+        $metadata = new ConsumerGroupMemberMetadata();
+        $metadata->setTopics([$config->getTopic()]);
+        $metadataContent = $metadata->pack();
+        $protocolName = 'group';
+        $protocols = [
+            (new JoinGroupRequestProtocol())->setName($protocolName)->setMetadata($metadataContent),
+        ];
+
+        // joinGroup
+        $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000));
+        $this->memberId = $response->getMemberId();
+        $generationId = $response->getGenerationId();
+
+        // syncGroup
+        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions());
+
+        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $generationId);
         $offsetManager->updateOffsets();
     }
 
@@ -75,7 +113,7 @@ class Consumer
         $config = $this->config;
         $groupId = $config->getGroupId();
         if (null !== $groupId) {
-            $this->groupManager->leaveGroup($groupId, $config->getMemberId(), $config->getGroupInstanceId());
+            $this->groupManager->leaveGroup($groupId, $this->memberId, $config->getGroupInstanceId());
         }
         $this->broker->close();
     }

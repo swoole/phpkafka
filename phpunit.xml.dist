@@ -24,6 +24,7 @@
         </testsuite>
         <testsuite name="tests">
             <file>tests/ProducerTest.php</file>
+            <file>tests/ConsumerTest.php</file>
         </testsuite>
     </testsuites>
 

@@ -13,6 +13,8 @@ function consume(ConsumeMessage $message)
 $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
 $config->setTopic('test');
+$config->setGroupId('testGroup');
+$config->setClientId('test');
 $config->setInterval(0.1);
 $consumer = new Consumer($config, 'consume');
 $consumer->start();

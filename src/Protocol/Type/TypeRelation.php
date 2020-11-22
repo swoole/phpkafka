@@ -26,7 +26,7 @@ class TypeRelation
         'int32'       => ['int', 'Int32', 'Int32', 'Int32', 'Int32'],
         'int64'       => ['int', 'Int64', 'Int64', 'Int64', 'Int64'],
         'string'      => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
-        'bytes'       => ['string', 'String16', 'CompactString', 'NullableString', 'CompactNullableString'],
+        'bytes'       => ['string', 'String32', 'CompactString', 'NullableString32', 'CompactNullableString'],
         'varint'      => ['int', 'varint', 'varint', 'varint', 'varint'],
         'RecordBatch' => ['\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch', '\longlang\phpkafka\Protocol\RecordBatch\RecordBatch'],
     ];

@@ -33,9 +33,9 @@ class ConsumerConfig extends CommonConfig
     protected $interval = 0;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $groupId;
+    protected $groupId = '';
 
     /**
      * @var string
@@ -45,12 +45,7 @@ class ConsumerConfig extends CommonConfig
     /**
      * @var string|null
      */
-    protected $groupInstanceId;
-
-    /**
-     * @var array
-     */
-    protected $protocols = [];
+    protected $groupInstanceId = '';
 
     /**
      * @var float
@@ -123,12 +118,12 @@ class ConsumerConfig extends CommonConfig
         return $this;
     }
 
-    public function getGroupId(): ?string
+    public function getGroupId(): string
     {
         return $this->groupId;
     }
 
-    public function setGroupId(?string $groupId): self
+    public function setGroupId(string $groupId): self
     {
         $this->groupId = $groupId;
 
@@ -197,18 +192,6 @@ class ConsumerConfig extends CommonConfig
     public function setGroupInstanceId($groupInstanceId): self
     {
         $this->groupInstanceId = $groupInstanceId;
-
-        return $this;
-    }
-
-    public function getProtocols(): array
-    {
-        return $this->protocols;
-    }
-
-    public function setProtocols(array $protocols): self
-    {
-        $this->protocols = $protocols;
 
         return $this;
     }

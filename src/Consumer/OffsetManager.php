@@ -47,6 +47,11 @@ class OffsetManager
     protected $memberId;
 
     /**
+     * @var int
+     */
+    protected $generationId;
+
+    /**
      * offsets map.
      *
      * partition => offset
@@ -55,7 +60,7 @@ class OffsetManager
      */
     private $offsets;
 
-    public function __construct(ClientInterface $client, string $topic, array $partitions, string $groupId, ?string $groupInstanceId, string $memberId)
+    public function __construct(ClientInterface $client, string $topic, array $partitions, string $groupId, ?string $groupInstanceId, string $memberId, int $generationId)
     {
         $this->client = $client;
         $this->topic = $topic;
@@ -63,6 +68,7 @@ class OffsetManager
         $this->groupId = $groupId;
         $this->groupInstanceId = $groupInstanceId;
         $this->memberId = $memberId;
+        $this->generationId = $generationId;
     }
 
     public function updateOffsets()
@@ -145,6 +151,7 @@ class OffsetManager
         $request->setGroupId($this->groupId);
         $request->setGroupInstanceId($this->groupInstanceId);
         $request->setMemberId($this->memberId);
+        $request->setGenerationId($this->generationId);
         $topic = (new OffsetCommitRequestTopic())->setName($this->topic);
         $request->setTopics([$topic]);
         $partitions = [];
@@ -171,5 +178,10 @@ class OffsetManager
     public function getGroupId(): string
     {
         return $this->groupId;
+    }
+
+    public function getGenerationId(): int
+    {
+        return $this->generationId;
     }
 }
