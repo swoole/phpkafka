@@ -151,7 +151,7 @@ class RecordBatch extends AbstractStruct
         if ($length <= 0) {
             return;
         }
-        $data = substr($data, $tmpSize);
+        $data = substr($data, $tmpSize, $length);
         $size += $tmpSize;
 
         $size = 0;
