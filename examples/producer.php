@@ -14,7 +14,7 @@ $i = 0;
 while (true) {
     $producer->send('test', (string) microtime(true), uniqid('', true));
     var_dump(++$i);
-    sleep(3);
+    sleep(1);
 }
 
 return;
