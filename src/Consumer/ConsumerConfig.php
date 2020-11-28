@@ -102,6 +102,11 @@ class ConsumerConfig extends CommonConfig
      */
     protected $groupHeartbeat = 3;
 
+    /**
+     * @var bool
+     */
+    protected $autoCreateTopic = true;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -320,6 +325,18 @@ class ConsumerConfig extends CommonConfig
     public function setGroupHeartbeat(float $groupHeartbeat): self
     {
         $this->groupHeartbeat = $groupHeartbeat;
+
+        return $this;
+    }
+
+    public function getAutoCreateTopic(): bool
+    {
+        return $this->autoCreateTopic;
+    }
+
+    public function setAutoCreateTopic(bool $autoCreateTopic): self
+    {
+        $this->autoCreateTopic = $autoCreateTopic;
 
         return $this;
     }

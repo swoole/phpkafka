@@ -24,6 +24,7 @@
 | producerId | 生产者 ID | `-1` |
 | producerEpoch | 生产者 Epoch | `-1` |
 | partitionLeaderEpoch | 分区 Leader Epoch | `-1` |
+| autoCreateTopic | 自动创建主题 | `true` |
 
 ## 发送单个消息
 

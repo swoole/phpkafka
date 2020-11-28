@@ -33,6 +33,7 @@
 | groupRetrySleep | 分组操作重试延迟，单位：秒 | `1` |
 | offsetRetry | 偏移量操作，匹配预设的错误码时，自动重试次数 | `5` |
 | groupHeartbeat | 分组心跳时间间隔，单位：秒 | `3` |
+| autoCreateTopic | 自动创建主题 | `true` |
 
 ## 异步消费（回调）
 

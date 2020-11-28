@@ -55,6 +55,7 @@ class Broker
         $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, KafkaUtil::getSocketClass($config->getSocket()));
         $client->connect();
         $request = new MetadataRequest();
+        $request->setAllowAutoTopicCreation($config->getAutoCreateTopic());
         /** @var MetadataResponse $response */
         $response = $client->sendRecv($request);
         $client->close();

@@ -61,6 +61,11 @@ class ProducerConfig extends CommonConfig
      */
     protected $partitionLeaderEpoch = -1;
 
+    /**
+     * @var bool
+     */
+    protected $autoCreateTopic = true;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -171,6 +176,18 @@ class ProducerConfig extends CommonConfig
     public function setPartitionLeaderEpoch(int $partitionLeaderEpoch): self
     {
         $this->partitionLeaderEpoch = $partitionLeaderEpoch;
+
+        return $this;
+    }
+
+    public function getAutoCreateTopic(): bool
+    {
+        return $this->autoCreateTopic;
+    }
+
+    public function setAutoCreateTopic(bool $autoCreateTopic): self
+    {
+        $this->autoCreateTopic = $autoCreateTopic;
 
         return $this;
     }
