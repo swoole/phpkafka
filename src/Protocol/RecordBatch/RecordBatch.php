@@ -242,7 +242,6 @@ class RecordBatch extends AbstractStruct
             }
         }
         $this->records = ArrayInt32::unpack($lengthBin . $data, $tmpSize, Record::class);
-        $data = substr($data, $tmpSize);
         $size += $tmpSize;
     }
 

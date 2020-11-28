@@ -124,7 +124,6 @@ class Record extends AbstractStruct
         $size += $tmpSize;
 
         $this->headers = CompactArray::unpack($data, $tmpSize, RecordHeader::class) ?? [];
-        $data = substr($data, $tmpSize);
         $size += $tmpSize;
     }
 
