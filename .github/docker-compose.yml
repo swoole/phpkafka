@@ -59,3 +59,20 @@ services:
       core: -1
     privileged: true
     command: tail -f /etc/group
+
+  swoole-php8:
+    container_name: "swoole-php8"
+    build:
+      context: .
+      dockerfile: ./swoole-php8.dockerfile
+      args:
+        SWOOLE_DOCKER_VERSION: 4.5.9-php8.0
+    depends_on:
+      - zookeeper
+    volumes:
+      - "${GITHUB_WORKSPACE}:/kafka-client:rw"
+    working_dir: /kafka-client
+    ulimits:
+      core: -1
+    privileged: true
+    command: tail -f /etc/group
