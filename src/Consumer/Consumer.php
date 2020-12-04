@@ -8,9 +8,11 @@ use InvalidArgumentException;
 use longlang\phpkafka\Broker;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Consumer\Struct\ConsumerGroupMemberMetadata;
+use longlang\phpkafka\Exception\KafkaErrorException;
 use longlang\phpkafka\Group\CoordinatorType;
 use longlang\phpkafka\Group\GroupManager;
 use longlang\phpkafka\Group\ProtocolType;
+use longlang\phpkafka\Group\Struct\ConsumerGroupMemberAssignment;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\Fetch\FetchableTopic;
 use longlang\phpkafka\Protocol\Fetch\FetchPartition;
@@ -62,6 +64,9 @@ class Consumer
      */
     protected $generationId;
 
+    /**
+     * @var bool
+     */
     private $started = false;
 
     /**
@@ -84,18 +89,38 @@ class Consumer
      */
     private $heartbeatTimerId;
 
+    /**
+     * @var ConsumerGroupMemberAssignment
+     */
+    private $consumerGroupMemberAssignment;
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
         $this->consumeCallback = $consumeCallback;
         $this->broker = $broker = new Broker($config);
         $broker->setBrokers([$config->getBroker()]);
-        $this->client = $client = $broker->getClient();
-        $this->groupManager = $groupManager = new GroupManager($client);
+        $this->client = $broker->getClient();
+        $this->groupManager = $groupManager = new GroupManager($broker);
         $groupId = $config->getGroupId();
 
+        $this->broker->updateMetadata([$config->getTopic()]);
+
         // findCoordinator
-        $response = $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
+        $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
+
+        $this->rejoin();
+    }
+
+    public function rejoin()
+    {
+        if ($this->swooleHeartbeat) {
+            $this->stopHeartbeat();
+        }
+        $config = $this->config;
+        $groupManager = $this->groupManager;
+        $groupId = $config->getGroupId();
+        $client = $this->broker->getClient();
 
         $metadata = new ConsumerGroupMemberMetadata();
         $metadata->setTopics([$config->getTopic()]);
@@ -111,9 +136,12 @@ class Consumer
         $this->generationId = $response->getGenerationId();
 
         // syncGroup
-        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $config->getTopic(), $config->getPartitions(), $config->getGroupRetry(), $config->getGroupRetrySleep());
+        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $config->getGroupRetry(), $config->getGroupRetrySleep());
 
-        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $config->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+        $this->consumerGroupMemberAssignment = $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
+        $consumerGroupMemberAssignment->unpack($response->getAssignment());
+
+        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $this->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
         $offsetManager->updateOffsets($config->getOffsetRetry());
 
         $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
@@ -195,7 +223,7 @@ class Consumer
         $topic = $config->getTopic();
         $request->setRackId($config->getRackId());
         $fetchPartitions = [];
-        foreach ($config->getPartitions() as $partition) {
+        foreach ($this->getPartitions() as $partition) {
             $fetchPartitions[] = (new FetchPartition())->setPartitionIndex($partition)->setFetchOffset($this->offsetManager->getFetchOffset($partition));
         }
         $request->setTopics([
@@ -204,7 +232,15 @@ class Consumer
 
         /** @var FetchResponse $response */
         $response = $this->client->sendRecv($request);
-        ErrorCode::check($response->getErrorCode());
+        $errorCode = $response->getErrorCode();
+        switch ($errorCode) {
+            case ErrorCode::REBALANCE_IN_PROGRESS:
+                $this->rejoin();
+
+                return;
+            default:
+                ErrorCode::check($errorCode);
+        }
 
         $messages = [];
         foreach ($response->getTopics() as $topic) {
@@ -218,18 +254,12 @@ class Consumer
         $this->messages = $messages;
     }
 
-    /**
-     * @return ConsumerConfig
-     */
-    public function getConfig()
+    public function getConfig(): ConsumerConfig
     {
         return $this->config;
     }
 
-    /**
-     * @return Broker
-     */
-    public function getBroker()
+    public function getBroker(): Broker
     {
         return $this->broker;
     }
@@ -252,7 +282,17 @@ class Consumer
     protected function heartbeat()
     {
         $config = $this->config;
-        $this->groupManager->heartbeat($config->getGroupId(), $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+        try {
+            $this->groupManager->heartbeat($config->getGroupId(), $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+        } catch (KafkaErrorException $kafkaErrorException) {
+            switch ($kafkaErrorException->getCode()) {
+                case ErrorCode::REBALANCE_IN_PROGRESS:
+                    $this->rejoin();
+                    break;
+                default:
+                    throw $kafkaErrorException;
+            }
+        }
     }
 
     protected function checkBeartbeat()
@@ -262,5 +302,21 @@ class Consumer
             $this->lastHeartbeatTime = $time;
             $this->heartbeat();
         }
+    }
+
+    protected function getPartitions(): array
+    {
+        $partitions = [];
+        $topic = $this->config->getTopic();
+        foreach ($this->consumerGroupMemberAssignment->getTopics() as $consumerGroupMemberAssignmentTopic) {
+            if ($topic === $consumerGroupMemberAssignmentTopic->getTopicName()) {
+                foreach ($consumerGroupMemberAssignmentTopic->getPartitions() as $partition) {
+                    $partitions[] = $partition;
+                }
+                break;
+            }
+        }
+
+        return $partitions;
     }
 }

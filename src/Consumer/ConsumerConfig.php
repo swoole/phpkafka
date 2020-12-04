@@ -63,11 +63,6 @@ class ConsumerConfig extends CommonConfig
     protected $topic;
 
     /**
-     * @var int[]
-     */
-    protected $partitions = [0];
-
-    /**
      * @var int
      */
     protected $replicaId = -1;
@@ -106,6 +101,11 @@ class ConsumerConfig extends CommonConfig
      * @var bool
      */
     protected $autoCreateTopic = true;
+
+    /**
+     * @var string
+     */
+    protected $partitionAssignmentStrategy = \longlang\phpkafka\Consumer\Assignor\RangeAssignor::class;
 
     public function getClient(): ?string
     {
@@ -163,24 +163,6 @@ class ConsumerConfig extends CommonConfig
     public function setTopic(string $topic): self
     {
         $this->topic = $topic;
-
-        return $this;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getPartitions(): array
-    {
-        return $this->partitions;
-    }
-
-    /**
-     * @param int[] $partitions
-     */
-    public function setPartitions(array $partitions): self
-    {
-        $this->partitions = $partitions;
 
         return $this;
     }
@@ -337,6 +319,18 @@ class ConsumerConfig extends CommonConfig
     public function setAutoCreateTopic(bool $autoCreateTopic): self
     {
         $this->autoCreateTopic = $autoCreateTopic;
+
+        return $this;
+    }
+
+    public function getPartitionAssignmentStrategy(): string
+    {
+        return $this->partitionAssignmentStrategy;
+    }
+
+    public function setPartitionAssignmentStrategy(string $partitionAssignmentStrategy): self
+    {
+        $this->partitionAssignmentStrategy = $partitionAssignmentStrategy;
 
         return $this;
     }

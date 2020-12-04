@@ -13,7 +13,7 @@
 | connectTimeout | 连接超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
 | sendTimeout | 发送超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
 | recvTimeout | 接收超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
-| clientId | Kafka 客户端标识 | `null` |
+| clientId | Kafka 客户端标识，不同的消费者进程请使用不同的设置 | `null` |
 | maxWriteAttempts | 最大写入尝试次数 | `3` |
 | client | 使用哪个 Kafka 客户端类，默认为`null`时根据场景自动识别 | `null` |
 | socket | 使用哪个 Kafka Socket 类，默认为`null`时根据场景自动识别 | `null` |
@@ -21,11 +21,10 @@
 | interval | 未获取消息到消息时，延迟多少秒再次尝试，默认为`0`则不延迟（单位：秒，支持小数） | `0` |
 | groupId | 分组 ID | `null` |
 | memberId | 用户 ID | `null` |
-| groupInstanceId | 分组实例 ID | `null` |
+| groupInstanceId | 分组实例 ID，不同的消费者进程请使用不同的设置 | `null` |
 | sessionTimeout | 如果超时后没有收到心跳信号，则协调器会认为该用户死亡。（单位：秒，支持小数） | `60` |
 | rebalanceTimeout | 重新平衡组时，协调器等待每个成员重新加入的最长时间（单位：秒，支持小数）。 | `60` |
 | topic | 主题名称 | `null` |
-| partitions | 分区列表 | `[0]` |
 | replicaId | 副本 ID | `-1` |
 | rackId | 机架编号 | `''` |
 | autoCommit | 自动提交 offset | `true` |
@@ -34,6 +33,7 @@
 | offsetRetry | 偏移量操作，匹配预设的错误码时，自动重试次数 | `5` |
 | groupHeartbeat | 分组心跳时间间隔，单位：秒 | `3` |
 | autoCreateTopic | 自动创建主题 | `true` |
+| partitionAssignmentStrategy | 消费者分区分配策略，可选：范围分配-`longlang\phpkafka\Consumer\Assignor\RangeAssignor`、轮询分配-`\longlang\phpkafka\Consumer\Assignor\RoundRobinAssignor`、粘性分配-`\longlang\phpkafka\Consumer\Assignor\StickyAssignor` | `longlang\phpkafka\Consumer\Assignor\RangeAssignor` |
 
 ## 异步消费（回调）
 
@@ -53,7 +53,8 @@ $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
 $config->setTopic('test'); // 主题名称
 $config->setGroupId('testGroup'); // 分组ID
-$config->setClientId('test'); // 客户端ID
+$config->setClientId('test'); // 客户端ID，不同的消费者进程请使用不同的设置
+$config->setGroupInstanceId('test'); // 分组实例ID，不同的消费者进程请使用不同的设置
 $config->setInterval(0.1);
 $consumer = new Consumer($config, 'consume');
 $consumer->start();
@@ -71,7 +72,8 @@ $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
 $config->setTopic('test'); // 主题名称
 $config->setGroupId('testGroup'); // 分组ID
-$config->setClientId('test'); // 客户端ID
+$config->setClientId('test_custom'); // 客户端ID，不同的消费者进程请使用不同的设置
+$config->setGroupInstanceId('test_custom'); // 分组实例ID，不同的消费者进程请使用不同的设置
 $consumer = new Consumer($config);
 while(true) {
     $message = $consumer->consume();

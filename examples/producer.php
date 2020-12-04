@@ -13,6 +13,9 @@ $producer = new Producer($config);
 $i = 0;
 while (true) {
     $producer->send('test', (string) microtime(true), uniqid('', true));
+    // random partition
+    // $partitionIndex = mt_rand(0, 2);
+    // $producer->send('test', (string) microtime(true), uniqid('', true), [], $partitionIndex);
     var_dump(++$i);
     sleep(1);
 }

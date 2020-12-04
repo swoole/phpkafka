@@ -60,8 +60,10 @@ $config->setUpdateBrokers(true);
 $config->setAcks(-1);
 $producer = new Producer($config);
 $topic = 'test';
+$partition0 = 0;
+$partition1 = 1;
 $producer->sendBatch([
-    new ProduceMessage($topic, 'v1', 'k1'),
-    new ProduceMessage($topic, 'v2', 'k2'),
+    new ProduceMessage($topic, 'v1', 'k1', $partition0),
+    new ProduceMessage($topic, 'v2', 'k2', $partition1),
 ]);
 ```

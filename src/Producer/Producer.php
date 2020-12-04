@@ -167,18 +167,12 @@ class Producer
         $this->broker->close();
     }
 
-    /**
-     * @return ProducerConfig
-     */
-    public function getConfig()
+    public function getConfig(): ProducerConfig
     {
         return $this->config;
     }
 
-    /**
-     * @return Broker
-     */
-    public function getBroker()
+    public function getBroker(): Broker
     {
         return $this->broker;
     }
