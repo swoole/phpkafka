@@ -3,78 +3,41 @@ name: ci
 on: [push, pull_request]
 
 jobs:
-  ci-php8:
+  ci:
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php: [ 8.0 ]
-        kafka: [ 1.0.0, 1.1.1, 2.6.0 ]
-
-    env:
-      KAFKA_VERSION: ${{ matrix.kafka }}
-      KAFKA_HOST: kafka-${{ matrix.kafka }}
-      KAFKA_PORT: 9092
-
-    steps:
-    - uses: actions/checkout@v1
-
-    - name: start docker
-      run: |
-        cd .github
-        # kafka
-        docker-compose up -d kafka-$KAFKA_VERSION
-        # swoole
-        docker-compose up -d swoole-php8 && docker exec swoole-php8 php -v && docker exec swoole-php8 php --ri swoole && docker exec swoole-php8 composer -V
-        docker ps -a && docker ps
-
-    - name: prepare
-      run: |
-        docker exec swoole-php8 composer update
-        docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
-
-    - name: php-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole-php8 composer test
-
-    - name: swoole-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole-php8 composer swoole-test
-
-  ci-php7:
-    runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php: [ 7.1, 7.2, 7.3, 7.4 ]
-        kafka: [ 1.0.0, 1.1.1, 2.6.0 ]
+        php: [7.1, 7.2, 7.3, 7.4, "8.0"]
+        kafka: [1.0.0, 1.1.1, 2.6.0]
 
     env:
       PHP_VERSION: ${{ matrix.php }}
       KAFKA_VERSION: ${{ matrix.kafka }}
-      SWOOLE_VERSION: 4.5.7
+      SWOOLE_VERSION: 4.5.9
       KAFKA_HOST: kafka-${{ matrix.kafka }}
       KAFKA_PORT: 9092
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: start docker
-      run: |
-        cd .github
-        # kafka
-        docker-compose up -d kafka-$KAFKA_VERSION
-        # swoole
-        docker-compose up -d swoole && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
-        docker ps -a && docker ps
+      - name: start docker
+        run: |
+          cd .github
+          # kafka
+          docker-compose up -d kafka-$KAFKA_VERSION
+          # swoole
+          docker-compose up -d swoole && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
+          docker ps -a && docker ps
 
-    - name: prepare
-      run: |
-        docker exec swoole composer update
-        docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
+      - name: prepare
+        run: |
+          docker exec swoole composer update
+          docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
 
-    - name: php-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer test
+      - name: php-test
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer test
 
-    - name: swoole-test
-      run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer swoole-test
+      - name: swoole-test
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer swoole-test
