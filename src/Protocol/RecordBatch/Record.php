@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Protocol\RecordBatch;
 
 use longlang\phpkafka\Protocol\AbstractStruct;
-use longlang\phpkafka\Protocol\Type\CompactArray;
 use longlang\phpkafka\Protocol\Type\Int8;
 use longlang\phpkafka\Protocol\Type\VarInt;
+use longlang\phpkafka\Protocol\Type\VarIntCompactArray;
 
 class Record extends AbstractStruct
 {
@@ -83,48 +83,40 @@ class Record extends AbstractStruct
 
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
+        $size = 0;
         if ('' === $data) {
             return;
         }
-        $size = 0;
-        $this->length = VarInt::unpack($data, $tmpSize);
+        $this->length = $length = VarInt::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
+        $size = $tmpSize + $length;
 
         $this->attributes = Int8::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->timestampDelta = VarInt::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->offsetDelta = VarInt::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $len = VarInt::unpack($data, $tmpSize);
         if ($len > 0) {
-            $size += $len;
             $this->key = substr($data, $tmpSize, $len);
             $data = substr($data, $tmpSize + $len);
         } else {
             $data = substr($data, $tmpSize);
         }
-        $size += $tmpSize;
 
         $len = VarInt::unpack($data, $tmpSize);
         if ($len > 0) {
-            $size += $len;
             $this->value = substr($data, $tmpSize, $len);
             $data = substr($data, $tmpSize + $len);
         } else {
             $data = substr($data, $tmpSize);
         }
-        $size += $tmpSize;
 
-        $this->headers = CompactArray::unpack($data, $tmpSize, RecordHeader::class) ?? [];
-        $size += $tmpSize;
+        $this->headers = VarIntCompactArray::unpack($data, $tmpSize, RecordHeader::class) ?? [];
     }
 
     public function toArray(): array

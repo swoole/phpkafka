@@ -33,6 +33,27 @@ class RecordHeader extends AbstractStruct
 
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
+        $size = 0;
+
+        $len = VarInt::unpack($data, $tmpSize);
+        if ($len > 0) {
+            $size += $len;
+            $this->headerKey = substr($data, $tmpSize, $len);
+            $data = substr($data, $tmpSize + $len);
+        } else {
+            $data = substr($data, $tmpSize);
+        }
+        $size += $tmpSize;
+
+        $len = VarInt::unpack($data, $tmpSize);
+        if ($len > 0) {
+            $size += $len;
+            $this->value = substr($data, $tmpSize, $len);
+            $data = substr($data, $tmpSize + $len);
+        } else {
+            $data = substr($data, $tmpSize);
+        }
+        $size += $tmpSize;
     }
 
     public function getHeaderKey(): string

@@ -148,32 +148,27 @@ class RecordBatch extends AbstractStruct
     public function unpack(string $data, ?int &$size = null, int $apiVersion = 0): void
     {
         $length = Int32::unpack($data, $tmpSize);
+        $size = $tmpSize;
         if ($length <= 0) {
             return;
         }
+        $size += $length;
         $data = substr($data, $tmpSize, $length);
-        $size += $tmpSize;
 
-        $size = 0;
         $this->baseOffset = Int64::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->batchLength = Int32::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->partitionLeaderEpoch = Int32::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->magic = Int8::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->crc = Int32::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         if (ProtocolUtil::int32(hexdec(ProtocolUtil::crc32c($data))) !== $this->crc) {
             throw new CRC32Exception('crc32 verification failed');
@@ -181,31 +176,24 @@ class RecordBatch extends AbstractStruct
 
         $this->attributes->setValue(Int16::unpack($data, $tmpSize));
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->lastOffsetDelta = Int32::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->firstTimestamp = Int64::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->maxTimestamp = Int64::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->producerId = Int64::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->producerEpoch = Int16::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $this->baseSequence = Int32::unpack($data, $tmpSize);
         $data = substr($data, $tmpSize);
-        $size += $tmpSize;
 
         $lengthBin = substr($data, 0, 4);
         $data = substr($data, 4);
@@ -242,7 +230,6 @@ class RecordBatch extends AbstractStruct
             }
         }
         $this->records = ArrayInt32::unpack($lengthBin . $data, $tmpSize, Record::class);
-        $size += $tmpSize;
     }
 
     public function toArray(): array

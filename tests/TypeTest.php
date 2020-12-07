@@ -21,6 +21,7 @@ use longlang\phpkafka\Protocol\Type\String32;
 use longlang\phpkafka\Protocol\Type\UInt32;
 use longlang\phpkafka\Protocol\Type\UVarInt;
 use longlang\phpkafka\Protocol\Type\VarInt;
+use longlang\phpkafka\Protocol\Type\VarIntCompactArray;
 use PHPUnit\Framework\TestCase;
 
 class TypeTest extends TestCase
@@ -232,6 +233,15 @@ class TypeTest extends TestCase
         $encodeResult = CompactArray::pack($exceptedArray, Int32::class);
         $this->assertEquals('04000000010000000200000003', bin2hex($encodeResult));
         $this->assertEquals($exceptedArray, CompactArray::unpack($encodeResult, $size, Int32::class));
+        $this->assertEquals(13, $size);
+    }
+
+    public function testVarIntCompactArray()
+    {
+        $exceptedArray = [1, 2, 3];
+        $encodeResult = VarIntCompactArray::pack($exceptedArray, Int32::class);
+        $this->assertEquals('08000000010000000200000003', bin2hex($encodeResult));
+        $this->assertEquals($exceptedArray, VarIntCompactArray::unpack($encodeResult, $size, Int32::class));
         $this->assertEquals(13, $size);
     }
 }
