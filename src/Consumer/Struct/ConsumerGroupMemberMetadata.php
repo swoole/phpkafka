@@ -15,7 +15,7 @@ class ConsumerGroupMemberMetadata extends AbstractStruct
     protected $version = 0;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected $topics = [];
 
@@ -59,11 +59,17 @@ class ConsumerGroupMemberMetadata extends AbstractStruct
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getTopics(): array
     {
         return $this->topics;
     }
 
+    /**
+     * @param string[] $topics
+     */
     public function setTopics(array $topics): self
     {
         $this->topics = $topics;

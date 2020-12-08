@@ -11,14 +11,34 @@ use PHPUnit\Framework\TestCase;
 
 class ConsumerTest extends TestCase
 {
-    public function testConsume()
+    public function testConsumeWithRangeAssignor()
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
         $config->setTopic('test');
         $config->setGroupId('testGroup');
-        $config->setClientId('test');
-        $config->setGroupInstanceId('test');
+        $config->setClientId('testConsumeWithRangeAssignor');
+        $config->setGroupInstanceId('testConsumeWithRangeAssignor');
+        $config->setPartitionAssignmentStrategy(\longlang\phpkafka\Consumer\Assignor\RangeAssignor::class);
+        $config->setInterval(0.1);
+        $consumer = new Consumer($config, function (ConsumeMessage $message) {
+            $consumer = $message->getConsumer();
+            $this->assertNotEmpty($message->getValue());
+            $consumer->stop();
+        });
+        $consumer->start();
+        $consumer->close();
+    }
+
+    public function testConsumeWithRoundRobinAssignor()
+    {
+        $config = new ConsumerConfig();
+        $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setTopic('test');
+        $config->setGroupId('testGroup');
+        $config->setClientId('testConsumeWithRoundRobinAssignor');
+        $config->setGroupInstanceId('testConsumeWithRoundRobinAssignor');
+        $config->setPartitionAssignmentStrategy(\longlang\phpkafka\Consumer\Assignor\RoundRobinAssignor::class);
         $config->setInterval(0.1);
         $consumer = new Consumer($config, function (ConsumeMessage $message) {
             $consumer = $message->getConsumer();

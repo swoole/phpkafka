@@ -19,13 +19,18 @@ class RangeAssignor extends AbstractPartitionAssignor
      */
     public function assign(MetadataResponseTopic $metadata, array $members): array
     {
+        $partitions = [];
+        foreach ($metadata->getPartitions() as $item) {
+            $partitions[] = $item->getPartitionIndex();
+        }
+        sort($partitions);
         $assignments = [];
-        $partitions = $metadata->getPartitions();
         $consumersForTopic = [];
         foreach ($members as $member) {
-            $consumersForTopic[$member->getMemberId()] = $member;
+            $memberId = $member->getMemberId();
+            $consumersForTopic[$memberId] = $member;
             $assignments[] = $assignment = new SyncGroupRequestAssignment();
-            $assignment->setMemberId($member->getMemberId());
+            $assignment->setMemberId($memberId);
         }
         ksort($consumersForTopic);
 
@@ -41,7 +46,7 @@ class RangeAssignor extends AbstractPartitionAssignor
             $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
             $consumerGroupTopic = new ConsumerGroupTopic();
             $consumerGroupTopic->setTopicName($metadata->getName());
-            $consumerGroupTopic->setPartitions(range($start, $start + $length - 1));
+            $consumerGroupTopic->setPartitions(\array_slice($partitions, $start, $length));
             $consumerGroupMemberAssignment->setTopics([$consumerGroupTopic]);
             $assignments[$i]->setAssignment($consumerGroupMemberAssignment->pack());
         }
