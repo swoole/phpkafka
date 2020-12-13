@@ -24,7 +24,7 @@
 | groupInstanceId | 分组实例 ID，不同的消费者进程请使用不同的设置 | `null` |
 | sessionTimeout | 如果超时后没有收到心跳信号，则协调器会认为该用户死亡。（单位：秒，支持小数） | `60` |
 | rebalanceTimeout | 重新平衡组时，协调器等待每个成员重新加入的最长时间（单位：秒，支持小数）。 | `60` |
-| topic | 主题名称 | `null` |
+| topic | 主题名称，支持同时消费多个主题 | `null` |
 | replicaId | 副本 ID | `-1` |
 | rackId | 机架编号 | `''` |
 | autoCommit | 自动提交 offset | `true` |
@@ -47,7 +47,7 @@ use longlang\phpkafka\Consumer\ConsumerConfig;
 function consume(ConsumeMessage $message)
 {
     var_dump($message->getKey() . ':' . $message->getValue());
-    // $consumer->ack($message->getPartition()); // autoCommit设为false时，手动提交
+    // $consumer->ack($message); // autoCommit设为false时，手动提交
 }
 $config = new ConsumerConfig();
 $config->setBroker('127.0.0.1:9092');
@@ -79,7 +79,7 @@ while(true) {
     $message = $consumer->consume();
     if($message) {
         var_dump($message->getKey() . ':' . $message->getValue());
-        $consumer->ack($message->getPartition()); // 手动提交
+        $consumer->ack($message); // 手动提交
     }
     sleep(1);
 }

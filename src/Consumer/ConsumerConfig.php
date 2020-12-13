@@ -58,7 +58,7 @@ class ConsumerConfig extends CommonConfig
     protected $rebalanceTimeout = 60;
 
     /**
-     * @var string
+     * @var string[]
      */
     protected $topic;
 
@@ -155,14 +155,20 @@ class ConsumerConfig extends CommonConfig
         return $this;
     }
 
-    public function getTopic(): string
+    /**
+     * @return string[]
+     */
+    public function getTopic(): array
     {
         return $this->topic;
     }
 
-    public function setTopic(string $topic): self
+    /**
+     * @param string|string[] $topic
+     */
+    public function setTopic($topic): self
     {
-        $this->topic = $topic;
+        $this->topic = (array) $topic;
 
         return $this;
     }

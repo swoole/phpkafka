@@ -16,7 +16,7 @@ while (true) {
     $message = $consumer->consume();
     if ($message) {
         var_dump($message->getKey() . ':' . $message->getValue());
-        $consumer->ack($message->getPartition()); // ack
+        $consumer->ack($message); // ack
     } else {
         usleep(10000);
     }

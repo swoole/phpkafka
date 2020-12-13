@@ -45,9 +45,9 @@ class Consumer
     protected $groupManager;
 
     /**
-     * @var OffsetManager
+     * @var OffsetManager[]
      */
-    protected $offsetManager;
+    protected $offsetManagers = [];
 
     /**
      * @var ClientInterface
@@ -104,7 +104,7 @@ class Consumer
         $this->groupManager = $groupManager = new GroupManager($broker);
         $groupId = $config->getGroupId();
 
-        $this->broker->updateMetadata([$config->getTopic()]);
+        $this->broker->updateMetadata($config->getTopic());
 
         // findCoordinator
         $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
@@ -123,7 +123,7 @@ class Consumer
         $client = $this->broker->getClient();
 
         $metadata = new ConsumerGroupMemberMetadata();
-        $metadata->setTopics([$config->getTopic()]);
+        $metadata->setTopics($config->getTopic());
         $metadataContent = $metadata->pack();
         $protocolName = 'group';
         $protocols = [
@@ -141,8 +141,10 @@ class Consumer
         $this->consumerGroupMemberAssignment = $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
         $consumerGroupMemberAssignment->unpack($response->getAssignment());
 
-        $this->offsetManager = $offsetManager = new OffsetManager($client, $config->getTopic(), $this->getPartitions(), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
-        $offsetManager->updateOffsets($config->getOffsetRetry());
+        foreach ($config->getTopic() as $topic) {
+            $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($client, $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+            $offsetManager->updateOffsets($config->getOffsetRetry());
+        }
 
         $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
         if ($this->swooleHeartbeat) {
@@ -171,15 +173,15 @@ class Consumer
         $this->started = true;
         $autoCommit = $this->config->getAutoCommit();
         while ($this->started) {
-            $result = $this->consume();
-            if (null === $result) {
+            $message = $this->consume();
+            if (null === $message) {
                 if ($interval > 0) {
                     usleep($interval);
                 }
             } else {
-                $consumeCallback($result);
+                $consumeCallback($message);
                 if ($autoCommit) {
-                    $this->ack($result->getPartition());
+                    $this->ack($message);
                 }
             }
         }
@@ -200,10 +202,12 @@ class Consumer
         return $message;
     }
 
-    public function ack(int $partition)
+    public function ack(ConsumeMessage $message)
     {
-        $this->offsetManager->addFetchOffset($partition);
-        $this->offsetManager->saveOffsets($partition, $this->config->getOffsetRetry());
+        $offsetManager = $this->getOffsetManager($message->getTopic());
+        $partition = $message->getPartition();
+        $offsetManager->addFetchOffset($partition);
+        $offsetManager->saveOffsets($partition, $this->config->getOffsetRetry());
     }
 
     protected function fetchMessages()
@@ -220,15 +224,16 @@ class Consumer
         } else {
             $request->setMaxWait((int) ($recvTimeout * 1000));
         }
-        $topic = $config->getTopic();
         $request->setRackId($config->getRackId());
-        $fetchPartitions = [];
-        foreach ($this->getPartitions() as $partition) {
-            $fetchPartitions[] = (new FetchPartition())->setPartitionIndex($partition)->setFetchOffset($this->offsetManager->getFetchOffset($partition));
+        $topics = [];
+        foreach ($config->getTopic() as $topic) {
+            $fetchPartitions = [];
+            foreach ($this->getPartitions($topic) as $partition) {
+                $fetchPartitions[] = (new FetchPartition())->setPartitionIndex($partition)->setFetchOffset($this->getOffsetManager($topic)->getFetchOffset($partition));
+            }
+            $topics[] = (new FetchableTopic())->setName($topic)->setFetchPartitions($fetchPartitions);
         }
-        $request->setTopics([
-            (new FetchableTopic())->setName($topic)->setFetchPartitions($fetchPartitions),
-        ]);
+        $request->setTopics($topics);
 
         /** @var FetchResponse $response */
         $response = $this->client->sendRecv($request);
@@ -304,12 +309,11 @@ class Consumer
         }
     }
 
-    protected function getPartitions(): array
+    protected function getPartitions(string $topic): array
     {
         $partitions = [];
-        $topic = $this->config->getTopic();
         foreach ($this->consumerGroupMemberAssignment->getTopics() as $consumerGroupMemberAssignmentTopic) {
-            if ($topic === $consumerGroupMemberAssignmentTopic->getTopicName()) {
+            if ($consumerGroupMemberAssignmentTopic->getTopicName() === $topic) {
                 foreach ($consumerGroupMemberAssignmentTopic->getPartitions() as $partition) {
                     $partitions[] = $partition;
                 }
@@ -318,5 +322,14 @@ class Consumer
         }
 
         return $partitions;
+    }
+
+    public function getOffsetManager(string $topic): OffsetManager
+    {
+        if (!isset($this->offsetManagers[$topic])) {
+            throw new \RuntimeException(sprintf('Topic %s does not exists', $topic));
+        }
+
+        return $this->offsetManagers[$topic];
     }
 }
