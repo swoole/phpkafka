@@ -86,7 +86,7 @@ class CommonConfig extends AbstractConfig
         return $this->maxWriteAttempts;
     }
 
-    public function setMaxWriteAttempts(float $maxWriteAttempts): self
+    public function setMaxWriteAttempts(int $maxWriteAttempts): self
     {
         $this->maxWriteAttempts = $maxWriteAttempts;
 
