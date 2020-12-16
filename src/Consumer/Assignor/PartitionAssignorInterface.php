@@ -15,9 +15,10 @@ interface PartitionAssignorInterface
     public function subscriptionUserData(array $topics): string;
 
     /**
-     * @param JoinGroupResponseMember[] $members
+     * @param MetadataResponseTopic[]   $topicMetadatas
+     * @param JoinGroupResponseMember[] $groupMembers
      *
      * @return SyncGroupRequestAssignment[]
      */
-    public function assign(MetadataResponseTopic $metadata, array $members): array;
+    public function assign(array $topicMetadatas, array $groupMembers): array;
 }

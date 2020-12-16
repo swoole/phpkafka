@@ -156,8 +156,6 @@ class Broker
     }
 
     /**
-     * Get the value of topicsMeta.
-     *
      * @return MetadataResponseTopic[]
      */
     public function getTopicsMeta(): array

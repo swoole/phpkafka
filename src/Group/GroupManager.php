@@ -6,14 +6,12 @@ namespace longlang\phpkafka\Group;
 
 use longlang\phpkafka\Broker;
 use longlang\phpkafka\Client\ClientInterface;
-use longlang\phpkafka\Consumer\Assignor\PartitionAssignorInterface;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorRequest;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\Heartbeat\HeartbeatRequest;
 use longlang\phpkafka\Protocol\Heartbeat\HeartbeatResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequest;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponse;
-use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponseMember;
 use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupRequest;
 use longlang\phpkafka\Protocol\LeaveGroup\LeaveGroupResponse;
 use longlang\phpkafka\Protocol\LeaveGroup\MemberIdentity;
@@ -83,7 +81,7 @@ class GroupManager
         return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
     }
 
-    public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, int $retry = 0, float $sleep = 0.01): SyncGroupResponse
+    public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, array $assignments, int $retry = 0, float $sleep = 0.01): SyncGroupResponse
     {
         $request = new SyncGroupRequest();
         $request->setGroupId($groupId);
@@ -92,12 +90,7 @@ class GroupManager
         $request->setGenerationId($generationId);
         $request->setProtocolName($protocolName);
         $request->setProtocolType($protocolType);
-        if ($this->isLeader) {
-            $assignorClass = $this->broker->getConfig()->getPartitionAssignmentStrategy();
-            /** @var PartitionAssignorInterface $assignor */
-            $assignor = new $assignorClass();
-            $request->setAssignments($assignor->assign($this->broker->getTopicsMeta()[0], $this->joinGroupResponse->getMembers()));
-        }
+        $request->setAssignments($assignments);
 
         return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
     }
@@ -123,20 +116,8 @@ class GroupManager
         return $this->isLeader;
     }
 
-    // /**
-    //  * @param JoinGroupResponseMember[] $members
-    //  *
-    //  * @return void
-    //  */
-    // public function balance(array $members)
-    // {
-    //     $topic = $this->broker->getTopicsMeta()[0] ?? null;
-    //     if (!$topic) {
-    //         throw new \RuntimeException('Topic meta not found');
-    //     }
-    //     $partitions = [];
-    //     foreach ($topic->getPartitions() as $partition) {
-    //         $partitions[] = $partition->getPartitionIndex();
-    //     }
-    // }
+    public function getJoinGroupResponse(): JoinGroupResponse
+    {
+        return $this->joinGroupResponse;
+    }
 }

@@ -7,6 +7,7 @@ namespace longlang\phpkafka\Consumer;
 use InvalidArgumentException;
 use longlang\phpkafka\Broker;
 use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Consumer\Assignor\PartitionAssignorInterface;
 use longlang\phpkafka\Consumer\Struct\ConsumerGroupMemberMetadata;
 use longlang\phpkafka\Exception\KafkaErrorException;
 use longlang\phpkafka\Group\CoordinatorType;
@@ -120,6 +121,7 @@ class Consumer
         $config = $this->config;
         $groupManager = $this->groupManager;
         $groupId = $config->getGroupId();
+        $topics = $config->getTopic();
         $client = $this->broker->getClient();
 
         $metadata = new ConsumerGroupMemberMetadata();
@@ -136,12 +138,23 @@ class Consumer
         $this->generationId = $response->getGenerationId();
 
         // syncGroup
-        $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $config->getGroupRetry(), $config->getGroupRetrySleep());
+        if ($this->groupManager->isLeader()) {
+            $assignorClass = $config->getPartitionAssignmentStrategy();
+            /** @var PartitionAssignorInterface $assignor */
+            $assignor = new $assignorClass();
+            $assignments = $assignor->assign($this->broker->getTopicsMeta(), $this->groupManager->getJoinGroupResponse()->getMembers());
+            $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $assignments, $config->getGroupRetry(), $config->getGroupRetrySleep());
+        } else {
+            $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, [], $config->getGroupRetry(), $config->getGroupRetrySleep());
+        }
 
         $this->consumerGroupMemberAssignment = $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
-        $consumerGroupMemberAssignment->unpack($response->getAssignment());
+        $data = $response->getAssignment();
+        if ('' !== $data) {
+            $consumerGroupMemberAssignment->unpack($data);
+        }
 
-        foreach ($config->getTopic() as $topic) {
+        foreach ($topics as $topic) {
             $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($client, $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
             $offsetManager->updateOffsets($config->getOffsetRetry());
         }
@@ -228,7 +241,7 @@ class Consumer
         $topics = [];
         foreach ($config->getTopic() as $topic) {
             $fetchPartitions = [];
-            foreach ($this->getPartitions($topic) as $partition) {
+            foreach ($this->getFetchPartitions($topic) as $partition) {
                 $fetchPartitions[] = (new FetchPartition())->setPartitionIndex($partition)->setFetchOffset($this->getOffsetManager($topic)->getFetchOffset($partition));
             }
             $topics[] = (new FetchableTopic())->setName($topic)->setFetchPartitions($fetchPartitions);
@@ -310,6 +323,21 @@ class Consumer
     }
 
     protected function getPartitions(string $topic): array
+    {
+        $partitions = [];
+        foreach ($this->broker->getTopicsMeta() as $topicMeta) {
+            if ($topicMeta->getName() === $topic) {
+                foreach ($topicMeta->getPartitions() as $partition) {
+                    $partitions[] = $partition->getPartitionIndex();
+                }
+                break;
+            }
+        }
+
+        return $partitions;
+    }
+
+    protected function getFetchPartitions(string $topic): array
     {
         $partitions = [];
         foreach ($this->consumerGroupMemberAssignment->getTopics() as $consumerGroupMemberAssignmentTopic) {
