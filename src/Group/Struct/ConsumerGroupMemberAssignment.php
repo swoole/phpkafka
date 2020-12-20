@@ -67,6 +67,9 @@ class ConsumerGroupMemberAssignment extends AbstractStruct
         return $this->topics;
     }
 
+    /**
+     * @param ConsumerGroupTopic[] $topics
+     */
     public function setTopics(array $topics): self
     {
         $this->topics = $topics;
