@@ -95,6 +95,11 @@ class Consumer
      */
     private $consumerGroupMemberAssignment;
 
+    /**
+     * @var PartitionAssignorInterface
+     */
+    private $assignor;
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
@@ -141,7 +146,7 @@ class Consumer
         if ($this->groupManager->isLeader()) {
             $assignorClass = $config->getPartitionAssignmentStrategy();
             /** @var PartitionAssignorInterface $assignor */
-            $assignor = new $assignorClass();
+            $assignor = $this->assignor = new $assignorClass();
             $assignments = $assignor->assign($this->broker->getTopicsMeta(), $this->groupManager->getJoinGroupResponse()->getMembers());
             $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $assignments, $config->getGroupRetry(), $config->getGroupRetrySleep());
         } else {

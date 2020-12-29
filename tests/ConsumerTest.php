@@ -48,4 +48,23 @@ class ConsumerTest extends TestCase
         $consumer->start();
         $consumer->close();
     }
+
+    public function testConsumeWithStickyAssignor()
+    {
+        $config = new ConsumerConfig();
+        $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setTopic('test');
+        $config->setGroupId('testGroup');
+        $config->setClientId('testConsumeWithStickyAssignor');
+        $config->setGroupInstanceId('testConsumeWithStickyAssignor');
+        $config->setPartitionAssignmentStrategy(\longlang\phpkafka\Consumer\Assignor\StickyAssignor::class);
+        $config->setInterval(0.1);
+        $consumer = new Consumer($config, function (ConsumeMessage $message) {
+            $consumer = $message->getConsumer();
+            $this->assertNotEmpty($message->getValue());
+            $consumer->stop();
+        });
+        $consumer->start();
+        $consumer->close();
+    }
 }

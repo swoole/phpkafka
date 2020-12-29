@@ -61,6 +61,11 @@ class OffsetManager
      */
     private $offsets;
 
+    /**
+     * @var string[]
+     */
+    private $metadatas;
+
     public function __construct(ClientInterface $client, string $topic, array $partitions, string $groupId, ?string $groupInstanceId, string $memberId, int $generationId)
     {
         $this->client = $client;
@@ -83,13 +88,16 @@ class OffsetManager
         /** @var OffsetFetchResponse $response */
         $response = KafkaUtil::retry($this->client, $request, $retry, 0);
 
-        $offsets = [];
+        $metadatas = $offsets = [];
         foreach ($response->getTopics() as $topic) {
             foreach ($topic->getPartitions() as $partition) {
-                $offsets[$partition->getPartitionIndex()] = max($partition->getCommittedOffset(), 0);
+                $partitionIndex = $partition->getPartitionIndex();
+                $offsets[$partitionIndex] = max($partition->getCommittedOffset(), 0);
+                $metadatas[$partitionIndex] = $partition->getMetadata();
             }
         }
         $this->offsets = $offsets;
+        $this->metadatas = $metadatas;
     }
 
     public function getClient(): ClientInterface
@@ -158,11 +166,11 @@ class OffsetManager
         $timestamp = (int) (microtime(true) * 1000);
         if (null === $partition) {
             foreach ($this->partitions as $partition => $offset) {
-                $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp);
+                $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp)->setCommittedMetadata($this->metadatas[$partition]);
             }
         } else {
             $offset = $this->getFetchOffset($partition);
-            $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp);
+            $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp)->setCommittedMetadata($this->metadatas[$partition]);
         }
         $topic->setPartitions($partitions);
 
