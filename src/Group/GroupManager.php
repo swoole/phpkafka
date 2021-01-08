@@ -32,6 +32,11 @@ class GroupManager
     protected $isLeader = false;
 
     /**
+     * @var FindCoordinatorResponse
+     */
+    protected $findCoordinatorResponse;
+
+    /**
      * @var JoinGroupResponse
      */
     protected $joinGroupResponse;
@@ -47,7 +52,10 @@ class GroupManager
         $request->setKey($key);
         $request->setKeyType($keyType);
 
-        return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+        /** @var FindCoordinatorResponse $response */
+        $this->findCoordinatorResponse = KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+
+        return $this->findCoordinatorResponse;
     }
 
     public function joinGroup(string $groupId, string $memberId, string $protocolType, ?string $groupInstanceId = null, array $protocols = [], int $sessionTimeoutMs = 60000, int $rebalanceTimeoutMs = -1, int $retry = 0, float $sleep = 0.01): JoinGroupResponse
@@ -62,7 +70,7 @@ class GroupManager
         $request->setRebalanceTimeoutMs($rebalanceTimeoutMs);
 
         /** @var JoinGroupResponse $response */
-        $response = $this->joinGroupResponse = KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+        $response = $this->joinGroupResponse = KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
 
         $this->isLeader = $response->getLeader() === $response->getMemberId();
 
@@ -78,7 +86,7 @@ class GroupManager
             (new MemberIdentity())->setMemberId($memberId)->setGroupInstanceId($groupInstanceId),
         ]);
 
-        return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+        return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 
     public function syncGroup(string $groupId, string $groupInstanceId, string $memberId, int $generationId, string $protocolName, string $protocolType, array $assignments, int $retry = 0, float $sleep = 0.01): SyncGroupResponse
@@ -92,7 +100,7 @@ class GroupManager
         $request->setProtocolType($protocolType);
         $request->setAssignments($assignments);
 
-        return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+        return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 
     public function heartbeat(string $groupId, string $groupInstanceId, string $memberId, int $generationId, int $retry = 0, float $sleep = 0.01): HeartbeatResponse
@@ -103,7 +111,7 @@ class GroupManager
         $request->setGenerationId($generationId);
         $request->setMemberId($memberId);
 
-        return KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
+        return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 
     public function getClient(): ClientInterface
