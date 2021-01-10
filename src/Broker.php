@@ -96,16 +96,15 @@ class Broker
         if (null === $brokerId) {
             return $this->getRandomClient();
         } elseif (isset($this->brokers[$brokerId])) {
-            return $this->brokers[$brokerId];
+            return $this->getClientByIndex($brokerId);
         } else {
             throw new InvalidArgumentException(sprintf('Not found brokerId %s', $brokerId));
         }
     }
 
-    public function getRandomClient(): ClientInterface
+    public function getClientByIndex(int $index): ClientInterface
     {
         $brokers = $this->getBrokers();
-        $index = array_rand($brokers, 1);
         $url = parse_url($brokers[$index]);
         if (!$url) {
             throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $brokers[$index]));
@@ -121,6 +120,11 @@ class Broker
         }
 
         return $this->clients[$index];
+    }
+
+    public function getRandomClient(): ClientInterface
+    {
+        return $this->getClientByIndex(array_rand($this->getBrokers(), 1));
     }
 
     /**
