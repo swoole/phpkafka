@@ -5,7 +5,7 @@
     "require": {
         "php": ">=7.1",
         "google/crc32": "^0.1.0",
-        "exussum12/xxhash": "^1.0",
+        "exussum12/xxhash": "^1.0.0",
         "chdemko/sorted-collections": "^1.0"
     },
     "require-dev": {
