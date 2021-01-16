@@ -52,7 +52,15 @@ class Broker
     public function updateBrokers()
     {
         $config = $this->config;
-        $url = parse_url($config->getBootstrapServer());
+
+        if ($config instanceof ProducerConfig) {
+            $url = parse_url($config->getBootstrapServer());
+        } elseif ($config instanceof ConsumerConfig) {
+            $url = parse_url(explode(',', $config->getBroker())[0]);
+        } else {
+            throw new InvalidArgumentException('Unknown config, it should be either a ProducerConfig or a ConsumerConfig');
+        }
+
         if (!$url) {
             throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $config->getBootstrapServer()));
         }
@@ -93,38 +101,31 @@ class Broker
 
     public function getClient(?int $brokerId = null): ClientInterface
     {
-        if (null === $brokerId) {
-            return $this->getRandomClient();
-        } elseif (isset($this->brokers[$brokerId])) {
-            return $this->getClientByIndex($brokerId);
-        } else {
-            throw new InvalidArgumentException(sprintf('Not found brokerId %s', $brokerId));
-        }
+        return $this->getClientByBrokerId($brokerId ?? array_rand($this->brokers, 1));
     }
 
-    public function getClientByIndex(int $index): ClientInterface
+    public function getClientByBrokerId(int $brokerId): ClientInterface
     {
-        $brokers = $this->getBrokers();
-        $url = parse_url($brokers[$index]);
-        if (!$url) {
-            throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $brokers[$index]));
+        if (!isset($this->brokers[$brokerId])) {
+            throw new InvalidArgumentException(sprintf('Not found brokerId %s', $brokerId));
         }
+
+        $url = parse_url($this->brokers[$brokerId]);
+        if (!$url) {
+            throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $this->brokers[$brokerId]));
+        }
+
         $config = $this->config;
-        if (!isset($this->clients[$index])) {
+        if (!isset($this->clients[$brokerId])) {
             $clientClass = KafkaUtil::getClientClass($config->getClient());
 
             /** @var ClientInterface $client */
             $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, KafkaUtil::getSocketClass($config->getSocket()));
             $client->connect();
-            $this->clients[$index] = $client;
+            $this->clients[$brokerId] = $client;
         }
 
-        return $this->clients[$index];
-    }
-
-    public function getRandomClient(): ClientInterface
-    {
-        return $this->getClientByIndex(array_rand($this->getBrokers(), 1));
+        return $this->clients[$brokerId];
     }
 
     /**

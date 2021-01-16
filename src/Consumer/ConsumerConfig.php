@@ -107,6 +107,11 @@ class ConsumerConfig extends CommonConfig
      */
     protected $partitionAssignmentStrategy = \longlang\phpkafka\Consumer\Assignor\RangeAssignor::class;
 
+    /**
+     * @var bool
+     */
+    private $updateBrokers = true;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -337,6 +342,18 @@ class ConsumerConfig extends CommonConfig
     public function setPartitionAssignmentStrategy(string $partitionAssignmentStrategy): self
     {
         $this->partitionAssignmentStrategy = $partitionAssignmentStrategy;
+
+        return $this;
+    }
+
+    public function getUpdateBrokers(): bool
+    {
+        return $this->updateBrokers;
+    }
+
+    public function setUpdateBrokers(bool $updateBrokers): self
+    {
+        $this->updateBrokers = $updateBrokers;
 
         return $this;
     }

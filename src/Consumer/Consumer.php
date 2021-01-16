@@ -104,8 +104,14 @@ class Consumer
     {
         $this->config = $config;
         $this->consumeCallback = $consumeCallback;
+
         $this->broker = $broker = new Broker($config);
-        $broker->setBrokers($config->getBroker());
+        if ($config->getUpdateBrokers()) {
+            $broker->updateBrokers();
+        } else {
+            $broker->setBrokers($config->getBroker());
+        }
+
         $this->client = $broker->getClient();
         $this->groupManager = $groupManager = new GroupManager($broker);
         $groupId = $config->getGroupId();
