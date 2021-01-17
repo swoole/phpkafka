@@ -53,16 +53,17 @@ class Broker
     {
         $config = $this->config;
 
-        if ($config instanceof ProducerConfig) {
-            $url = parse_url($config->getBootstrapServer());
-        } elseif ($config instanceof ConsumerConfig) {
+        $url = null;
+        if ($config instanceof ConsumerConfig) {
             $url = parse_url(explode(',', $config->getBroker())[0]);
-        } else {
-            throw new InvalidArgumentException('Unknown config, it should be either a ProducerConfig or a ConsumerConfig');
+        }
+        if (!$url) {
+            $bootstrapServers = $config->getBootstrapServers();
+            $url = parse_url($bootstrapServers[array_rand($bootstrapServers)]);
         }
 
         if (!$url) {
-            throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $config->getBootstrapServer()));
+            throw new InvalidArgumentException(sprintf('Invalid bootstrapServer'));
         }
 
         $clientClass = KafkaUtil::getClientClass($config->getClient());

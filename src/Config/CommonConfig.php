@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Config;
 
+use InvalidArgumentException;
+
 class CommonConfig extends AbstractConfig
 {
     /**
@@ -32,6 +34,11 @@ class CommonConfig extends AbstractConfig
      * @var int
      */
     protected $maxWriteAttempts = 3;
+
+    /**
+     * @var string[]
+     */
+    protected $bootstrapServers = [];
 
     public function getConnectTimeout(): float
     {
@@ -89,6 +96,40 @@ class CommonConfig extends AbstractConfig
     public function setMaxWriteAttempts(int $maxWriteAttempts): self
     {
         $this->maxWriteAttempts = $maxWriteAttempts;
+
+        return $this;
+    }
+
+    public function getBootstrapServer(): array
+    {
+        return $this->bootstrapServers;
+    }
+
+    /**
+     * @param string|string[] $bootstrapServer
+     */
+    public function setBootstrapServer($bootstrapServer): self
+    {
+        return $this->setBootstrapServers($bootstrapServer);
+    }
+
+    public function getBootstrapServers(): array
+    {
+        return $this->bootstrapServers;
+    }
+
+    /**
+     * @param string|string[] $bootstrapServers
+     */
+    public function setBootstrapServers($bootstrapServers): self
+    {
+        if (\is_string($bootstrapServers)) {
+            $this->bootstrapServers = explode(',', $bootstrapServers);
+        } elseif (\is_array($bootstrapServers)) {
+            $this->bootstrapServers = $bootstrapServers;
+        } else {
+            throw new InvalidArgumentException(sprintf('The bootstrapServers must be string or array, and the current type is %', \gettype($bootstrapServers)));
+        }
 
         return $this;
     }

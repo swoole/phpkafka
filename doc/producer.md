@@ -17,8 +17,8 @@
 | maxWriteAttempts | 最大写入尝试次数 | `3` |
 | client | 使用哪个 Kafka 客户端类，默认为`null`时根据场景自动识别 | `null` |
 | socket | 使用哪个 Kafka Socket 类，默认为`null`时根据场景自动识别 | `null` |
-| brokers | 手动配置 brokers 列表，如果要使用手动配置，请把`updateBrokers`设为`true`。格式：`['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
-| bootstrapServer | 引导服务器，如果配置了该值，会自动连接该服务器，并自动更新 brokers | `null` |
+| brokers | 手动配置 brokers 列表，如果要使用手动配置，请把`updateBrokers`设为`true`。格式：`'127.0.0.1:9092,127.0.0.1:9093'` 或 `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
+| bootstrapServers | 别名bootstrapServer，引导服务器，如果配置了该值，会自动连接该服务器，并自动更新 brokers。格式：`'127.0.0.1:9092,127.0.0.1:9093'` 或 `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
 | updateBrokers | 是否自动更新 brokers | `true` |
 | acks | 生产者要求领导者，在确认请求完成之前已收到的确认数值。允许的值：0表示无确认，1表示仅领导者，-1表示完整的ISR。 | `0` |
 | producerId | 生产者 ID | `-1` |

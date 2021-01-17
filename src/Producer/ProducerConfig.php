@@ -28,11 +28,6 @@ class ProducerConfig extends CommonConfig
     protected $brokers;
 
     /**
-     * @var string
-     */
-    protected $bootstrapServer;
-
-    /**
      * Auto update brokers.
      *
      * @var bool
@@ -92,18 +87,6 @@ class ProducerConfig extends CommonConfig
     public function setBrokers($brokers): self
     {
         $this->brokers = $brokers;
-
-        return $this;
-    }
-
-    public function getBootstrapServer(): string
-    {
-        return $this->bootstrapServer;
-    }
-
-    public function setBootstrapServer(string $bootstrapServer): self
-    {
-        $this->bootstrapServer = $bootstrapServer;
 
         return $this;
     }
