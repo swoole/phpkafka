@@ -28,13 +28,6 @@ class ProducerConfig extends CommonConfig
     protected $brokers;
 
     /**
-     * Auto update brokers.
-     *
-     * @var bool
-     */
-    protected $updateBrokers = true;
-
-    /**
      * The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments, 1 for only the leader and -1 for the full ISR.
      *
      * @var int
@@ -99,18 +92,6 @@ class ProducerConfig extends CommonConfig
     public function setSocket(?string $socket): self
     {
         $this->socket = $socket;
-
-        return $this;
-    }
-
-    public function getUpdateBrokers(): bool
-    {
-        return $this->updateBrokers;
-    }
-
-    public function setUpdateBrokers(bool $updateBrokers): self
-    {
-        $this->updateBrokers = $updateBrokers;
 
         return $this;
     }

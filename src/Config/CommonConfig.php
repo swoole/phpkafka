@@ -40,6 +40,13 @@ class CommonConfig extends AbstractConfig
      */
     protected $bootstrapServers = [];
 
+    /**
+     * Auto update brokers.
+     *
+     * @var bool
+     */
+    protected $updateBrokers = true;
+
     public function getConnectTimeout(): float
     {
         return $this->connectTimeout;
@@ -130,6 +137,18 @@ class CommonConfig extends AbstractConfig
         } else {
             throw new InvalidArgumentException(sprintf('The bootstrapServers must be string or array, and the current type is %', \gettype($bootstrapServers)));
         }
+
+        return $this;
+    }
+
+    public function getUpdateBrokers(): bool
+    {
+        return $this->updateBrokers;
+    }
+
+    public function setUpdateBrokers(bool $updateBrokers): self
+    {
+        $this->updateBrokers = $updateBrokers;
 
         return $this;
     }
