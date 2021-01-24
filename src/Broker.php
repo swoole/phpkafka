@@ -168,4 +168,19 @@ class Broker
     {
         return $this->topicsMeta;
     }
+
+    public function getBrokerIdByTopic(string $topic, int $partition): ?int
+    {
+        foreach ($this->topicsMeta as $topicMeta) {
+            if ($topicMeta->getName() === $topic) {
+                foreach ($topicMeta->getPartitions() as $topicPartition) {
+                    if ($topicPartition->getPartitionIndex() === $partition) {
+                        return $topicPartition->getLeaderId();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 }
