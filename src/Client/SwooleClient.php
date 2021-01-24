@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Client;
 
+use Exception;
 use InvalidArgumentException;
 use longlang\phpkafka\Config\CommonConfig;
 use longlang\phpkafka\Protocol\AbstractRequest;
@@ -108,6 +109,9 @@ class SwooleClient extends SyncClient
         if (false === $data) {
             throw new RuntimeException('Recv data failed');
         }
+        if ($data instanceof Exception) {
+            throw $data;
+        }
 
         $header = new ResponseHeader();
         $header->unpack($data, $size, ResponseHeader::parseVersion($mapData['apiVersion'], $mapData['flexibleVersions']));
@@ -125,15 +129,19 @@ class SwooleClient extends SyncClient
         $this->recvCoId = true;
         $this->recvCoId = Coroutine::create(function () {
             while ($this->coRecvRunning) {
-                $data = $this->socket->recv(4, -1);
-                if ('' === $data) {
-                    break;
-                }
-                $length = Int32::unpack($data);
-                $data = $this->socket->recv($length);
-                $correlationId = Int32::unpack($data);
-                if (!isset($this->recvChannels[$correlationId])) {
-                    continue;
+                try {
+                    $data = $this->socket->recv(4, -1);
+                    if ('' === $data) {
+                        break;
+                    }
+                    $length = Int32::unpack($data);
+                    $data = $this->socket->recv($length);
+                    $correlationId = Int32::unpack($data);
+                    if (!isset($this->recvChannels[$correlationId])) {
+                        continue;
+                    }
+                } catch (Exception $e) {
+                    $data = $e;
                 }
                 $this->recvChannels[$correlationId]->push($data);
             }
