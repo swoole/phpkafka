@@ -70,7 +70,7 @@ class Producer
         $request->setTopics([$topicData]);
 
         $hasResponse = 0 !== $acks;
-        $client = $this->broker->getClient($brokerId);
+        $client = $this->broker->getClient($brokerId ?? $this->broker->getBrokerIdByTopic($topic, $partitionIndex));
         $correlationId = $client->send($request, null, $hasResponse);
         if (!$hasResponse) {
             return;
@@ -107,12 +107,15 @@ class Producer
         foreach ($messages as $message) {
             $topicName = $message->getTopic();
             $partitionIndex = $message->getPartitionIndex();
-            if (isset($topicsMap[$topicName])) {
+            if (null === $brokerId) {
+                $brokerId = $this->broker->getBrokerIdByTopic($topicName, $partitionIndex);
+            }
+            if (isset($topicsMap[$brokerId][$topicName])) {
                 /** @var TopicProduceData $topicData */
-                $topicData = $topicsMap[$topicName];
+                $topicData = $topicsMap[$brokerId][$topicName];
                 $partitions = $topicData->getPartitions();
             } else {
-                $topicData = $topicsMap[$topicName] = new TopicProduceData();
+                $topicData = $topicsMap[$brokerId][$topicName] = new TopicProduceData();
                 $topicData->setName($topicName);
                 $partitions = [];
             }
@@ -145,19 +148,21 @@ class Producer
 
             $topicData->setPartitions($partitions);
         }
-        $request->setTopics($topicsMap);
+        foreach ($topicsMap as $brokerId => $topics) {
+            $request->setTopics($topics);
 
-        $hasResponse = 0 !== $acks;
-        $client = $this->broker->getClient($brokerId);
-        $correlationId = $client->send($request, null, $hasResponse);
-        if (!$hasResponse) {
-            return;
-        }
-        /** @var ProduceResponse $response */
-        $response = $client->recv($correlationId);
-        foreach ($response->getResponses() as $response) {
-            foreach ($response->getPartitions() as $partition) {
-                ErrorCode::check($partition->getErrorCode());
+            $hasResponse = 0 !== $acks;
+            $client = $this->broker->getClient($brokerId);
+            $correlationId = $client->send($request, null, $hasResponse);
+            if (!$hasResponse) {
+                continue;
+            }
+            /** @var ProduceResponse $response */
+            $response = $client->recv($correlationId);
+            foreach ($response->getResponses() as $response) {
+                foreach ($response->getPartitions() as $partition) {
+                    ErrorCode::check($partition->getErrorCode());
+                }
             }
         }
     }
