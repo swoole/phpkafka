@@ -140,10 +140,13 @@ class SwooleClient extends SyncClient
                     if (!isset($this->recvChannels[$correlationId])) {
                         continue;
                     }
+                    $this->recvChannels[$correlationId]->push($data);
                 } catch (Exception $e) {
-                    $data = $e;
+                    foreach ($this->recvChannels as $ch) {
+                        $ch->push($e);
+                    }
+                    break;
                 }
-                $this->recvChannels[$correlationId]->push($data);
             }
         });
     }
