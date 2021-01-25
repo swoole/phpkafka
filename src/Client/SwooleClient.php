@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Client;
 
-use Exception;
 use InvalidArgumentException;
 use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Exception\SocketException;
 use longlang\phpkafka\Protocol\AbstractRequest;
 use longlang\phpkafka\Protocol\AbstractResponse;
 use longlang\phpkafka\Protocol\ApiKeys;
@@ -141,9 +141,9 @@ class SwooleClient extends SyncClient
                         continue;
                     }
                     $this->recvChannels[$correlationId]->push($data);
-                } catch (Exception $e) {
-                    foreach ($this->recvChannels as $ch) {
-                        $ch->push($e);
+                } catch (SocketException $e) {
+                    foreach ($this->recvChannels as $channel) {
+                        $channel->push($e);
                     }
                     break;
                 }
