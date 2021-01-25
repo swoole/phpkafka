@@ -27,7 +27,7 @@ Class `longlang\phpkafka\Consumer\ConsumerConfig`
 | sessionTimeout | If no heartbeat sent out after the timeout, the group coordinator will consider it dead. (unit: second, decimal) | `60` |
 | rebalanceTimeout | The maximum time the coordinator waits for consumers to join. (unit: second, decimal) | `60` |
 | topic | Topic name. Suppoprt multiple topics consumed simultaneously. | `null` |
-| replicaId | Replication ID | `-1` |
+| replicaId | Replica ID | `-1` |
 | rackId | Rack ID | `''` |
 | autoCommit | Auto commit offset | `true` |
 | groupRetry | Group retries allowed if matching an error code. | `5` |

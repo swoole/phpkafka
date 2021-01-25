@@ -1,34 +1,34 @@
 # Producer
 
-## Configuration
+## Producer configuration
 
 Class `longlang\phpkafka\Producer\ProducerConfig`
 
-> 支持构造方法传入数组赋值
+> You can pass an array to a constructor.
 
 ### Configuration keys
 
 | Key | Description | Default |
 | - | - | - |
-| connectTimeout | 连接超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
-| sendTimeout | 发送超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
-| recvTimeout | 接收超时时间（单位：秒，支持小数），为`-1`则不限制 | `-1` |
-| clientId | Kafka 客户端标识 | `null` |
-| maxWriteAttempts | 最大写入尝试次数 | `3` |
-| client | 使用哪个 Kafka 客户端类，默认为`null`时根据场景自动识别 | `null` |
-| socket | 使用哪个 Kafka Socket 类，默认为`null`时根据场景自动识别 | `null` |
-| brokers | 手动配置 brokers 列表，如果要使用手动配置，请把`updateBrokers`设为`true`。格式：`'127.0.0.1:9092,127.0.0.1:9093'` 或 `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
-| bootstrapServers | 别名bootstrapServer，引导服务器，如果配置了该值，会自动连接该服务器，并自动更新 brokers。格式：`'127.0.0.1:9092,127.0.0.1:9093'` 或 `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
-| updateBrokers | 是否自动更新 brokers | `true` |
-| acks | 生产者要求领导者，在确认请求完成之前已收到的确认数值。允许的值：0表示无确认，1表示仅领导者，-1表示完整的ISR。 | `0` |
-| producerId | 生产者 ID | `-1` |
-| producerEpoch | 生产者 Epoch | `-1` |
-| partitionLeaderEpoch | 分区 Leader Epoch | `-1` |
-| autoCreateTopic | 自动创建主题 | `true` |
+| connectTimeout | Connection timeout(unit: second, decimal). `-1` means no limit. | `-1` |
+| sendTimeout | Connection timeout(unit: second, decimal). `-1` means no limit. | `-1` |
+| recvTimeout | Connection timeout(unit: second, decimal).`-1` means no limit. | `-1` |
+| clientId | Kafka client ID | `null` |
+| maxWriteAttempts | Maximum attempts to write | `3` |
+| client | Kafka client used. `null` by default means auto recognition. | `null` |
+| socket | Kafka Socket used. `null` by default means auto recognition. | `null` |
+| brokers | Configure brokers. If configure it manually, set `updateBrokers` to `true`. Format: `'127.0.0.1:9092,127.0.0.1:9093'` or `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
+| bootstrapServers | Alias bootstrapServer, used to boot the server. If configured, the server will be connected and brokers updated. Format: `'127.0.0.1:9092,127.0.0.1:9093'` or `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
+| updateBrokers | Auto update brokers | `true` |
+| acks | The producer acknowledges the leader before responding. 0 means not confirmed, 1 means the leader confirmed, -1 means ISR. | `0` |
+| producerId | producer ID | `-1` |
+| producerEpoch | producer Epoch | `-1` |
+| partitionLeaderEpoch | partition Leader Epoch | `-1` |
+| autoCreateTopic | auto create topic | `true` |
 
-## 发送单个消息
+## Send a single message
 
-**代码示例：**
+**Example**
 
 ```php
 use longlang\phpkafka\Producer\Producer;
@@ -45,9 +45,9 @@ $key = uniqid('', true);
 $producer->send('test', $value, $key);
 ```
 
-## 批量发送消息
+## Send batch messages
 
-**代码示例：**
+**Example**
 
 ```php
 use longlang\phpkafka\Producer\ProduceMessage;
