@@ -36,6 +36,7 @@ Class `longlang\phpkafka\Consumer\ConsumerConfig`
 | groupHeartbeat | Group heartbeat intervals. (unit: second) | `3` |
 | autoCreateTopic | Auto create topic. | `true` |
 | partitionAssignmentStrategy | Consumer partition assignment strategy. Optional: Range-`longlang\phpkafka\Consumer\Assignor\RangeAssignor`, RoundRobin-`\longlang\phpkafka\Consumer\Assignor\RoundRobinAssignor`, Sticky-`\longlang\phpkafka\Consumer\Assignor\StickyAssignor`. |
+| exceptionCallback | This callback is called when an exception that cannot be thrown by the `recv()` coroutine is encountered. Format: `function(\Exception $e){}` | `null` |
 
 ## Asynchronous (callback)
 

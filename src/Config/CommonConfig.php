@@ -47,6 +47,13 @@ class CommonConfig extends AbstractConfig
      */
     protected $updateBrokers = true;
 
+    /**
+     * Exception callback in SwooleClient.
+     *
+     * @var callable|null
+     */
+    protected $exceptionCallback = null;
+
     public function getConnectTimeout(): float
     {
         return $this->connectTimeout;
@@ -149,6 +156,18 @@ class CommonConfig extends AbstractConfig
     public function setUpdateBrokers(bool $updateBrokers): self
     {
         $this->updateBrokers = $updateBrokers;
+
+        return $this;
+    }
+
+    public function getExceptionCallback(): ?callable
+    {
+        return $this->exceptionCallback;
+    }
+
+    public function setExceptionCallback(?callable $exceptionCallback): self
+    {
+        $this->exceptionCallback = $exceptionCallback;
 
         return $this;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Test\Client;
 
+use Exception;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Client\SwooleClient;
 use longlang\phpkafka\Test\TestUtil;
@@ -62,5 +63,16 @@ class SwooleClientTest extends SyncClientTest
         $this->checkSwoole();
 
         return parent::testClose($client);
+    }
+
+    public function testExceptionCallback()
+    {
+        $client = $this->testClient();
+        $exception = null;
+        $client->getConfig()->setExceptionCallback(function (Exception $e) use (&$exception) {
+            $exception = $e;
+        });
+        $client->close();
+        $this->assertInstanceOf(Exception::class, $exception);
     }
 }

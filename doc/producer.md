@@ -25,6 +25,7 @@
 | producerEpoch | 生产者 Epoch | `-1` |
 | partitionLeaderEpoch | 分区 Leader Epoch | `-1` |
 | autoCreateTopic | 自动创建主题 | `true` |
+| exceptionCallback | 遇到无法在`recv()`协程抛出的异常时，调用此回调。格式：`function(\Exception $e){}` | `null` |
 
 ## 发送单个消息
 

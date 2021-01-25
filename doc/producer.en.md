@@ -25,6 +25,7 @@ Class `longlang\phpkafka\Producer\ProducerConfig`
 | producerEpoch | producer Epoch | `-1` |
 | partitionLeaderEpoch | partition Leader Epoch | `-1` |
 | autoCreateTopic | auto create topic | `true` |
+| exceptionCallback | This callback is called when an exception that cannot be thrown by the `recv()` coroutine is encountered. Format: `function(\Exception $e){}` | `null` |
 
 ## Send a single message
 

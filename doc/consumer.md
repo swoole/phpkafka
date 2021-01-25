@@ -36,6 +36,7 @@
 | groupHeartbeat | 分组心跳时间间隔，单位：秒 | `3` |
 | autoCreateTopic | 自动创建主题 | `true` |
 | partitionAssignmentStrategy | 消费者分区分配策略，可选：范围分配-`longlang\phpkafka\Consumer\Assignor\RangeAssignor`、轮询分配-`\longlang\phpkafka\Consumer\Assignor\RoundRobinAssignor`、粘性分配-`\longlang\phpkafka\Consumer\Assignor\StickyAssignor` | `longlang\phpkafka\Consumer\Assignor\RangeAssignor` |
+| exceptionCallback | 遇到无法在`recv()`协程抛出的异常时，调用此回调。格式：`function(\Exception $e){}` | `null` |
 
 ## 异步消费（回调）
 

@@ -137,13 +137,17 @@ class SwooleClient extends SyncClient
                     $length = Int32::unpack($data);
                     $data = $this->socket->recv($length);
                     $correlationId = Int32::unpack($data);
-                    if (!isset($this->recvChannels[$correlationId])) {
-                        continue;
+                    if (isset($this->recvChannels[$correlationId])) {
+                        $this->recvChannels[$correlationId]->push($data);
                     }
                 } catch (Exception $e) {
-                    $data = $e;
+                    $callback = $this->getConfig()->getExceptionCallback();
+                    if ($callback) {
+                        $callback($e);
+                    } else {
+                        throw $e;
+                    }
                 }
-                $this->recvChannels[$correlationId]->push($data);
             }
         });
     }
