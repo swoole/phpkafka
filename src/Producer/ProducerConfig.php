@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Producer;
 
 use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Producer\Partitioner\DefaultPartitioner;
 
 class ProducerConfig extends CommonConfig
 {
@@ -53,6 +54,13 @@ class ProducerConfig extends CommonConfig
      * @var bool
      */
     protected $autoCreateTopic = true;
+
+    /**
+     * The partitioning strategy.
+     *
+     * @var string
+     */
+    protected $partitioner = DefaultPartitioner::class;
 
     public function getClient(): ?string
     {
@@ -152,6 +160,18 @@ class ProducerConfig extends CommonConfig
     public function setAutoCreateTopic(bool $autoCreateTopic): self
     {
         $this->autoCreateTopic = $autoCreateTopic;
+
+        return $this;
+    }
+
+    public function getPartitioner(): string
+    {
+        return $this->partitioner;
+    }
+
+    public function setPartitioner(string $partitioner): self
+    {
+        $this->partitioner = $partitioner;
 
         return $this;
     }

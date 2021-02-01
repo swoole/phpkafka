@@ -26,6 +26,15 @@
 | partitionLeaderEpoch | 分区 Leader Epoch | `-1` |
 | autoCreateTopic | 自动创建主题 | `true` |
 | exceptionCallback | 遇到无法在`recv()`协程抛出的异常时，调用此回调。格式：`function(\Exception $e){}` | `null` |
+| partitioner | 分区策略 |  默认策略：`\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
+
+**默认分区策略：**
+
+如果指定了分区，则使用指定的分区；
+
+如果没有指定分区，但指定了 `key`，会根据 `key` 的哈希值（crc32）选择分区；
+
+如果没有指定分区，也没有指定 `key`，会使用轮询策略。
 
 ## 发送单个消息
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Producer;
 
 use longlang\phpkafka\Broker;
+use longlang\phpkafka\Producer\Partitioner\PartitionerInterface;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\Produce\PartitionProduceData;
 use longlang\phpkafka\Protocol\Produce\ProduceRequest;
@@ -25,6 +26,11 @@ class Producer
      */
     protected $broker;
 
+    /**
+     * @var PartitionerInterface
+     */
+    protected $partitioner;
+
     public function __construct(ProducerConfig $config)
     {
         $this->config = $config;
@@ -34,11 +40,17 @@ class Producer
         } else {
             $broker->setBrokers($config->getBrokers());
         }
+        $class = $config->getPartitioner();
+        $this->partitioner = new $class();
     }
 
-    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], int $partitionIndex = 0, ?int $brokerId = null)
+    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null, ?int $brokerId = null)
     {
         $config = $this->config;
+        $broker = $this->broker;
+        if (null === $partitionIndex) {
+            $partitionIndex = $this->partitioner->partition($topic, $value, $key, $broker->getTopicsMeta());
+        }
         $request = new ProduceRequest();
         $request->setAcks($acks = $config->getAcks());
         $recvTimeout = $config->getRecvTimeout();
@@ -70,7 +82,7 @@ class Producer
         $request->setTopics([$topicData]);
 
         $hasResponse = 0 !== $acks;
-        $client = $this->broker->getClient($brokerId ?? $this->broker->getBrokerIdByTopic($topic, $partitionIndex));
+        $client = $broker->getClient($brokerId ?? $broker->getBrokerIdByTopic($topic, $partitionIndex));
         $correlationId = $client->send($request, null, $hasResponse);
         if (!$hasResponse) {
             return;
@@ -92,6 +104,7 @@ class Producer
     public function sendBatch(array $messages, ?int $brokerId = null)
     {
         $config = $this->config;
+        $broker = $this->broker;
         $request = new ProduceRequest();
         $request->setAcks($acks = $config->getAcks());
         $recvTimeout = $config->getRecvTimeout();
@@ -104,11 +117,14 @@ class Producer
         $timestamp = (int) (microtime(true) * 1000);
         $topicsMap = [];
         $partitionsMap = [];
+        $topicsMeta = $broker->getTopicsMeta();
         foreach ($messages as $message) {
             $topicName = $message->getTopic();
-            $partitionIndex = $message->getPartitionIndex();
+            $value = $message->getValue();
+            $key = $message->getKey();
+            $partitionIndex = $message->getPartitionIndex() ?? $this->partitioner->partition($topicName, $value, $key, $topicsMeta);
             if (null === $brokerId) {
-                $brokerId = $this->broker->getBrokerIdByTopic($topicName, $partitionIndex);
+                $brokerId = $broker->getBrokerIdByTopic($topicName, $partitionIndex);
             }
             if (isset($topicsMap[$brokerId][$topicName])) {
                 /** @var TopicProduceData $topicData */
@@ -139,8 +155,8 @@ class Producer
             $offsetDelta = $recordBatch->getLastOffsetDelta() + 1;
             $recordBatch->setLastOffsetDelta($offsetDelta);
             $record = $records[] = new Record();
-            $record->setKey($message->getKey());
-            $record->setValue($message->getValue());
+            $record->setKey($key);
+            $record->setValue($value);
             $record->setHeaders($message->getHeaders());
             $record->setOffsetDelta($offsetDelta);
             $record->setTimestampDelta(((int) (microtime(true) * 1000)) - $timestamp);
@@ -152,7 +168,7 @@ class Producer
             $request->setTopics($topics);
 
             $hasResponse = 0 !== $acks;
-            $client = $this->broker->getClient($brokerId);
+            $client = $broker->getClient($brokerId);
             $correlationId = $client->send($request, null, $hasResponse);
             if (!$hasResponse) {
                 continue;

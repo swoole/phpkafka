@@ -26,6 +26,15 @@ Class `longlang\phpkafka\Producer\ProducerConfig`
 | partitionLeaderEpoch | partition Leader Epoch | `-1` |
 | autoCreateTopic | auto create topic | `true` |
 | exceptionCallback | This callback is called when an exception that cannot be thrown by the `recv()` coroutine is encountered. Format: `function(\Exception $e){}` | `null` |
+| partitioner | Partitioning strategy |  Default: `\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
+
+**Default partitioning strategy：**
+
+If partition !== null, then use partition
+
+If partition === null && key !== null, then use crc32(key) % partitions to select partition
+
+If partition === null && key === null, then use Round Robin to select partition
 
 ## Send a single message
 

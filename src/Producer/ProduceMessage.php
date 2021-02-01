@@ -27,11 +27,11 @@ class ProduceMessage
     protected $headers;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $partitionIndex;
 
-    public function __construct(string $topic, ?string $value, ?string $key = null, array $headers = [], int $partitionIndex = 0)
+    public function __construct(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null)
     {
         $this->topic = $topic;
         $this->value = $value;
@@ -40,42 +40,27 @@ class ProduceMessage
         $this->partitionIndex = $partitionIndex;
     }
 
-    /**
-     * @return string
-     */
-    public function getTopic()
+    public function getTopic(): string
     {
         return $this->topic;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
-    /**
-     * @return int
-     */
-    public function getPartitionIndex()
+    public function getPartitionIndex(): ?int
     {
         return $this->partitionIndex;
     }

@@ -66,7 +66,7 @@ abstract class BaseFetchAndProduceTest extends TestCase
             $responses = $response->getResponses();
             $this->assertCount(1, $responses);
             $this->assertEquals('test', $responses[0]->getName());
-            $this->assertEquals(0, $responses[0]->getPartitions()[0]->getErrorCode());
+            $this->assertEquals(0, $responses[0]->getPartitions()[0]->getErrorCode(), $responses[0]->getPartitions()[0]->getErrorMessage() ?: 'Unknown');
 
             return [$responses[0]->getPartitions()[0]->getBaseOffset()];
         } finally {
