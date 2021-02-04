@@ -27,7 +27,7 @@ class ConsumeMessage
     protected $key;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $value;
 
@@ -36,7 +36,7 @@ class ConsumeMessage
      */
     protected $headers;
 
-    public function __construct(Consumer $consumer, string $topic, int $partition, ?string $key, string $value, array $headers)
+    public function __construct(Consumer $consumer, string $topic, int $partition, ?string $key, ?string $value, array $headers)
     {
         $this->consumer = $consumer;
         $this->topic = $topic;
@@ -94,12 +94,12 @@ class ConsumeMessage
         return $this;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(string $value): self
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 
