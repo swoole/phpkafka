@@ -28,7 +28,7 @@ abstract class BaseFetchAndProduceTest extends TestCase
     public function testProduceRequest()
     {
         $this->checkSkip();
-        $client = TestUtil::createKafkaClient();
+        $client = TestUtil::getLeaderBrokerClient('test', 0);
         $client->connect();
         $request = new ProduceRequest();
         $request->setAcks(-1);
@@ -83,7 +83,7 @@ abstract class BaseFetchAndProduceTest extends TestCase
     {
         $this->checkSkip();
         [$offset] = $args;
-        $client = TestUtil::createKafkaClient();
+        $client = TestUtil::getLeaderBrokerClient('test', 0);
         $client->connect();
         $request = new FetchRequest();
         $request->setReplicaId(-1);

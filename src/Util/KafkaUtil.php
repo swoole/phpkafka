@@ -40,7 +40,10 @@ class KafkaUtil
         }
     }
 
-    public static function retry(ClientInterface $client, AbstractRequest $request, int $retry, float $sleep = 0.01): AbstractResponse
+    /**
+     * @param callable[] $callbacks
+     */
+    public static function retry(ClientInterface $client, AbstractRequest $request, int $retry, float $sleep = 0.01, array $callbacks = []): AbstractResponse
     {
         $response = $client->sendRecv($request);
         if (!method_exists($response, 'getErrorCode')) {
@@ -54,6 +57,14 @@ class KafkaUtil
                 }
 
                 return self::retry($client, $request, $retry - 1, $sleep);
+            }
+            if (isset($callbacks[$errorCode])) {
+                $result = $callbacks[$errorCode]($response);
+                if (true === $result) {
+                    return $response;
+                } elseif ($result instanceof AbstractResponse) {
+                    return $result;
+                }
             }
             ErrorCode::check($errorCode);
         }

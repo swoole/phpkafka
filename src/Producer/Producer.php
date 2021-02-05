@@ -123,9 +123,7 @@ class Producer
             $value = $message->getValue();
             $key = $message->getKey();
             $partitionIndex = $message->getPartitionIndex() ?? $this->partitioner->partition($topicName, $value, $key, $topicsMeta);
-            if (null === $brokerId) {
-                $brokerId = $broker->getBrokerIdByTopic($topicName, $partitionIndex);
-            }
+            $brokerId = $broker->getBrokerIdByTopic($topicName, $partitionIndex);
             if (isset($topicsMap[$brokerId][$topicName])) {
                 /** @var TopicProduceData $topicData */
                 $topicData = $topicsMap[$brokerId][$topicName];

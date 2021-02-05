@@ -16,7 +16,7 @@ class CreateTopicsTest extends TestCase
 {
     public function testRequest()
     {
-        $client = TestUtil::createKafkaClient();
+        $client = TestUtil::getControllerClient();
         $client->connect();
         $request = new CreateTopicsRequest();
         $request->setTopics([
