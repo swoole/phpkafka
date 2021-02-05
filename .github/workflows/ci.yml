@@ -10,13 +10,13 @@ jobs:
       fail-fast: false
       matrix:
         php: [7.1, 7.2, 7.3, 7.4, "8.0"]
-        kafka: [1.0.0, 1.1.1, 2.6.0]
+        kafka: [1.0.0, 2.11-1.1.1, 2.13-2.6.0]
 
     env:
       PHP_VERSION: ${{ matrix.php }}
       KAFKA_VERSION: ${{ matrix.kafka }}
-      SWOOLE_VERSION: 4.5.9
-      KAFKA_HOST: kafka-${{ matrix.kafka }}
+      SWOOLE_VERSION: 4.6
+      KAFKA_HOST: kafka1
       KAFKA_PORT: 9092
 
     steps:
@@ -25,16 +25,16 @@ jobs:
       - name: start docker
         run: |
           cd .github
-          # kafka
-          docker-compose up -d kafka-$KAFKA_VERSION
+          # run
+          docker-compose up -d
           # swoole
-          docker-compose up -d swoole && docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
+          docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
           docker ps -a && docker ps
 
       - name: prepare
         run: |
           docker exec swoole composer update
-          docker exec kafka /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
+          docker exec kafka1 /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
 
       - name: php-test
         run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer test
