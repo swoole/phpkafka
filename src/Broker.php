@@ -36,6 +36,11 @@ class Broker
      */
     protected $topicsMeta;
 
+    /**
+     * @var string[]
+     */
+    protected $metaUpdatedTopics = [];
+
     public function __construct($config)
     {
         $this->config = $config;
@@ -95,7 +100,17 @@ class Broker
         $request->setAllowAutoTopicCreation($config->getAutoCreateTopic());
         /** @var MetadataResponse $response */
         $response = $client->sendRecv($request);
-        $this->topicsMeta = $response->getTopics();
+        $topicsMeta = $response->getTopics();
+        if ($this->topicsMeta) {
+            $this->topicsMeta = array_values(array_merge($this->topicsMeta, $topicsMeta));
+        } else {
+            $this->topicsMeta = $topicsMeta;
+        }
+        if ($this->metaUpdatedTopics) {
+            $this->metaUpdatedTopics = array_values(array_merge($this->metaUpdatedTopics, $topics));
+        } else {
+            $this->metaUpdatedTopics = $topics;
+        }
 
         return $response;
     }
@@ -171,6 +186,9 @@ class Broker
 
     public function getBrokerIdByTopic(string $topic, int $partition): ?int
     {
+        if (!\in_array($topic, $this->metaUpdatedTopics)) {
+            $this->updateMetadata([$topic]);
+        }
         foreach ($this->topicsMeta as $topicMeta) {
             if ($topicMeta->getName() === $topic) {
                 foreach ($topicMeta->getPartitions() as $topicPartition) {

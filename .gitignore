@@ -9,3 +9,4 @@ vendor/
 *.log
 /coverage.txt
 /.php_cs.cache
+*.cache

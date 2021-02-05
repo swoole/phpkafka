@@ -6,7 +6,6 @@ namespace longlang\phpkafka\Consumer;
 
 use InvalidArgumentException;
 use longlang\phpkafka\Broker;
-use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Consumer\Assignor\PartitionAssignorInterface;
 use longlang\phpkafka\Consumer\Struct\ConsumerGroupMemberMetadata;
 use longlang\phpkafka\Exception\KafkaErrorException;
@@ -19,6 +18,7 @@ use longlang\phpkafka\Protocol\Fetch\FetchableTopic;
 use longlang\phpkafka\Protocol\Fetch\FetchPartition;
 use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
+use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
 use longlang\phpkafka\Util\KafkaUtil;
 use Swoole\Timer;
@@ -49,11 +49,6 @@ class Consumer
      * @var OffsetManager[]
      */
     protected $offsetManagers = [];
-
-    /**
-     * @var ClientInterface
-     */
-    protected $client;
 
     /**
      * @var string
@@ -100,6 +95,13 @@ class Consumer
      */
     private $assignor;
 
+    /**
+     * @var FindCoordinatorResponse
+     */
+    private $coordinator;
+
+    protected $fetchOptions = [];
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
@@ -112,14 +114,13 @@ class Consumer
             $broker->setBrokers($config->getBroker());
         }
 
-        $this->client = $broker->getClient();
         $this->groupManager = $groupManager = new GroupManager($broker);
         $groupId = $config->getGroupId();
 
         $this->broker->updateMetadata($config->getTopic());
 
         // findCoordinator
-        $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
+        $this->coordinator = $groupManager->findCoordinator($groupId, CoordinatorType::GROUP, $config->getGroupRetry(), $config->getGroupRetrySleep());
 
         $this->rejoin();
     }
@@ -133,7 +134,6 @@ class Consumer
         $groupManager = $this->groupManager;
         $groupId = $config->getGroupId();
         $topics = $config->getTopic();
-        $client = $this->broker->getClient();
 
         $metadata = new ConsumerGroupMemberMetadata();
         $metadata->setTopics($config->getTopic());
@@ -165,6 +165,9 @@ class Consumer
             $consumerGroupMemberAssignment->unpack($data);
         }
 
+        $this->initFetchOptions();
+
+        $client = $this->broker->getClient($this->coordinator->getNodeId());
         foreach ($topics as $topic) {
             $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($client, $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
             $offsetManager->updateOffsets($config->getOffsetRetry());
@@ -234,6 +237,37 @@ class Consumer
         $offsetManager->saveOffsets($partition, $this->config->getOffsetRetry());
     }
 
+    protected function initFetchOptions()
+    {
+        $fetchOptions = [];
+        $config = $this->config;
+        $broker = $this->broker;
+        $topicsMeta = $broker->getTopicsMeta();
+        foreach ($config->getTopic() as $topic) {
+            $currentTopicMetaItem = null;
+            foreach ($topicsMeta as $topicMetaItem) {
+                if ($topicMetaItem->getName() === $topic) {
+                    $currentTopicMetaItem = $topicMetaItem;
+                    break;
+                }
+            }
+            if (!$currentTopicMetaItem) {
+                continue;
+            }
+            foreach ($this->getFetchPartitions($topic) as $partition) {
+                foreach ($currentTopicMetaItem->getPartitions() as $topicsMetaItemPartition) {
+                    if ($partition === $topicsMetaItemPartition->getPartitionIndex()) {
+                        foreach ($topicsMetaItemPartition->getReplicaNodes() as $nodeId) {
+                            $fetchOptions[$nodeId][$topic][] = $partition;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        $this->fetchOptions = $fetchOptions;
+    }
+
     protected function fetchMessages()
     {
         if (!$this->swooleHeartbeat) {
@@ -250,9 +284,15 @@ class Consumer
         }
         $request->setRackId($config->getRackId());
         $topics = [];
-        foreach ($config->getTopic() as $topic) {
+        $currentList = current($this->fetchOptions);
+        if (false === $currentList) {
+            $currentList = reset($this->fetchOptions);
+        }
+        $nodeId = key($this->fetchOptions);
+        next($this->fetchOptions);
+        foreach ($currentList as $topic => $partitions) {
             $fetchPartitions = [];
-            foreach ($this->getFetchPartitions($topic) as $partition) {
+            foreach ($partitions as $partition) {
                 $fetchPartitions[] = (new FetchPartition())->setPartitionIndex($partition)->setFetchOffset($this->getOffsetManager($topic)->getFetchOffset($partition));
             }
             $topics[] = (new FetchableTopic())->setName($topic)->setFetchPartitions($fetchPartitions);
@@ -260,7 +300,7 @@ class Consumer
         $request->setTopics($topics);
 
         /** @var FetchResponse $response */
-        $response = $this->client->sendRecv($request);
+        $response = $this->broker->getClient($nodeId)->sendRecv($request);
         $errorCode = $response->getErrorCode();
         switch ($errorCode) {
             case ErrorCode::REBALANCE_IN_PROGRESS:
@@ -348,6 +388,9 @@ class Consumer
         return $partitions;
     }
 
+    /**
+     * @return int[]
+     */
     protected function getFetchPartitions(string $topic): array
     {
         $partitions = [];
