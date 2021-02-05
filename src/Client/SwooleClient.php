@@ -7,6 +7,7 @@ namespace longlang\phpkafka\Client;
 use Exception;
 use InvalidArgumentException;
 use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Exception\SocketException;
 use longlang\phpkafka\Protocol\AbstractRequest;
 use longlang\phpkafka\Protocol\AbstractResponse;
 use longlang\phpkafka\Protocol\ApiKeys;
@@ -49,14 +50,10 @@ class SwooleClient extends SyncClient
 
     public function close(): bool
     {
-        if ($this->socket->close()) {
-            $this->connected = false;
-            $this->recvChannels = [];
+        $this->connected = false;
+        $this->recvChannels = [];
 
-            return true;
-        } else {
-            return false;
-        }
+        return $this->socket->close();
     }
 
     /**
@@ -141,6 +138,9 @@ class SwooleClient extends SyncClient
                         $this->recvChannels[$correlationId]->push($data);
                     }
                 } catch (Exception $e) {
+                    if ($e instanceof SocketException && !$this->connected) {
+                        return;
+                    }
                     $callback = $this->getConfig()->getExceptionCallback();
                     if ($callback) {
                         $callback($e);
