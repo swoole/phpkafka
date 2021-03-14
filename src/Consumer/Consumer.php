@@ -290,6 +290,9 @@ class Consumer
         }
         $nodeId = key($this->fetchOptions);
         next($this->fetchOptions);
+        if (!$currentList) {
+            return;
+        }
         foreach ($currentList as $topic => $partitions) {
             $fetchPartitions = [];
             foreach ($partitions as $partition) {
