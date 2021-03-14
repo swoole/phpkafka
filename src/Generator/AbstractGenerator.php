@@ -110,7 +110,7 @@ abstract class AbstractGenerator
             $classProperties .= <<<CODE
 /**
  * {$about}
- * 
+ *
  * @var {$phpCommentType}
  */
 protected \${$propertyName}{$defaultValue};
@@ -139,7 +139,7 @@ public function get{$ucPropertyName}(): {$phpType}
 
 /**
  * @param {$phpCommentType} \${$propertyName}
- * 
+ *
  * @return self
  */
 public function set{$ucPropertyName}({$phpType} \${$propertyName}): self

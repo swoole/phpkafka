@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ jobs:
       KAFKA_PORT: 9092
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: start docker
         run: |

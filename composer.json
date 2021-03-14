@@ -11,7 +11,8 @@
     "require-dev": {
         "phpunit/phpunit": "^7.5|^8.0|^9.0",
         "colinodell/json5": "^2.1",
-        "swoole/ide-helper": "^4.5"
+        "swoole/ide-helper": "^4.5",
+        "friendsofphp/php-cs-fixer": "^2.18"
     },
     "autoload": {
         "psr-4": {

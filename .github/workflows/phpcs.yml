@@ -1,0 +1,36 @@
+name: Coding Standards
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.4]
+        swoole: [4.5]
+        kafka: [2.13-2.7.0]
+
+    env:
+      PHP_VERSION: ${{ matrix.php }}
+      KAFKA_VERSION: ${{ matrix.kafka }}
+      SWOOLE_VERSION: 4.5
+      KAFKA_HOST: kafka1
+      KAFKA_PORT: 9092
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Start docker
+        run: |
+          cd .github
+          # run
+          docker-compose up -d
+          # swoole
+          docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
+          docker ps -a && docker ps
+
+      - name: Test
+        run: docker exec swoole ./vendor/bin/php-cs-fixer fix --dry-run
