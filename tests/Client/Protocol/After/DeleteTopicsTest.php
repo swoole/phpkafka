@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class DeleteTopicsTest extends TestCase
 {
-    public function testRequest()
+    public function testRequest(): array
     {
         $client = TestUtil::createKafkaClient();
         $client->connect();
@@ -27,10 +27,8 @@ class DeleteTopicsTest extends TestCase
 
     /**
      * @depends testRequest
-     *
-     * @return void
      */
-    public function testResponse($args)
+    public function testResponse(array $args): void
     {
         /** @var ClientInterface $client */
         [$client, $correlationId] = $args;

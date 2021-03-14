@@ -28,7 +28,7 @@ class SwooleClient extends SyncClient
     protected $coRecvRunning = false;
 
     /**
-     * @return \Swoole\Coroutine\Channel[]
+     * @var \Swoole\Coroutine\Channel[]
      */
     protected $recvChannels = [];
 
@@ -36,6 +36,11 @@ class SwooleClient extends SyncClient
      * @var int|bool
      */
     private $recvCoId = false;
+
+    /**
+     * @var bool
+     */
+    private $connected = false;
 
     public function __construct(string $host, int $port, ?CommonConfig $config = null, string $socketClass = SwooleSocket::class)
     {
@@ -120,7 +125,7 @@ class SwooleClient extends SyncClient
         return $result;
     }
 
-    private function startRecvCo()
+    private function startRecvCo(): void
     {
         $this->coRecvRunning = true;
         $this->recvCoId = true;

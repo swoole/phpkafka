@@ -29,7 +29,7 @@ class CreateTopicsTest extends TestCase
 
     private const ENCODE_RESPONSE_RESULT_V5 = '000027100205746573740000086d657373616765000000030001020461626304646566017b0100010002000b00';
 
-    public function testPackRequest()
+    public function testPackRequest(): void
     {
         $request = new CreateTopicsRequest();
         $request->setTopics([
@@ -52,7 +52,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V5, bin2hex($request->pack(5)));
     }
 
-    public function testUnpackRequest()
+    public function testUnpackRequest(): void
     {
         $request = new CreateTopicsRequest();
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V0), $size, 0);
@@ -122,7 +122,7 @@ class CreateTopicsTest extends TestCase
         ], $request->toArray());
     }
 
-    public function testPackResponse()
+    public function testPackResponse(): void
     {
         $response = new CreateTopicsResponse();
         $response->setThrottleTimeMs(10000);
@@ -144,7 +144,7 @@ class CreateTopicsTest extends TestCase
         $this->assertEquals(self::ENCODE_RESPONSE_RESULT_V5, bin2hex($response->pack(5)));
     }
 
-    public function testUnpackResponse()
+    public function testUnpackResponse(): void
     {
         $response = new CreateTopicsResponse();
         $response->unpack(hex2bin(self::ENCODE_RESPONSE_RESULT_V0), $size);

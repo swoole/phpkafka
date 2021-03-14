@@ -44,7 +44,7 @@ class Producer
         $this->partitioner = new $class();
     }
 
-    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null, ?int $brokerId = null)
+    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null, ?int $brokerId = null): void
     {
         $config = $this->config;
         $broker = $this->broker;
@@ -181,7 +181,7 @@ class Producer
         }
     }
 
-    public function close()
+    public function close(): void
     {
         $this->broker->close();
     }

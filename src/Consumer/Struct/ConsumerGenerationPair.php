@@ -22,12 +22,12 @@ class ConsumerGenerationPair
         $this->generation = $generation;
     }
 
-    public function getConsumer()
+    public function getConsumer(): string
     {
         return $this->consumer;
     }
 
-    public function getGeneration()
+    public function getGeneration(): int
     {
         return $this->generation;
     }

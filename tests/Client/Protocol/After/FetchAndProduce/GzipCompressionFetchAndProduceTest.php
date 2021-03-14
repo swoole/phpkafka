@@ -8,12 +8,12 @@ use longlang\phpkafka\Protocol\RecordBatch\Enum\Compression;
 
 class GzipCompressionFetchAndProduceTest extends BaseFetchAndProduceTest
 {
-    public function getComporession()
+    public function getComporession(): int
     {
         return Compression::GZIP;
     }
 
-    public function checkSkip()
+    public function checkSkip(): void
     {
     }
 }

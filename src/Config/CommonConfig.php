@@ -142,7 +142,7 @@ class CommonConfig extends AbstractConfig
         } elseif (\is_array($bootstrapServers)) {
             $this->bootstrapServers = $bootstrapServers;
         } else {
-            throw new InvalidArgumentException(sprintf('The bootstrapServers must be string or array, and the current type is %', \gettype($bootstrapServers)));
+            throw new InvalidArgumentException(sprintf('The bootstrapServers must be string or array, and the current type is %s', \gettype($bootstrapServers)));
         }
 
         return $this;

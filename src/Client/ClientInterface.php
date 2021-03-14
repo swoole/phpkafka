@@ -7,6 +7,7 @@ namespace longlang\phpkafka\Client;
 use longlang\phpkafka\Config\CommonConfig;
 use longlang\phpkafka\Protocol\AbstractRequest;
 use longlang\phpkafka\Protocol\AbstractResponse;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponseKey;
 use longlang\phpkafka\Protocol\RequestHeader\RequestHeader;
 use longlang\phpkafka\Protocol\ResponseHeader\ResponseHeader;
 use longlang\phpkafka\Socket\SocketInterface;
@@ -25,12 +26,12 @@ interface ClientInterface
     public function getSocket(): SocketInterface;
 
     /**
-     * @param \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
+     * @param ApiVersionsResponseKey[] $apiKeys
      */
     public function setApiKeys(array $apiKeys): self;
 
     /**
-     * @return \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]|null
+     * @return ApiVersionsResponseKey[]|null
      */
     public function getApiKeys(): ?array;
 

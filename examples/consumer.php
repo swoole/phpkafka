@@ -6,7 +6,7 @@ use longlang\phpkafka\Consumer\ConsumerConfig;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-function consume(ConsumeMessage $message)
+function consume(ConsumeMessage $message): void
 {
     var_dump($message->getKey() . ':' . $message->getValue());
 }
@@ -19,5 +19,3 @@ $config->setGroupInstanceId('test'); // 分组实例ID
 $config->setInterval(0.1);
 $consumer = new Consumer($config, 'consume');
 $consumer->start();
-
-return;

@@ -8,12 +8,12 @@ use longlang\phpkafka\Protocol\RecordBatch\Enum\Compression;
 
 class ZSTDCompressionFetchAndProduceTest extends BaseFetchAndProduceTest
 {
-    public function getComporession()
+    public function getComporession(): int
     {
         return Compression::ZSTD;
     }
 
-    public function checkSkip()
+    public function checkSkip(): void
     {
         $kafkaVersion = getenv('KAFKA_VERSION') ?: '0';
         $list = explode('-', $kafkaVersion);

@@ -23,7 +23,7 @@ class RequestHeaderTest extends TestCase
 
     private const ENCODE_RESULT_V2 = '001200010000007b00047465737400';
 
-    public function testPack()
+    public function testPack(): void
     {
         $header = new RequestHeader();
         $header->setClientId(self::TEST_CLIENT_ID);
@@ -35,7 +35,7 @@ class RequestHeaderTest extends TestCase
         $this->assertEquals(self::ENCODE_RESULT_V2, bin2hex($header->pack(2)));
     }
 
-    public function testUnpack()
+    public function testUnpack(): void
     {
         $header = new RequestHeader();
         $header->unpack(hex2bin(self::ENCODE_RESULT_V0), $size);

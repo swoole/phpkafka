@@ -41,7 +41,7 @@ class KafkaRequest
         return Int32::pack($this->size) . $this->data;
     }
 
-    private function updateData()
+    private function updateData(): void
     {
         $apiVersion = $this->header->getRequestApiVersion();
         $headerVersion = RequestHeader::parseVersion($apiVersion, $this->request->getFlexibleVersions());

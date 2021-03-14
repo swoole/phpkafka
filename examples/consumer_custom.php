@@ -21,5 +21,3 @@ while (true) {
         usleep(10000);
     }
 }
-
-return;

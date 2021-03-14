@@ -19,5 +19,3 @@ while (true) {
     var_dump(++$i);
     sleep(1);
 }
-
-return;

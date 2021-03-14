@@ -53,6 +53,7 @@ class GroupManager
         $request->setKey($key);
         $request->setKeyType($keyType);
 
+        // @phpstan-ignore-next-line
         return $this->findCoordinatorResponse = KafkaUtil::retry($this->broker->getClient(), $request, $retry, $sleep);
     }
 
@@ -68,6 +69,7 @@ class GroupManager
         $request->setRebalanceTimeoutMs($rebalanceTimeoutMs);
 
         /** @var JoinGroupResponse $response */
+        // @phpstan-ignore-next-line
         $response = $this->joinGroupResponse = KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep, [
             ErrorCode::MEMBER_ID_REQUIRED => function (JoinGroupResponse $response) use ($request, $retry, $sleep) {
                 $request->setMemberId($response->getMemberId());
@@ -90,6 +92,7 @@ class GroupManager
             (new MemberIdentity())->setMemberId($memberId)->setGroupInstanceId($groupInstanceId),
         ]);
 
+        // @phpstan-ignore-next-line
         return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 
@@ -104,6 +107,7 @@ class GroupManager
         $request->setProtocolType($protocolType);
         $request->setAssignments($assignments);
 
+        // @phpstan-ignore-next-line
         return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 
@@ -115,6 +119,7 @@ class GroupManager
         $request->setGenerationId($generationId);
         $request->setMemberId($memberId);
 
+        // @phpstan-ignore-next-line
         return KafkaUtil::retry($this->broker->getClient($this->findCoordinatorResponse->getNodeId()), $request, $retry, $sleep);
     }
 

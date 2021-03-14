@@ -40,7 +40,7 @@ class StreamSocket implements SocketInterface
     protected $config;
 
     /**
-     * @var resource
+     * @var resource|null
      */
     protected $socket;
 
@@ -216,9 +216,12 @@ class StreamSocket implements SocketInterface
         return $data;
     }
 
-    protected function select(array $sockets, float $timeout, bool $isRead = true): int
+    /**
+     * @return int|false
+     */
+    protected function select(array $sockets, float $timeout, bool $isRead = true)
     {
-        $null = null;
+        $null = [];
         $timeoutSec = (int) $timeout;
         if ($timeoutSec < 0) {
             $timeoutSec = null;

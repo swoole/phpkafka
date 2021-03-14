@@ -100,6 +100,9 @@ class Consumer
      */
     private $coordinator;
 
+    /**
+     * @var array
+     */
     protected $fetchOptions = [];
 
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
@@ -125,7 +128,7 @@ class Consumer
         $this->rejoin();
     }
 
-    public function rejoin()
+    public function rejoin(): void
     {
         if ($this->swooleHeartbeat) {
             $this->stopHeartbeat();
@@ -179,7 +182,7 @@ class Consumer
         }
     }
 
-    public function close()
+    public function close(): void
     {
         $config = $this->config;
         $groupId = $config->getGroupId();
@@ -190,7 +193,7 @@ class Consumer
         $this->stopHeartbeat();
     }
 
-    public function start()
+    public function start(): void
     {
         $consumeCallback = $this->consumeCallback;
         if (null === $consumeCallback) {
@@ -214,7 +217,7 @@ class Consumer
         }
     }
 
-    public function stop()
+    public function stop(): void
     {
         $this->started = false;
     }
@@ -229,7 +232,7 @@ class Consumer
         return $message;
     }
 
-    public function ack(ConsumeMessage $message)
+    public function ack(ConsumeMessage $message): void
     {
         $offsetManager = $this->getOffsetManager($message->getTopic());
         $partition = $message->getPartition();
@@ -237,7 +240,7 @@ class Consumer
         $offsetManager->saveOffsets($partition, $this->config->getOffsetRetry());
     }
 
-    protected function initFetchOptions()
+    protected function initFetchOptions(): void
     {
         $fetchOptions = [];
         $config = $this->config;
@@ -268,7 +271,7 @@ class Consumer
         $this->fetchOptions = $fetchOptions;
     }
 
-    protected function fetchMessages()
+    protected function fetchMessages(): void
     {
         if (!$this->swooleHeartbeat) {
             $this->checkBeartbeat();
@@ -336,14 +339,14 @@ class Consumer
         return $this->broker;
     }
 
-    protected function startHeartbeat()
+    protected function startHeartbeat(): void
     {
         $this->heartbeatTimerId = Timer::tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
             $this->heartbeat();
         });
     }
 
-    protected function stopHeartbeat()
+    protected function stopHeartbeat(): void
     {
         if ($this->heartbeatTimerId) {
             Timer::clear($this->heartbeatTimerId);
@@ -351,7 +354,7 @@ class Consumer
         }
     }
 
-    protected function heartbeat()
+    protected function heartbeat(): void
     {
         $config = $this->config;
         try {
@@ -367,7 +370,7 @@ class Consumer
         }
     }
 
-    protected function checkBeartbeat()
+    protected function checkBeartbeat(): void
     {
         $time = microtime(true);
         if ($time - $this->lastHeartbeatTime >= $this->config->getGroupHeartbeat()) {

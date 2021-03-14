@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ProducerTest extends TestCase
 {
-    public function testSend()
+    public function testSend(): void
     {
         $config = new ProducerConfig();
         $config->setBootstrapServer(TestUtil::getHost() . ':' . TestUtil::getPort());
@@ -24,7 +24,7 @@ class ProducerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testSendBatch()
+    public function testSendBatch(): void
     {
         $config = new ProducerConfig();
         $config->setBootstrapServer(TestUtil::getHost() . ':' . TestUtil::getPort());

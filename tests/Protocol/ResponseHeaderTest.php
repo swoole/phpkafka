@@ -15,7 +15,7 @@ class ResponseHeaderTest extends TestCase
 
     private const ENCODE_RESULT_V1 = '0000007b00';
 
-    public function testPack()
+    public function testPack(): void
     {
         $header = new ResponseHeader();
         $header->setCorrelationId(self::TEST_CORRELATION_ID);
@@ -23,7 +23,7 @@ class ResponseHeaderTest extends TestCase
         $this->assertEquals(self::ENCODE_RESULT_V1, bin2hex($header->pack(1)));
     }
 
-    public function testUnpack()
+    public function testUnpack(): void
     {
         $header = new ResponseHeader();
         $header->unpack(hex2bin(self::ENCODE_RESULT), $size);

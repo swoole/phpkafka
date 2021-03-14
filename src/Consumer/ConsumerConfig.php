@@ -202,7 +202,7 @@ class ConsumerConfig extends CommonConfig
         return $this->groupInstanceId;
     }
 
-    public function setGroupInstanceId($groupInstanceId): self
+    public function setGroupInstanceId(?string $groupInstanceId): self
     {
         $this->groupInstanceId = $groupInstanceId;
 
