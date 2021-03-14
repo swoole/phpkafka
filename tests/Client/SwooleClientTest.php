@@ -12,14 +12,14 @@ use Swoole\Coroutine;
 
 class SwooleClientTest extends SyncClientTest
 {
-    private function checkSwoole()
+    private function checkSwoole(): void
     {
         if (!\extension_loaded('swoole') || -1 === Coroutine::getCid()) {
             $this->markTestSkipped();
         }
     }
 
-    public function testClient()
+    public function testClient(): ClientInterface
     {
         $this->checkSwoole();
         $client = TestUtil::createKafkaClient(SwooleClient::class);
@@ -31,10 +31,8 @@ class SwooleClientTest extends SyncClientTest
 
     /**
      * @depends testClient
-     *
-     * @return void
      */
-    public function testConnect(ClientInterface $client)
+    public function testConnect(ClientInterface $client): ClientInterface
     {
         $this->checkSwoole();
 
@@ -43,29 +41,25 @@ class SwooleClientTest extends SyncClientTest
 
     /**
      * @depends testConnect
-     *
-     * @return void
      */
-    public function testGetApiKeys(ClientInterface $client)
+    public function testGetApiKeys(ClientInterface $client): void
     {
         $this->checkSwoole();
 
-        return parent::testGetApiKeys($client);
+        parent::testGetApiKeys($client);
     }
 
     /**
      * @depends testConnect
-     *
-     * @return void
      */
-    public function testClose(ClientInterface $client)
+    public function testClose(ClientInterface $client): void
     {
         $this->checkSwoole();
 
-        return parent::testClose($client);
+        parent::testClose($client);
     }
 
-    public function testExceptionCallback()
+    public function testExceptionCallback(): void
     {
         $client = $this->testClient();
         $exception = null;

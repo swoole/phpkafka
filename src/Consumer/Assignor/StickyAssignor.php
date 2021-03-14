@@ -124,6 +124,7 @@ class StickyAssignor extends AbstractPartitionAssignor
             $generation = $memberData->getGeneration();
 
             // Only consider this consumer's owned partitions as valid if it is a member of the current highest generation, or it's generation is not present but we have not seen any known generation so far
+            // @phpstan-ignore-next-line
             if ((null !== $generation && $generation >= $maxGeneration) || (null === $generation && self::DEFAULT_GENERATION === $generation)) {
                 // If the current member's generation is higher, all the previously owned partitions are invalid
                 if (null !== $generation && $generation > $maxGeneration) {
@@ -203,6 +204,7 @@ class StickyAssignor extends AbstractPartitionAssignor
             foreach ($unfilledMembers as $consumerKey => $consumer) {
                 /** @var TopicAndPartition $tp */
                 $tp = current($unassignedPartitions);
+                // @phpstan-ignore-next-line
                 if (false === $tp) {
                     break;
                 }
@@ -235,9 +237,9 @@ class StickyAssignor extends AbstractPartitionAssignor
             $underCapacityConsumer = array_shift($minCapacityMembers);
             if (null === $underCapacityConsumer) {
                 throw new \RuntimeException('Some partitions are unassigned but all consumers are at maximum capacity');
-                // We can skip the bookkeeping of unassignedPartitions and maxCapacityMembers here since we are at the end
-                $assignment[$underCapacityConsumer][] = $unassignedPartition;
             }
+            // We can skip the bookkeeping of unassignedPartitions and maxCapacityMembers here since we are at the end
+            $assignment[$underCapacityConsumer][] = $unassignedPartition;
         }
 
         return $assignment;
@@ -332,7 +334,6 @@ class StickyAssignor extends AbstractPartitionAssignor
                 foreach ($entry as $topicPartition) {
                     unset($currentPartitionConsumer[$topicPartition]);
                 }
-                $currentAssignment[$key];
             }
         }
         unset($entry);
@@ -346,6 +347,7 @@ class StickyAssignor extends AbstractPartitionAssignor
             }
 
             return $ret;
+            // @phpstan-ignore-next-line
         })->put(array_keys($currentAssignment));
 
         $this->balance($currentAssignment, $prevAssignment, $sortedPartitions, $unassignedPartitions, $sortedCurrentSubscriptions,
@@ -355,7 +357,7 @@ class StickyAssignor extends AbstractPartitionAssignor
     }
 
     private function balance(array &$currentAssignment, ObjectKeyArray $prevAssignment, array &$sortedPartitions, array &$unassignedPartitions, TreeSet $sortedCurrentSubscriptions,
-    array &$consumer2AllPotentialPartitions, ObjectKeyArray $partition2AllPotentialConsumers, ObjectKeyArray $currentPartitionConsumer, bool $revocationRequired)
+    array &$consumer2AllPotentialPartitions, ObjectKeyArray $partition2AllPotentialConsumers, ObjectKeyArray $currentPartitionConsumer, bool $revocationRequired): void
     {
         $initializing = empty($currentAssignment[$sortedCurrentSubscriptions->last()]);
         $reassignmentPerformed = false;
@@ -424,19 +426,17 @@ class StickyAssignor extends AbstractPartitionAssignor
         foreach ($fixedAssignments as $consumer => $entry) {
             $currentAssignment[$consumer] = $entry;
         }
+        // @phpstan-ignore-next-line
         $sortedCurrentSubscriptions->put(array_keys($fixedAssignments));
 
         $fixedAssignments = [];
     }
 
     /**
-     * @param JoinGroupResponseMember[]                     $groupMembers
-     * @param TopicPartition[][]                            $currentAssignment
-     * @param array<TopicPartition, ConsumerGenerationPair> $prevAssignment
-     *
-     * @return void
+     * @param JoinGroupResponseMember[] $groupMembers
+     * @param TopicPartition[][]        $currentAssignment
      */
-    private function prepopulateCurrentAssignments(array $groupMembers, array &$currentAssignment, ObjectKeyArray $prevAssignment)
+    private function prepopulateCurrentAssignments(array $groupMembers, array &$currentAssignment, ObjectKeyArray $prevAssignment): void
     {
         // we need to process subscriptions' user data with each consumer's reported generation in mind higher generations overwrite lower generations in case of a conflict note that a conflict could exists only if user data is for different generations
 
@@ -522,13 +522,14 @@ class StickyAssignor extends AbstractPartitionAssignor
         return $sortKeys;
     }
 
-    private function assignPartition(TopicPartition $partition, TreeSet $sortedCurrentSubscriptions, array &$currentAssignment, array &$consumer2AllPotentialPartitions, ObjectKeyArray $currentPartitionConsumer)
+    private function assignPartition(TopicPartition $partition, TreeSet $sortedCurrentSubscriptions, array &$currentAssignment, array &$consumer2AllPotentialPartitions, ObjectKeyArray $currentPartitionConsumer): void
     {
         foreach ($sortedCurrentSubscriptions as $consumer) {
             if (\in_array($partition, $consumer2AllPotentialPartitions[$consumer])) {
                 unset($sortedCurrentSubscriptions[$consumer]);
                 $currentAssignment[$consumer][] = $partition;
                 $currentPartitionConsumer[$partition] = $consumer;
+                // @phpstan-ignore-next-line
                 $sortedCurrentSubscriptions->put([
                     $consumer,
                 ]);
@@ -563,8 +564,7 @@ class StickyAssignor extends AbstractPartitionAssignor
     }
 
     /**
-     * @param TopicPartition[]                              $reassignablePartitions
-     * @param array<TopicPartition, ConsumerGenerationPair> $prevAssignment
+     * @param TopicPartition[] $reassignablePartitions
      */
     private function performReassignments(array &$reassignablePartitions, array &$currentAssignment, ObjectKeyArray $prevAssignment, TreeSet $sortedCurrentSubscriptions, array &$consumer2AllPotentialPartitions, ObjectKeyArray $partition2AllPotentialConsumers, ObjectKeyArray $currentPartitionConsumer): bool
     {
@@ -663,7 +663,7 @@ class StickyAssignor extends AbstractPartitionAssignor
         return true;
     }
 
-    private function reassignPartition1(TopicPartition $partition, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer, array &$consumer2AllPotentialPartitions)
+    private function reassignPartition1(TopicPartition $partition, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer, array &$consumer2AllPotentialPartitions): void
     {
         // find the new consumer
         $newConsumer = null;
@@ -677,7 +677,7 @@ class StickyAssignor extends AbstractPartitionAssignor
         $this->reassignPartition2($partition, $currentAssignment, $sortedCurrentSubscriptions, $currentPartitionConsumer, $newConsumer);
     }
 
-    private function reassignPartition2(TopicPartition $partition, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer, string $newConsumer)
+    private function reassignPartition2(TopicPartition $partition, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer, string $newConsumer): void
     {
         $consumer = $currentPartitionConsumer[$partition];
         // find the correct partition movement considering the stickiness requirement
@@ -685,7 +685,7 @@ class StickyAssignor extends AbstractPartitionAssignor
         $this->processPartitionMovement($partitionToBeMoved, $newConsumer, $currentAssignment, $sortedCurrentSubscriptions, $currentPartitionConsumer);
     }
 
-    private function processPartitionMovement(TopicPartition $partition, string $newConsumer, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer)
+    private function processPartitionMovement(TopicPartition $partition, string $newConsumer, array &$currentAssignment, TreeSet $sortedCurrentSubscriptions, ObjectKeyArray $currentPartitionConsumer): void
     {
         $oldConsumer = $currentPartitionConsumer[$partition];
 
@@ -701,6 +701,7 @@ class StickyAssignor extends AbstractPartitionAssignor
 
         $currentPartitionConsumer[$partition] = $newConsumer;
 
+        // @phpstan-ignore-next-line
         $sortedCurrentSubscriptions->put([
             $newConsumer,
             $oldConsumer,

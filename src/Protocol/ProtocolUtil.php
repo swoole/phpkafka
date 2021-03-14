@@ -19,7 +19,7 @@ class ProtocolUtil
     private static $nativeIsBigEndian;
 
     /**
-     * @var \Google\CRC32\CRC32Interface
+     * @var \Google\CRC32\CRCInterface|null
      */
     private static $crc32;
 
@@ -61,13 +61,8 @@ class ProtocolUtil
 
     /**
      * unsigned int32 >>.
-     *
-     * @param mixed  $x
-     * @param string $bits
-     *
-     * @return mixed
      */
-    public static function shr32($x, $bits)
+    public static function shr32(int $x, int $bits): int
     {
         if ($bits <= 0) {
             return $x;
@@ -88,13 +83,8 @@ class ProtocolUtil
 
     /**
      * unsigned int32 <<.
-     *
-     * @param mixed  $x
-     * @param string $bits
-     *
-     * @return mixed
      */
-    public static function shl32($x, $bits)
+    public static function shl32(int $x, int $bits): int
     {
         if ($bits <= 0) {
             return $x;
@@ -113,22 +103,24 @@ class ProtocolUtil
         return bindec(str_pad(substr($bin, $bits), 32, '0', \STR_PAD_RIGHT));
     }
 
-    public static function crc32c(string $data, bool $rawOutput = false)
+    public static function crc32c(string $data, bool $rawOutput = false): string
     {
         if (\PHP_VERSION_ID >= 70400) {
-            return hash('crc32c', $data, $rawOutput);
+            $result = hash('crc32c', $data, $rawOutput);
         } else {
             if (self::$crc32) {
                 $crc32 = self::$crc32;
             } else {
-                self::$crc32 = $crc32 = CRC32::create(CRC32::CASTAGNOLI);
+                /** @var \Google\CRC32\CRCInterface $crc32 */
+                // @phpstan-ignore-next-line
+                $crc32 = self::$crc32 = CRC32::create(CRC32::CASTAGNOLI);
             }
             $crc32->update($data);
 
             $result = $crc32->hash($rawOutput);
             $crc32->reset();
-
-            return $result;
         }
+
+        return $result;
     }
 }

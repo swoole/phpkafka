@@ -1,0 +1,21 @@
+parameters:
+    level: 6
+
+    paths:
+        - src
+        - tests
+        - examples
+
+    excludes_analyse:
+        - vendor
+
+    bootstrapFiles:
+        - vendor/autoload.php
+
+    treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+
+    ignoreErrors:
+        - '#Call to an undefined static method longlang\\phpkafka\\Protocol\\Type\\AbstractType::pack\(\).#'
+        - '#Call to an undefined static method longlang\\phpkafka\\Protocol\\Type\\AbstractType::unpack\(\).#'

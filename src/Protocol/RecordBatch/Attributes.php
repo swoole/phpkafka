@@ -53,7 +53,7 @@ class Attributes
         $this->setValue($value);
     }
 
-    public function setValue(int $value)
+    public function setValue(int $value): void
     {
         $binString = (str_pad(decbin($value), 16, '0', \STR_PAD_LEFT));
 

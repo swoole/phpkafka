@@ -69,7 +69,7 @@ class TestUtil
         $request = new MetadataRequest();
         $topicsArray = [];
         $topicsArray[] = (new MetadataRequestTopic())->setName($topic);
-        $request->setTopics($topicsArray ?: null);
+        $request->setTopics($topicsArray);
         /** @var MetadataResponse $response */
         $response = $client->sendRecv($request);
         $client->close();

@@ -77,7 +77,7 @@ class OffsetManager
         $this->generationId = $generationId;
     }
 
-    public function updateOffsets(int $retry = 0)
+    public function updateOffsets(int $retry = 0): void
     {
         $request = new OffsetFetchRequest();
         $request->setGroupId($this->groupId);
@@ -145,7 +145,7 @@ class OffsetManager
         return $this->offsets[$partition];
     }
 
-    public function addFetchOffset(int $partition, int $offset = 1)
+    public function addFetchOffset(int $partition, int $offset = 1): void
     {
         if (!isset($this->offsets[$partition])) {
             throw new \RuntimeException(sprintf('Partition %s doses not exists', $partition));
@@ -153,7 +153,7 @@ class OffsetManager
         $this->offsets[$partition] += $offset;
     }
 
-    public function saveOffsets(?int $partition = null, int $retry = 0)
+    public function saveOffsets(?int $partition = null, int $retry = 0): void
     {
         $request = new OffsetCommitRequest();
         $request->setGroupId($this->groupId);

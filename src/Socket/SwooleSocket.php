@@ -41,7 +41,7 @@ class SwooleSocket implements SocketInterface
     protected $config;
 
     /**
-     * @var \Swoole\Coroutine\Client
+     * @var \Swoole\Coroutine\Client|null
      */
     protected $socket;
 

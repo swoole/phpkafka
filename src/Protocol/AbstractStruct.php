@@ -129,6 +129,9 @@ abstract class AbstractStruct implements \JsonSerializable
         }
     }
 
+    /**
+     * @return mixed
+     */
     protected function unpackItem(int $apiVersion, string $data, ProtocolField $protocolField, ?int &$tmpSize)
     {
         $type = $protocolField->getType();

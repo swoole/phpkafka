@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Consumer\Assignor;
 
+use longlang\phpkafka\Protocol\JoinGroup\JoinGroupResponseMember;
 use longlang\phpkafka\Protocol\Metadata\MetadataResponseTopic;
 use longlang\phpkafka\Protocol\SyncGroup\SyncGroupRequestAssignment;
 

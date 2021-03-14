@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConsumerTest extends TestCase
 {
-    public function testConsumeWithRangeAssignor()
+    public function testConsumeWithRangeAssignor(): void
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
@@ -30,7 +30,7 @@ class ConsumerTest extends TestCase
         $consumer->close();
     }
 
-    public function testConsumeWithRoundRobinAssignor()
+    public function testConsumeWithRoundRobinAssignor(): void
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
@@ -49,7 +49,7 @@ class ConsumerTest extends TestCase
         $consumer->close();
     }
 
-    public function testConsumeWithStickyAssignor()
+    public function testConsumeWithStickyAssignor(): void
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());

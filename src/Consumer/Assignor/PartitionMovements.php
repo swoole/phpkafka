@@ -17,7 +17,7 @@ class PartitionMovements
     private $partitionMovementsByTopic = [];
 
     /**
-     * @var array<TopicPartition, ConsumerPair>
+     * @var ObjectKeyArray array<TopicPartition, ConsumerPair>
      */
     private $partitionMovements;
 
@@ -44,7 +44,7 @@ class PartitionMovements
         return $pair;
     }
 
-    public function addPartitionMovementRecord(TopicPartition $partition, ConsumerPair $pair)
+    public function addPartitionMovementRecord(TopicPartition $partition, ConsumerPair $pair): void
     {
         $this->partitionMovements[$partition] = $pair;
         $topic = $partition->getTopic();
@@ -56,7 +56,7 @@ class PartitionMovements
         $partitionMovementsForThisTopic[$pair][] = $partition;
     }
 
-    public function movePartition(TopicPartition $partition, string $oldConsumer, string $newConsumer)
+    public function movePartition(TopicPartition $partition, string $oldConsumer, string $newConsumer): void
     {
         $pair = new ConsumerPair($oldConsumer, $newConsumer);
 
@@ -158,6 +158,7 @@ class PartitionMovements
         // for now we want to make sure there is no partition movements of the same topic between a pair of consumers.
         // the odds of finding a cycle among more than two consumers seem to be very low (according to various randomized tests with the given sticky algorithm) that it should not worth the added complexity of handling those cases.
         foreach ($cycles as $cycle) {
+            // @phpstan-ignore-next-line
             if (3 === \count($cycle)) { // indicates a cycle of length 2
                 return true;
             }

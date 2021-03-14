@@ -22,7 +22,7 @@ class MessageGenerator extends AbstractGenerator
     protected $flexibleVersions;
 
     /**
-     * @var string[]
+     * @var array
      */
     protected $generatedTypes = [];
 
@@ -167,7 +167,7 @@ CODE;
         $this->save($classContent);
     }
 
-    public function generateCommonStructs()
+    public function generateCommonStructs(): void
     {
         if (!isset($this->data->commonStructs)) {
             return;

@@ -21,11 +21,11 @@ use PHPUnit\Framework\TestCase;
 
 abstract class BaseFetchAndProduceTest extends TestCase
 {
-    abstract public function getComporession();
+    abstract public function getComporession(): int;
 
-    abstract public function checkSkip();
+    abstract public function checkSkip(): void;
 
-    public function testProduceRequest()
+    public function testProduceRequest(): array
     {
         $this->checkSkip();
         $client = TestUtil::getLeaderBrokerClient('test', 0);
@@ -52,10 +52,8 @@ abstract class BaseFetchAndProduceTest extends TestCase
 
     /**
      * @depends testProduceRequest
-     *
-     * @return void
      */
-    public function testProduceResponse($args)
+    public function testProduceResponse(array $args): array
     {
         $this->checkSkip();
         /** @var ClientInterface $client */
@@ -76,10 +74,8 @@ abstract class BaseFetchAndProduceTest extends TestCase
 
     /**
      * @depends testProduceResponse
-     *
-     * @return void
      */
-    public function testFetchRequest($args)
+    public function testFetchRequest(array $args): array
     {
         $this->checkSkip();
         [$offset] = $args;
@@ -101,10 +97,8 @@ abstract class BaseFetchAndProduceTest extends TestCase
 
     /**
      * @depends testFetchRequest
-     *
-     * @return void
      */
-    public function testFetchResponse($args)
+    public function testFetchResponse(array $args): void
     {
         $this->checkSkip();
         /** @var ClientInterface $client */

@@ -21,7 +21,7 @@ class DeleteTopicsTest extends TestCase
 
     private const ENCODE_RESPONSE_RESULT_V4 = '00002710040461616100000004626262007b000463636300000000';
 
-    public function testPackRequest()
+    public function testPackRequest(): void
     {
         $request = new DeleteTopicsRequest();
         $request->setTopicNames(['aaa', 'bbb', 'ccc']);
@@ -30,7 +30,7 @@ class DeleteTopicsTest extends TestCase
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V4, bin2hex($request->pack(4)));
     }
 
-    public function testUnpackRequest()
+    public function testUnpackRequest(): void
     {
         $request = new DeleteTopicsRequest();
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V0), $size, 0);
@@ -48,7 +48,7 @@ class DeleteTopicsTest extends TestCase
         ], $request->toArray());
     }
 
-    public function testPackResponse()
+    public function testPackResponse(): void
     {
         $response = new DeleteTopicsResponse();
         $response->setThrottleTimeMs(10000);
@@ -63,7 +63,7 @@ class DeleteTopicsTest extends TestCase
         $this->assertEquals(self::ENCODE_RESPONSE_RESULT_V4, bin2hex($response->pack(4)));
     }
 
-    public function testUnpackResponse()
+    public function testUnpackResponse(): void
     {
         $response = new DeleteTopicsResponse();
         $response->unpack(hex2bin(self::ENCODE_RESPONSE_RESULT_V0), $size);

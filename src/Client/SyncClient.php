@@ -13,6 +13,7 @@ use longlang\phpkafka\Protocol\AbstractResponse;
 use longlang\phpkafka\Protocol\ApiKeys;
 use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsRequest;
 use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponse;
+use longlang\phpkafka\Protocol\ApiVersions\ApiVersionsResponseKey;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\KafkaRequest;
 use longlang\phpkafka\Protocol\RequestHeader\RequestHeader;
@@ -29,7 +30,7 @@ class SyncClient implements ClientInterface
     protected $socket;
 
     /**
-     * @var \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]
+     * @var ApiVersionsResponseKey[]
      */
     protected $apiKeys;
 
@@ -69,7 +70,7 @@ class SyncClient implements ClientInterface
     }
 
     /**
-     * @param \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[] $apiKeys
+     * @param ApiVersionsResponseKey[] $apiKeys
      */
     public function setApiKeys(array $apiKeys): ClientInterface
     {
@@ -83,7 +84,7 @@ class SyncClient implements ClientInterface
     }
 
     /**
-     * @return \longlang\phpkafka\Protocol\ApiVersions\ApiKeys[]|null
+     * @return ApiVersionsResponseKey[]|null
      */
     public function getApiKeys(): ?array
     {
@@ -180,7 +181,7 @@ class SyncClient implements ClientInterface
         return $this->recv($correlationId, $responseHeader);
     }
 
-    protected function updateApiVersions()
+    protected function updateApiVersions(): void
     {
         $request = new ApiVersionsRequest();
         $correlationId = $this->send($request);

@@ -19,7 +19,7 @@ class ApiVersionsTest extends TestCase
 
     private const ENCODE_RESPONSE_RESULT_V3 = '007b02001200000064000000271000';
 
-    public function testPackRequest()
+    public function testPackRequest(): void
     {
         // no fields
         $request = new ApiVersionsRequest();
@@ -30,7 +30,7 @@ class ApiVersionsTest extends TestCase
         $this->assertEquals(self::ENCODE_REQUEST_RESULT_V3, bin2hex($request->pack(3)));
     }
 
-    public function testUnpackRequest()
+    public function testUnpackRequest(): void
     {
         $request = new ApiVersionsRequest();
         $request->unpack(hex2bin(self::ENCODE_REQUEST_RESULT_V3), $size, 0);
@@ -43,7 +43,7 @@ class ApiVersionsTest extends TestCase
         ], $request->toArray());
     }
 
-    public function testPackResponse()
+    public function testPackResponse(): void
     {
         $response = new ApiVersionsResponse();
         $response->setApiKeys([
@@ -56,7 +56,7 @@ class ApiVersionsTest extends TestCase
         $this->assertEquals(self::ENCODE_RESPONSE_RESULT_V3, bin2hex($response->pack(3)));
     }
 
-    public function testUnpackResponse()
+    public function testUnpackResponse(): void
     {
         $response = new ApiVersionsResponse();
         $response->unpack(hex2bin(self::ENCODE_RESPONSE_RESULT_V0), $size);

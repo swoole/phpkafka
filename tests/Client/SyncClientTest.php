@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class SyncClientTest extends TestCase
 {
-    public function testClient()
+    public function testClient(): ClientInterface
     {
         $client = TestUtil::createKafkaClient(SyncClient::class);
         $this->assertEquals(TestUtil::getHost(), $client->getHost());
@@ -22,10 +22,8 @@ class SyncClientTest extends TestCase
 
     /**
      * @depends testClient
-     *
-     * @return void
      */
-    public function testConnect(ClientInterface $client)
+    public function testConnect(ClientInterface $client): ClientInterface
     {
         $client->connect();
         $this->assertTrue(true);
@@ -35,20 +33,16 @@ class SyncClientTest extends TestCase
 
     /**
      * @depends testConnect
-     *
-     * @return void
      */
-    public function testGetApiKeys(ClientInterface $client)
+    public function testGetApiKeys(ClientInterface $client): void
     {
         $this->assertNotEmpty($client->getApiKeys());
     }
 
     /**
      * @depends testConnect
-     *
-     * @return void
      */
-    public function testClose(ClientInterface $client)
+    public function testClose(ClientInterface $client): void
     {
         $this->assertTrue($client->close());
     }

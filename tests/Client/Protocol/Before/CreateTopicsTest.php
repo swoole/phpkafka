@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateTopicsTest extends TestCase
 {
-    public function testRequest()
+    public function testRequest(): array
     {
         $client = TestUtil::getControllerClient();
         $client->connect();
@@ -32,10 +32,8 @@ class CreateTopicsTest extends TestCase
 
     /**
      * @depends testRequest
-     *
-     * @return void
      */
-    public function testResponse($args)
+    public function testResponse(array $args): void
     {
         /** @var ClientInterface $client */
         [$client, $correlationId] = $args;

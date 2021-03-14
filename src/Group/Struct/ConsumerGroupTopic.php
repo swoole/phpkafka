@@ -46,7 +46,7 @@ class ConsumerGroupTopic extends AbstractStruct
         return $this->topicName;
     }
 
-    public function setTopicName(string $topicName)
+    public function setTopicName(string $topicName): self
     {
         $this->topicName = $topicName;
 

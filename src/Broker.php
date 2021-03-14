@@ -41,12 +41,15 @@ class Broker
      */
     protected $metaUpdatedTopics = [];
 
+    /**
+     * @param ProducerConfig|ConsumerConfig $config
+     */
     public function __construct($config)
     {
         $this->config = $config;
     }
 
-    public function close()
+    public function close(): void
     {
         foreach ($this->clients as $client) {
             $client->close();
@@ -54,7 +57,7 @@ class Broker
         $this->clients = [];
     }
 
-    public function updateBrokers()
+    public function updateBrokers(): void
     {
         $config = $this->config;
 
@@ -162,14 +165,14 @@ class Broker
         } elseif (\is_array($brokers)) {
             $this->brokers = $brokers;
         } else {
-            throw new InvalidArgumentException(sprintf('The type of brokers must be string or array, and the current type is %', \gettype($brokers)));
+            throw new InvalidArgumentException(sprintf('The type of brokers must be string or array, and the current type is %s', \gettype($brokers)));
         }
 
         return $this;
     }
 
     /**
-     * @return @var ProducerConfig|ConsumerConfig
+     * @return ProducerConfig|ConsumerConfig
      */
     public function getConfig()
     {

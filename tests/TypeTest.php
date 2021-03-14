@@ -30,7 +30,7 @@ class TypeTest extends TestCase
 
     private const FLOAT_VALUE = 3.141592654;
 
-    public function testBoolean()
+    public function testBoolean(): void
     {
         $encodeResult = Boolean::pack(true);
         $this->assertEquals(\chr(1), $encodeResult);
@@ -43,7 +43,7 @@ class TypeTest extends TestCase
         $this->assertEquals(1, $size);
     }
 
-    public function testCompactString()
+    public function testCompactString(): void
     {
         $encodeResult = CompactString::pack(self::TEST_STRING);
         $this->assertEquals('325048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -51,7 +51,7 @@ class TypeTest extends TestCase
         $this->assertEquals(1 + \strlen(self::TEST_STRING), $size);
     }
 
-    public function testFloat64()
+    public function testFloat64(): void
     {
         $encodeResult = Float64::pack(self::FLOAT_VALUE);
         $this->assertEquals(8, \strlen($encodeResult));
@@ -59,7 +59,7 @@ class TypeTest extends TestCase
         $this->assertEquals(8, $size);
     }
 
-    public function testInt8()
+    public function testInt8(): void
     {
         $encodeResult = Int8::pack(Int8::MIN_VALUE);
         $this->assertEquals(1, \strlen($encodeResult));
@@ -72,7 +72,7 @@ class TypeTest extends TestCase
         $this->assertEquals(1, $size);
     }
 
-    public function testInt16()
+    public function testInt16(): void
     {
         $encodeResult = Int16::pack(Int16::MIN_VALUE);
         $this->assertEquals(2, \strlen($encodeResult));
@@ -85,7 +85,7 @@ class TypeTest extends TestCase
         $this->assertEquals(2, $size);
     }
 
-    public function testInt32()
+    public function testInt32(): void
     {
         $encodeResult = Int32::pack(Int32::MIN_VALUE);
         $this->assertEquals(4, \strlen($encodeResult));
@@ -98,7 +98,7 @@ class TypeTest extends TestCase
         $this->assertEquals(4, $size);
     }
 
-    public function testInt64()
+    public function testInt64(): void
     {
         $encodeResult = Int64::pack(Int64::MIN_VALUE);
         $this->assertEquals(8, \strlen($encodeResult));
@@ -111,7 +111,7 @@ class TypeTest extends TestCase
         $this->assertEquals(8, $size);
     }
 
-    public function testNullableString()
+    public function testNullableString(): void
     {
         $encodeResult = NullableString::pack(self::TEST_STRING);
         $this->assertEquals('00315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -124,7 +124,7 @@ class TypeTest extends TestCase
         $this->assertEquals(2, $size);
     }
 
-    public function testNullableString32()
+    public function testNullableString32(): void
     {
         $encodeResult = NullableString32::pack(self::TEST_STRING);
         $this->assertEquals('000000315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -137,7 +137,7 @@ class TypeTest extends TestCase
         $this->assertEquals(4, $size);
     }
 
-    public function testCompactNullableString()
+    public function testCompactNullableString(): void
     {
         $encodeResult = CompactNullableString::pack(self::TEST_STRING);
         $this->assertEquals('325048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -150,7 +150,7 @@ class TypeTest extends TestCase
         $this->assertEquals(1, $size);
     }
 
-    public function testString16()
+    public function testString16(): void
     {
         $encodeResult = String16::pack(self::TEST_STRING);
         $this->assertEquals('00315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -158,7 +158,7 @@ class TypeTest extends TestCase
         $this->assertEquals(2 + \strlen(self::TEST_STRING), $size);
     }
 
-    public function testString32()
+    public function testString32(): void
     {
         $encodeResult = String32::pack(self::TEST_STRING);
         $this->assertEquals('000000315048502069732074686520626573742070726f6772616d6d696e67206c616e677561676520696e2074686520776f726c64', bin2hex($encodeResult));
@@ -166,7 +166,7 @@ class TypeTest extends TestCase
         $this->assertEquals(4 + \strlen(self::TEST_STRING), $size);
     }
 
-    public function testUInt32()
+    public function testUInt32(): void
     {
         $encodeResult = UInt32::pack(UInt32::MIN_VALUE);
         $this->assertEquals(4, \strlen($encodeResult));
@@ -179,7 +179,7 @@ class TypeTest extends TestCase
         $this->assertEquals(4, $size);
     }
 
-    public function testUVarInt()
+    public function testUVarInt(): void
     {
         foreach ([
             UVarInt::MIN_VALUE => 1,
@@ -195,7 +195,7 @@ class TypeTest extends TestCase
         }
     }
 
-    public function testVarInt()
+    public function testVarInt(): void
     {
         foreach ([
             VarInt::MIN_VALUE => 5,
@@ -212,7 +212,7 @@ class TypeTest extends TestCase
         }
     }
 
-    public function testArrayInt32()
+    public function testArrayInt32(): void
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = ArrayInt32::pack($exceptedArray, Int32::class);
@@ -227,7 +227,7 @@ class TypeTest extends TestCase
         $this->assertEquals(4, $size);
     }
 
-    public function testCompactArray()
+    public function testCompactArray(): void
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = CompactArray::pack($exceptedArray, Int32::class);
@@ -236,7 +236,7 @@ class TypeTest extends TestCase
         $this->assertEquals(13, $size);
     }
 
-    public function testVarIntCompactArray()
+    public function testVarIntCompactArray(): void
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = VarIntCompactArray::pack($exceptedArray, Int32::class);
