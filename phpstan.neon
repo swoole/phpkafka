@@ -19,7 +19,3 @@ parameters:
     ignoreErrors:
         - '#Call to an undefined static method longlang\\phpkafka\\Protocol\\Type\\AbstractType::pack\(\).#'
         - '#Call to an undefined static method longlang\\phpkafka\\Protocol\\Type\\AbstractType::unpack\(\).#'
-        - '#Function lz4_compress not found.#'
-        - '#Function lz4_uncompress not found.#'
-        - '#Function snappy_compress not found.#'
-        - '#Function snappy_uncompress not found.#'

@@ -107,9 +107,6 @@ class ProtocolUtil
     {
         if (\PHP_VERSION_ID >= 70400) {
             $result = hash('crc32c', $data, $rawOutput);
-            if (false === $result) {
-                return '';
-            }
         } else {
             if (self::$crc32) {
                 $crc32 = self::$crc32;
