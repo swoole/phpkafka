@@ -68,7 +68,7 @@ class Broker
         }
 
         if (!$url) {
-            throw new InvalidArgumentException(sprintf('Invalid bootstrapServer'));
+            throw new InvalidArgumentException('Invalid bootstrapServer');
         }
 
         $clientClass = KafkaUtil::getClientClass($config->getClient());

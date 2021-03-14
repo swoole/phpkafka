@@ -17,12 +17,9 @@ class ZSTDCompressionFetchAndProduceTest extends BaseFetchAndProduceTest
     {
         $kafkaVersion = getenv('KAFKA_VERSION') ?: '0';
         $list = explode('-', $kafkaVersion);
-        if(isset($list[1]))
-        {
+        if (isset($list[1])) {
             $kafkaVersion = $list[1];
-        }
-        else
-        {
+        } else {
             $kafkaVersion = $list[0];
         }
         if (!\extension_loaded('zstd') || version_compare($kafkaVersion, '2.1', '<')) {

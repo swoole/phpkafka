@@ -22,12 +22,12 @@ class ConsumeMessage
     protected $partition;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     protected $key;
 
     /**
-     * @var null|string
+     * @var string|null
      */
     protected $value;
 
