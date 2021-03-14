@@ -10,15 +10,12 @@ jobs:
       fail-fast: false
       matrix:
         php: [7.4]
-        swoole: [4.5]
         kafka: [2.13-2.7.0]
 
     env:
       PHP_VERSION: ${{ matrix.php }}
       KAFKA_VERSION: ${{ matrix.kafka }}
       SWOOLE_VERSION: 4.5
-      KAFKA_HOST: kafka1
-      KAFKA_PORT: 9092
 
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +28,10 @@ jobs:
           # swoole
           docker exec swoole php -v && docker exec swoole php --ri swoole && docker exec swoole composer -V
           docker ps -a && docker ps
+
+      - name: Prepare
+        run: |
+          docker exec swoole composer update
 
       - name: Test
         run: docker exec swoole ./vendor/bin/php-cs-fixer fix --dry-run
