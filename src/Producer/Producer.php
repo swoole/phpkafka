@@ -98,10 +98,8 @@ class Producer
 
     /**
      * @param ProduceMessage[] $messages
-     *
-     * @return void
      */
-    public function sendBatch(array $messages, ?int $brokerId = null)
+    public function sendBatch(array $messages, ?int $brokerId = null): void
     {
         $config = $this->config;
         $broker = $this->broker;

@@ -23,19 +23,30 @@ class RoundRobinAssignor extends AbstractPartitionAssignor
     public function assign(array $topicMetadatas, array $groupMembers): array
     {
         $memberIds = [];
+        $topicMemberIds = [];
         /** @var TopicAndPartition[] $topicAndPartitions */
         $topicAndPartitions = [];
         foreach ($groupMembers as $groupMember) {
             $memberId = $groupMember->getMemberId();
+            $memberIds[] = $memberId;
             $consumerGroupMemberMetadata = new ConsumerGroupMemberMetadata();
             $consumerGroupMemberMetadata->unpack($groupMember->getMetadata());
-            $memberIds[] = $memberId;
+            foreach ($consumerGroupMemberMetadata->getTopics() as $topic) {
+                $topicMemberIds[$topic][] = $memberId;
+            }
         }
+        $topicIndexs = [];
         foreach ($topicMetadatas as $topicMetadata) {
             $topic = $topicMetadata->getName();
-            foreach ($this->getTopicPartitions($topic, $topicMetadatas) as $partition) {
-                $topicAndPartition = new TopicAndPartition($topic, $partition);
-                $topicAndPartitions[spl_object_hash($topicAndPartition)] = $topicAndPartition;
+            if (!isset($topicMemberIds[$topic])) {
+                continue;
+            }
+            if (!isset($topicIndexs[$topic])) {
+                $topicIndexs[$topic] = 0;
+                foreach ($this->getTopicPartitions($topic, $topicMetadatas) as $partition) {
+                    $topicAndPartition = new TopicAndPartition($topic, $partition);
+                    $topicAndPartitions[spl_object_hash($topicAndPartition)] = $topicAndPartition;
+                }
             }
         }
         ksort($topicAndPartitions);
@@ -48,15 +59,16 @@ class RoundRobinAssignor extends AbstractPartitionAssignor
             $memberPartitions[$memberId] = [];
         }
 
-        $memberCount = \count($memberIds);
-
-        $i = 0;
         foreach ($topicAndPartitions as $topicAndPartition) {
-            $memberPartitions[$memberIds[$i]][] = $topicAndPartition;
+            $topic = $topicAndPartition->getTopic();
+            $memberCount = \count($topicMemberIds[$topic]);
+            $i = &$topicIndexs[$topic];
+            $memberPartitions[$topicMemberIds[$topic][$i]][] = $topicAndPartition;
             ++$i;
             if ($i >= $memberCount) {
                 $i = 0;
             }
+            unset($i);
         }
 
         $i = 0;

@@ -23,6 +23,7 @@ class RangeAssignor extends AbstractPartitionAssignor
     {
         $partitions = [];
         $memberTopics = [];
+        $topicMembers = [];
         foreach ($groupMembers as $groupMember) {
             $memberId = $groupMember->getMemberId();
             $consumerGroupMemberMetadata = new ConsumerGroupMemberMetadata();
@@ -33,6 +34,7 @@ class RangeAssignor extends AbstractPartitionAssignor
                     $partitions[$topic] = $this->getTopicPartitions($topic, $topicMetadatas);
                     sort($partitions[$topic]);
                 }
+                $topicMembers[$topic][$memberId] = [];
             }
         }
         /** @var SyncGroupRequestAssignment[] $assignments */
@@ -42,11 +44,15 @@ class RangeAssignor extends AbstractPartitionAssignor
         foreach ($memberTopics as $memberId => $topics) {
             $assignments[] = $assignment = new SyncGroupRequestAssignment();
             $assignment->setMemberId($memberId);
-            $consumerGroupMemberAssignments[] = new ConsumerGroupMemberAssignment();
+            $consumerGroupMemberAssignments[] = $assignment = new ConsumerGroupMemberAssignment();
+            foreach ($topics as $topic) {
+                $topicMembers[$topic][$memberId]['assignment'] = $assignment;
+            }
         }
 
-        $memberCount = \count($memberTopics);
         foreach ($partitions as $topicName => $topicPartitions) {
+            $memberIds = array_keys($topicMembers[$topicName]);
+            $memberCount = \count($memberIds);
             $partitionCount = \count($topicPartitions);
             $numPartitionsPerConsumer = (int) ($partitionCount / $memberCount);
             $consumersWithExtraPartition = $partitionCount % $memberCount;
@@ -55,7 +61,8 @@ class RangeAssignor extends AbstractPartitionAssignor
                 $start = $numPartitionsPerConsumer * $i + min($i, $consumersWithExtraPartition);
                 $length = $numPartitionsPerConsumer + ($i + 1 > $consumersWithExtraPartition ? 0 : 1);
 
-                $consumerGroupMemberAssignment = $consumerGroupMemberAssignments[$i];
+                /** @var ConsumerGroupMemberAssignment $consumerGroupMemberAssignment */
+                $consumerGroupMemberAssignment = $topicMembers[$topicName][$memberIds[$i]]['assignment'];
                 $consumerGroupTopic = new ConsumerGroupTopic();
                 $consumerGroupTopic->setTopicName($topicName);
                 $consumerGroupTopic->setPartitions(\array_slice($topicPartitions, $start, $length));

@@ -65,10 +65,8 @@ class ObjectKeyArray implements \Iterator, \ArrayAccess
     /**
      * @param mixed $offset
      * @param mixed $value
-     *
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $hash = $this->__hash($offset);
         if (null === $hash) {
@@ -80,10 +78,8 @@ class ObjectKeyArray implements \Iterator, \ArrayAccess
 
     /**
      * @param mixed $offset
-     *
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $hash = $this->__hash($offset);
         if (null === $hash) {
