@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Consumer;
 
-use longlang\phpkafka\Client\ClientInterface;
+use longlang\phpkafka\Broker;
 use longlang\phpkafka\Protocol\ErrorCode;
+use longlang\phpkafka\Protocol\ListOffset\ListOffsetPartition;
+use longlang\phpkafka\Protocol\ListOffset\ListOffsetRequest;
+use longlang\phpkafka\Protocol\ListOffset\ListOffsetResponse;
+use longlang\phpkafka\Protocol\ListOffset\ListOffsetTopic;
 use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequest;
 use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequestPartition;
 use longlang\phpkafka\Protocol\OffsetCommit\OffsetCommitRequestTopic;
@@ -18,9 +22,9 @@ use longlang\phpkafka\Util\KafkaUtil;
 class OffsetManager
 {
     /**
-     * @var ClientInterface
+     * @var Broker
      */
-    protected $client;
+    protected $broker;
 
     /**
      * @var string
@@ -66,9 +70,15 @@ class OffsetManager
      */
     private $metadatas;
 
-    public function __construct(ClientInterface $client, string $topic, array $partitions, string $groupId, ?string $groupInstanceId, string $memberId, int $generationId)
+    /**
+     * @var int
+     */
+    private $coordinatorNodeId;
+
+    public function __construct(Broker $broker, int $coordinatorNodeId, string $topic, array $partitions, string $groupId, ?string $groupInstanceId, string $memberId, int $generationId)
     {
-        $this->client = $client;
+        $this->broker = $broker;
+        $this->coordinatorNodeId = $coordinatorNodeId;
         $this->topic = $topic;
         $this->partitions = $partitions;
         $this->groupId = $groupId;
@@ -79,6 +89,8 @@ class OffsetManager
 
     public function updateOffsets(int $retry = 0): void
     {
+        $client = $this->broker->getClient($this->coordinatorNodeId);
+
         $request = new OffsetFetchRequest();
         $request->setGroupId($this->groupId);
         $request->setTopics([
@@ -86,7 +98,7 @@ class OffsetManager
         ]);
 
         /** @var OffsetFetchResponse $response */
-        $response = KafkaUtil::retry($this->client, $request, $retry, 0);
+        $response = KafkaUtil::retry($client, $request, $retry, 0);
 
         $metadatas = $offsets = [];
         foreach ($response->getTopics() as $topic) {
@@ -100,9 +112,38 @@ class OffsetManager
         $this->metadatas = $metadatas;
     }
 
-    public function getClient(): ClientInterface
+    public function updateListOffsets(array $partitions, int $retry = 0): void
     {
-        return $this->client;
+        $brokerPartitionMap = [];
+        $broker = $this->broker;
+        $topicName = $this->topic;
+        foreach ($partitions as $partition) {
+            $brokerPartitionMap[$broker->getBrokerIdByTopic($topicName, $partition)][] = $partition;
+        }
+        foreach ($brokerPartitionMap as $brokerId => $partitions) {
+            $request = new ListOffsetRequest();
+            $topicPartitions = [];
+            foreach ($partitions as $partition) {
+                $topicPartitions[] = $listOffsetPartition = new ListOffsetPartition();
+                $listOffsetPartition->setPartitionIndex($partition)->setTimestamp(-1);
+            }
+            $request->setTopics([
+                (new ListOffsetTopic())->setName($topicName)->setPartitions($topicPartitions),
+            ]);
+            $client = $broker->getClientByBrokerId($brokerId);
+            /** @var ListOffsetResponse $response */
+            $response = KafkaUtil::retry($client, $request, $retry, 0);
+            foreach ($response->getTopics() as $topic) {
+                foreach ($topic->getPartitions() as $partition) {
+                    $this->offsets[$partition->getPartitionIndex()] = $partition->getOffset();
+                }
+            }
+        }
+    }
+
+    public function getBroker(): Broker
+    {
+        return $this->broker;
     }
 
     public function getTopic(): string
@@ -153,7 +194,7 @@ class OffsetManager
         $this->offsets[$partition] += $offset;
     }
 
-    public function saveOffsets(?int $partition = null, int $retry = 0): void
+    public function saveOffsets(int $partition, int $retry = 0): void
     {
         $request = new OffsetCommitRequest();
         $request->setGroupId($this->groupId);
@@ -162,24 +203,20 @@ class OffsetManager
         $request->setGenerationId($this->generationId);
         $topic = (new OffsetCommitRequestTopic())->setName($this->topic);
         $request->setTopics([$topic]);
-        $partitions = [];
-        $timestamp = (int) (microtime(true) * 1000);
-        if (null === $partition) {
-            foreach ($this->partitions as $partition => $offset) {
-                $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp)->setCommittedMetadata($this->metadatas[$partition]);
-            }
-        } else {
-            $offset = $this->getFetchOffset($partition);
-            $partitions[] = (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp)->setCommittedMetadata($this->metadatas[$partition]);
-        }
-        $topic->setPartitions($partitions);
 
+        $timestamp = (int) (microtime(true) * 1000);
+        $offset = $this->getFetchOffset($partition);
+        $topic->setPartitions([
+            (new OffsetCommitRequestPartition())->setPartitionIndex($partition)->setCommittedOffset($offset)->setCommitTimestamp($timestamp)->setCommittedMetadata($this->metadatas[$partition]),
+        ]);
+
+        $broker = $this->broker;
         for ($i = 0; $i <= $retry; ++$i) {
             /** @var OffsetCommitResponse $response */
-            $response = $this->client->sendRecv($request);
+            $response = $broker->getClientByBrokerId($broker->getBrokerIdByTopic($this->topic, $partition))->sendRecv($request);
             foreach ($response->getTopics() as $topic) {
-                foreach ($topic->getPartitions() as $partition) {
-                    $errorCode = $partition->getErrorCode();
+                foreach ($topic->getPartitions() as $topicPartition) {
+                    $errorCode = $topicPartition->getErrorCode();
                     if (!ErrorCode::success($errorCode)) {
                         if ($retry > 0 && ErrorCode::canRetry($errorCode)) {
                             continue 3;

@@ -170,9 +170,8 @@ class Consumer
 
         $this->initFetchOptions();
 
-        $client = $this->broker->getClient($this->coordinator->getNodeId());
         foreach ($topics as $topic) {
-            $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($client, $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+            $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($this->broker, $this->coordinator->getNodeId(), $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
             $offsetManager->updateOffsets($config->getOffsetRetry());
         }
 
@@ -319,11 +318,23 @@ class Consumer
 
         $messages = [];
         foreach ($response->getTopics() as $topic) {
+            $needUpdatePartitions = [];
             foreach ($topic->getPartitions() as $partition) {
-                ErrorCode::check($partition->getErrorCode());
-                foreach ($partition->getRecords()->getRecords() as $record) {
-                    $messages[] = new ConsumeMessage($this, $topic->getName(), $partition->getPartitionIndex(), $record->getKey(), $record->getValue(), $record->getHeaders());
+                $errorCode = $partition->getErrorCode();
+                switch ($errorCode) {
+                    case ErrorCode::OFFSET_OUT_OF_RANGE:
+                        $needUpdatePartitions[] = $partition->getPartitionIndex();
+                        break;
+                    default:
+                        ErrorCode::check($errorCode);
+                        foreach ($partition->getRecords()->getRecords() as $record) {
+                            $messages[] = new ConsumeMessage($this, $topic->getName(), $partition->getPartitionIndex(), $record->getKey(), $record->getValue(), $record->getHeaders());
+                        }
                 }
+            }
+            if ($needUpdatePartitions) {
+                $offsetManager = $this->getOffsetManager($topic->getName());
+                $offsetManager->updateListOffsets($needUpdatePartitions);
             }
         }
         $this->messages = $messages;
