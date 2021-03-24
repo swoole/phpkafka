@@ -325,6 +325,13 @@ class Consumer
                     case ErrorCode::OFFSET_OUT_OF_RANGE:
                         $needUpdatePartitions[] = $partition->getPartitionIndex();
                         break;
+                    case ErrorCode::UNKNOWN_TOPIC_OR_PARTITION:
+                    case ErrorCode::LEADER_NOT_AVAILABLE:
+                    case ErrorCode::NOT_LEADER_OR_FOLLOWER:
+                    case ErrorCode::REPLICA_NOT_AVAILABLE:
+                        $this->rejoin();
+
+                        return;
                     default:
                         ErrorCode::check($errorCode);
                         foreach ($partition->getRecords()->getRecords() as $record) {
