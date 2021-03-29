@@ -23,7 +23,7 @@ class ConsumerConfig extends CommonConfig
     protected $socket;
 
     /**
-     * @var string
+     * @var string|string[]
      */
     protected $broker;
 
@@ -173,12 +173,19 @@ class ConsumerConfig extends CommonConfig
         return $this;
     }
 
-    public function getBroker(): string
+    /**
+     * @return string|string[]
+     */
+    public function getBroker()
     {
         return $this->broker;
     }
 
-    public function setBroker(string $broker): self
+    /**
+     * @param string|string[] $broker
+     * @return $this
+     */
+    public function setBroker($broker): self
     {
         $this->broker = $broker;
 
