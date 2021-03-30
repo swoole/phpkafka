@@ -37,6 +37,9 @@
 | autoCreateTopic | 自动创建主题 | `true` |
 | partitionAssignmentStrategy | 消费者分区分配策略，可选：范围分配-`longlang\phpkafka\Consumer\Assignor\RangeAssignor`、轮询分配-`\longlang\phpkafka\Consumer\Assignor\RoundRobinAssignor`、粘性分配-`\longlang\phpkafka\Consumer\Assignor\StickyAssignor` | `longlang\phpkafka\Consumer\Assignor\RangeAssignor` |
 | exceptionCallback | 遇到无法在`recv()`协程抛出的异常时，调用此回调。格式：`function(\Exception $e){}` | `null` |
+| minBytes | 最小字节数 | `1` |
+| maxBytes | 最大字节数 | `128 * 1024 * 1024` |
+| maxWait | 最大等待时间，单位：秒 | `1` |
 
 ## 异步消费（回调）
 

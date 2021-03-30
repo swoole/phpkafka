@@ -107,6 +107,21 @@ class ConsumerConfig extends CommonConfig
      */
     protected $partitionAssignmentStrategy = \longlang\phpkafka\Consumer\Assignor\RangeAssignor::class;
 
+    /**
+     * @var int
+     */
+    protected $minBytes = 1;
+
+    /**
+     * @var int
+     */
+    protected $maxBytes = 128 * 1024 * 1024;
+
+    /**
+     * @var int
+     */
+    protected $maxWait = 1;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -337,6 +352,42 @@ class ConsumerConfig extends CommonConfig
     public function setPartitionAssignmentStrategy(string $partitionAssignmentStrategy): self
     {
         $this->partitionAssignmentStrategy = $partitionAssignmentStrategy;
+
+        return $this;
+    }
+
+    public function getMinBytes(): int
+    {
+        return $this->minBytes;
+    }
+
+    public function setMinBytes(int $minBytes): self
+    {
+        $this->minBytes = $minBytes;
+
+        return $this;
+    }
+
+    public function getMaxBytes(): int
+    {
+        return $this->maxBytes;
+    }
+
+    public function setMaxBytes(int $maxBytes): self
+    {
+        $this->maxBytes = $maxBytes;
+
+        return $this;
+    }
+
+    public function getMaxWait(): int
+    {
+        return $this->maxWait;
+    }
+
+    public function setMaxWait(int $maxWait): self
+    {
+        $this->maxWait = $maxWait;
 
         return $this;
     }

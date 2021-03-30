@@ -130,54 +130,64 @@ class Consumer
 
     public function rejoin(): void
     {
-        if ($this->swooleHeartbeat) {
-            $this->stopHeartbeat();
-        }
-        $config = $this->config;
-        $groupManager = $this->groupManager;
-        $groupId = $config->getGroupId();
-        $topics = $config->getTopic();
+        rejoinBegin:
+        try {
+            if ($this->swooleHeartbeat) {
+                $this->stopHeartbeat();
+            }
+            $config = $this->config;
+            $groupManager = $this->groupManager;
+            $groupId = $config->getGroupId();
+            $topics = $config->getTopic();
 
-        $metadata = new ConsumerGroupMemberMetadata();
-        $metadata->setTopics($config->getTopic());
-        $metadataContent = $metadata->pack();
-        $protocolName = 'group';
-        $protocols = [
-            (new JoinGroupRequestProtocol())->setName($protocolName)->setMetadata($metadataContent),
-        ];
+            $metadata = new ConsumerGroupMemberMetadata();
+            $metadata->setTopics($config->getTopic());
+            $metadataContent = $metadata->pack();
+            $protocolName = 'group';
+            $protocols = [
+                (new JoinGroupRequestProtocol())->setName($protocolName)->setMetadata($metadataContent),
+            ];
 
-        // joinGroup
-        $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000), $config->getGroupRetry(), $config->getGroupRetrySleep());
-        $this->memberId = $response->getMemberId();
-        $this->generationId = $response->getGenerationId();
+            // joinGroup
+            $response = $groupManager->joinGroup($groupId, $config->getMemberId(), ProtocolType::CONSUMER, $config->getGroupInstanceId(), $protocols, (int) ($config->getSessionTimeout() * 1000), (int) ($config->getRebalanceTimeout() * 1000), $config->getGroupRetry(), $config->getGroupRetrySleep());
+            $this->memberId = $response->getMemberId();
+            $this->generationId = $response->getGenerationId();
 
-        // syncGroup
-        if ($this->groupManager->isLeader()) {
-            $assignorClass = $config->getPartitionAssignmentStrategy();
-            /** @var PartitionAssignorInterface $assignor */
-            $assignor = $this->assignor = new $assignorClass();
-            $assignments = $assignor->assign($this->broker->getTopicsMeta(), $this->groupManager->getJoinGroupResponse()->getMembers());
-            $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $assignments, $config->getGroupRetry(), $config->getGroupRetrySleep());
-        } else {
-            $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, [], $config->getGroupRetry(), $config->getGroupRetrySleep());
-        }
+            // syncGroup
+            if ($this->groupManager->isLeader()) {
+                $assignorClass = $config->getPartitionAssignmentStrategy();
+                /** @var PartitionAssignorInterface $assignor */
+                $assignor = $this->assignor = new $assignorClass();
+                $assignments = $assignor->assign($this->broker->getTopicsMeta(), $this->groupManager->getJoinGroupResponse()->getMembers());
+                $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, $assignments, $config->getGroupRetry(), $config->getGroupRetrySleep());
+            } else {
+                $response = $groupManager->syncGroup($groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId, $protocolName, ProtocolType::CONSUMER, [], $config->getGroupRetry(), $config->getGroupRetrySleep());
+            }
 
-        $this->consumerGroupMemberAssignment = $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
-        $data = $response->getAssignment();
-        if ('' !== $data) {
-            $consumerGroupMemberAssignment->unpack($data);
-        }
+            $this->consumerGroupMemberAssignment = $consumerGroupMemberAssignment = new ConsumerGroupMemberAssignment();
+            $data = $response->getAssignment();
+            if ('' !== $data) {
+                $consumerGroupMemberAssignment->unpack($data);
+            }
 
-        $this->initFetchOptions();
+            $this->initFetchOptions();
 
-        foreach ($topics as $topic) {
-            $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($this->broker, $this->coordinator->getNodeId(), $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
-            $offsetManager->updateOffsets($config->getOffsetRetry());
-        }
+            foreach ($topics as $topic) {
+                $this->offsetManagers[$topic] = $offsetManager = new OffsetManager($this->broker, $this->coordinator->getNodeId(), $topic, $this->getPartitions($topic), $groupId, $config->getGroupInstanceId(), $this->memberId, $this->generationId);
+                $offsetManager->updateOffsets($config->getOffsetRetry());
+            }
 
-        $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
-        if ($this->swooleHeartbeat) {
-            $this->startHeartbeat();
+            $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
+            if ($this->swooleHeartbeat) {
+                $this->startHeartbeat();
+            }
+        } catch (KafkaErrorException $ke) {
+            switch ($ke->getCode()) {
+                case ErrorCode::REBALANCE_IN_PROGRESS:
+                    goto rejoinBegin;
+                default:
+                    throw $ke;
+            }
         }
     }
 
@@ -259,9 +269,7 @@ class Consumer
             foreach ($this->getFetchPartitions($topic) as $partition) {
                 foreach ($currentTopicMetaItem->getPartitions() as $topicsMetaItemPartition) {
                     if ($partition === $topicsMetaItemPartition->getPartitionIndex()) {
-                        foreach ($topicsMetaItemPartition->getReplicaNodes() as $nodeId) {
-                            $fetchOptions[$nodeId][$topic][] = $partition;
-                        }
+                        $fetchOptions[$topicsMetaItemPartition->getLeaderId()][$topic][] = $partition;
                         break;
                     }
                 }
@@ -278,12 +286,9 @@ class Consumer
         $config = $this->config;
         $request = new FetchRequest();
         $request->setReplicaId($config->getReplicaId());
-        $recvTimeout = $config->getRecvTimeout();
-        if ($recvTimeout < 0) {
-            $request->setMaxWait(60000);
-        } else {
-            $request->setMaxWait((int) ($recvTimeout * 1000));
-        }
+        $request->setMinBytes($config->getMinBytes());
+        $request->setMaxBytes($config->getMaxBytes());
+        $request->setMaxWait($config->getMaxWait());
         $request->setRackId($config->getRackId());
         $topics = [];
         $currentList = current($this->fetchOptions);
