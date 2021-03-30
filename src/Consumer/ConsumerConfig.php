@@ -23,9 +23,9 @@ class ConsumerConfig extends CommonConfig
     protected $socket;
 
     /**
-     * @var string
+     * @var string|string[]
      */
-    protected $broker;
+    protected $brokers;
 
     /**
      * @var float|null
@@ -188,14 +188,42 @@ class ConsumerConfig extends CommonConfig
         return $this;
     }
 
-    public function getBroker(): string
+    /**
+     * @return string|string[]
+     */
+    public function getBrokers()
     {
-        return $this->broker;
+        return $this->brokers;
     }
 
-    public function setBroker(string $broker): self
+    /**
+     * @param string|string[] $brokers
+     *
+     * @return $this
+     */
+    public function setBrokers($brokers): self
     {
-        $this->broker = $broker;
+        $this->brokers = $brokers;
+
+        return $this;
+    }
+
+    /**
+     * @return string|string[]
+     */
+    public function getBroker()
+    {
+        return $this->brokers;
+    }
+
+    /**
+     * @param string|string[] $brokers
+     *
+     * @return $this
+     */
+    public function setBroker($brokers): self
+    {
+        $this->brokers = $brokers;
 
         return $this;
     }

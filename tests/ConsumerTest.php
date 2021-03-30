@@ -52,7 +52,7 @@ class ConsumerTest extends TestCase
     public function testConsumeWithStickyAssignor(): void
     {
         $config = new ConsumerConfig();
-        $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setBroker([TestUtil::getHost() . ':' . TestUtil::getPort()]);
         $config->setTopic('test');
         $config->setGroupId('testGroup');
         $config->setClientId('testConsumeWithStickyAssignor');
