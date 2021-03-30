@@ -183,6 +183,7 @@ class ConsumerConfig extends CommonConfig
 
     /**
      * @param string|string[] $broker
+     *
      * @return $this
      */
     public function setBroker($broker): self

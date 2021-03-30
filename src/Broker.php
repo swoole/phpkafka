@@ -63,16 +63,14 @@ class Broker
 
         $url = null;
         if ($config instanceof ConsumerConfig) {
-
             $brokers = $config->getBroker();
-            if (is_string($brokers)) {
+            if (\is_string($brokers)) {
                 $url = parse_url(explode(',', $config->getBroker())[0]);
             }
 
-            if (is_array($brokers)) {
+            if (\is_array($brokers)) {
                 $url = parse_url($brokers[array_rand($brokers)]);
             }
-
         }
         if (!$url) {
             $bootstrapServers = $config->getBootstrapServers();
