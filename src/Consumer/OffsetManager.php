@@ -213,16 +213,17 @@ class OffsetManager
         $broker = $this->broker;
         for ($i = 0; $i <= $retry; ++$i) {
             /** @var OffsetCommitResponse $response */
-            $response = $broker->getClientByBrokerId($broker->getBrokerIdByTopic($this->topic, $partition))->sendRecv($request);
+            $response = $broker->getClientByBrokerId($this->coordinatorNodeId)->sendRecv($request);
             foreach ($response->getTopics() as $topic) {
                 foreach ($topic->getPartitions() as $topicPartition) {
                     $errorCode = $topicPartition->getErrorCode();
-                    if (!ErrorCode::success($errorCode)) {
-                        if ($retry > 0 && ErrorCode::canRetry($errorCode)) {
-                            continue 3;
-                        }
-                        ErrorCode::check($errorCode);
+                    if (ErrorCode::success($errorCode)) {
+                        return;
                     }
+                    if (ErrorCode::canRetry($errorCode)) {
+                        continue 3;
+                    }
+                    ErrorCode::check($errorCode);
                 }
             }
         }
