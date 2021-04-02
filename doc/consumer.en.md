@@ -17,7 +17,7 @@ Class `longlang\phpkafka\Consumer\ConsumerConfig`
 | maxWriteAttempts | Maximum attempts to write | `3` |
 | client | Kafka client used. `null` by default means auto recognition. | `null` |
 | socket | Kafka Socket used. `null` by default means auto recognition. | `null` |
-| broker | broker format `'127.0.0.1:9092'` | `null` |
+| brokers | Alias is broker. Format: `'127.0.0.1:9092,127.0.0.1:9093'` or `['127.0.0.1:9092','127.0.0.1:9093']` | `null` |
 | bootstrapServers | Alias bootstrapServer, used to boot the server. If configured, the server will be connected and brokers updated. Format `'127.0.0.1:9092,127.0.0.1:9093'` or `['127.0.0.1:9092','127.0.0.1:9093']`. | `null` |
 | updateBrokers | Auto update brokers. | `true` |
 | interval | If the message is not received, try again internals. `0` is default and means no intervals(unit: second, decimal). | `0` |
