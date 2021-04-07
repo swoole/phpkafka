@@ -12,7 +12,7 @@ about: 使用中文提交 issue
 
 
 * 请执行下面的命令获取环境信息。
-> `php -v & php --ri swoole & composer info | grep longlang/phpkafka`
+> `php -v && php --ri swoole && composer info | grep longlang/phpkafka`
 
 ```
 # 粘贴到这里
