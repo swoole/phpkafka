@@ -12,7 +12,7 @@ about: Submit issue in English
 
 
 * Please execute the following command to get environment information.
-> `php -v & php --ri swoole & composer info | grep longlang/phpkafka`
+> `php -v && php --ri swoole && composer info | grep longlang/phpkafka`
 
 ```
 # Paste here
