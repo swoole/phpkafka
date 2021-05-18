@@ -27,6 +27,8 @@ Class `longlang\phpkafka\Producer\ProducerConfig`
 | autoCreateTopic | auto create topic | `true` |
 | exceptionCallback | This callback is called when an exception that cannot be thrown by the `recv()` coroutine is encountered. Format: `function(\Exception $e){}` | `null` |
 | partitioner | Partitioning strategy |  Default: `\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
+| produceRetry | Produce message retries allowed if matching an error code. | `3` |
+| produceRetrySleep | Produce message retry sleep time. (unit: second) | `0.1` |
 
 **Default partitioning strategy：**
 

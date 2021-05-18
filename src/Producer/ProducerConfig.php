@@ -62,6 +62,16 @@ class ProducerConfig extends CommonConfig
      */
     protected $partitioner = DefaultPartitioner::class;
 
+    /**
+     * @var int
+     */
+    protected $produceRetry = 3;
+
+    /**
+     * @var float
+     */
+    protected $produceRetrySleep = 0.1;
+
     public function getClient(): ?string
     {
         return $this->client;
@@ -172,6 +182,30 @@ class ProducerConfig extends CommonConfig
     public function setPartitioner(string $partitioner): self
     {
         $this->partitioner = $partitioner;
+
+        return $this;
+    }
+
+    public function getProduceRetry(): int
+    {
+        return $this->produceRetry;
+    }
+
+    public function setProduceRetry(int $produceRetry): self
+    {
+        $this->produceRetry = $produceRetry;
+
+        return $this;
+    }
+
+    public function getProduceRetrySleep(): float
+    {
+        return $this->produceRetrySleep;
+    }
+
+    public function setProduceRetrySleep(float $produceRetrySleep): self
+    {
+        $this->produceRetrySleep = $produceRetrySleep;
 
         return $this;
     }

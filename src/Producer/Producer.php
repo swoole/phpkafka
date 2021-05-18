@@ -46,54 +46,9 @@ class Producer
 
     public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null, ?int $brokerId = null): void
     {
-        $config = $this->config;
-        $broker = $this->broker;
-        if (null === $partitionIndex) {
-            $partitionIndex = $this->partitioner->partition($topic, $value, $key, $broker->getTopicsMeta($topic));
-        }
-        $request = new ProduceRequest();
-        $request->setAcks($acks = $config->getAcks());
-        $recvTimeout = $config->getRecvTimeout();
-        if ($recvTimeout < 0) {
-            $request->setTimeoutMs(60000);
-        } else {
-            $request->setTimeoutMs((int) ($recvTimeout * 1000));
-        }
-
-        $topicData = new TopicProduceData();
-        $topicData->setName($topic);
-        $partition = new PartitionProduceData();
-        $partition->setPartitionIndex($partitionIndex);
-        $recordBatch = new RecordBatch();
-        $recordBatch->setProducerId($config->getProducerId());
-        $recordBatch->setProducerEpoch($config->getProducerEpoch());
-        $recordBatch->setPartitionLeaderEpoch($config->getPartitionLeaderEpoch());
-        $record = new Record();
-        $record->setKey($key);
-        $record->setValue($value);
-        $record->setHeaders($headers);
-        $recordBatch->setRecords([$record]);
-        $timestamp = (int) (microtime(true) * 1000);
-        $recordBatch->setFirstTimestamp($timestamp);
-        $recordBatch->setMaxTimestamp($timestamp);
-        $partition->setRecords($recordBatch);
-        $topicData->setPartitions([$partition]);
-
-        $request->setTopics([$topicData]);
-
-        $hasResponse = 0 !== $acks;
-        $client = $broker->getClient($brokerId ?? $broker->getBrokerIdByTopic($topic, $partitionIndex));
-        $correlationId = $client->send($request, null, $hasResponse);
-        if (!$hasResponse) {
-            return;
-        }
-        /** @var ProduceResponse $response */
-        $response = $client->recv($correlationId);
-        foreach ($response->getResponses() as $response) {
-            foreach ($response->getPartitions() as $partition) {
-                ErrorCode::check($partition->getErrorCode());
-            }
-        }
+        $message = new ProduceMessage($topic, $value, $key, $headers, $partitionIndex);
+        $messages = [$message];
+        $this->sendBatch($messages, $brokerId);
     }
 
     /**
@@ -113,6 +68,7 @@ class Producer
         }
 
         $timestamp = (int) (microtime(true) * 1000);
+        /** @var TopicProduceData[][] $topicsMap */
         $topicsMap = [];
         $partitionsMap = [];
         $topics = [];
@@ -164,21 +120,56 @@ class Producer
 
             $topicData->setPartitions($partitions);
         }
+        $produceRetry = $config->getProduceRetry();
+        $produceRetrySleep = $config->getProduceRetrySleep();
         foreach ($topicsMap as $brokerId => $topics) {
-            $request->setTopics($topics);
-
-            $hasResponse = 0 !== $acks;
-            $client = $broker->getClient($brokerId);
-            $correlationId = $client->send($request, null, $hasResponse);
-            if (!$hasResponse) {
-                continue;
-            }
-            /** @var ProduceResponse $response */
-            $response = $client->recv($correlationId);
-            foreach ($response->getResponses() as $response) {
-                foreach ($response->getPartitions() as $partition) {
-                    ErrorCode::check($partition->getErrorCode());
+            $retryTopics = [];
+            for ($retryCount = 0; $retryCount <= $produceRetry; ++$retryCount) {
+                if ($retryTopics) {
+                    foreach ($topics as $k => $v) {
+                        $name = $v->getName();
+                        if (isset($retryTopics[$name])) {
+                            $partitions = $v->getPartitions();
+                            foreach ($partitions as $i => $partition) {
+                                if (!\in_array($partition->getPartitionIndex(), $retryTopics[$name])) {
+                                    unset($partitions[$i]);
+                                }
+                            }
+                            $v->setPartitions($partitions);
+                        } else {
+                            unset($topics[$k]);
+                        }
+                    }
                 }
+                $request->setTopics($topics);
+
+                $hasResponse = 0 !== $acks;
+                $client = $broker->getClient($brokerId);
+                $correlationId = $client->send($request, null, $hasResponse);
+                if (!$hasResponse) {
+                    continue;
+                }
+                /** @var ProduceResponse $response */
+                $response = $client->recv($correlationId);
+                $retryTopics = [];
+                foreach ($response->getResponses() as $response) {
+                    $topicName = $response->getName();
+                    foreach ($response->getPartitions() as $partition) {
+                        $errorCode = $partition->getErrorCode();
+                        switch ($errorCode) {
+                            case ErrorCode::UNKNOWN_TOPIC_OR_PARTITION:
+                            case ErrorCode::LEADER_NOT_AVAILABLE:
+                                $retryTopics[$topicName][] = $partition->getPartitionIndex();
+                                break;
+                            default:
+                                ErrorCode::check($errorCode);
+                        }
+                    }
+                }
+                if (!$retryTopics) {
+                    break;
+                }
+                usleep((int) ($produceRetrySleep * 1000000));
             }
         }
     }

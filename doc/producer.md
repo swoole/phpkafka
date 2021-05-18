@@ -27,6 +27,8 @@
 | autoCreateTopic | 自动创建主题 | `true` |
 | exceptionCallback | 遇到无法在`recv()`协程抛出的异常时，调用此回调。格式：`function(\Exception $e){}` | `null` |
 | partitioner | 分区策略 |  默认策略：`\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
+| produceRetry | 生产消息，匹配预设的错误码时，自动重试次数 | `3` |
+| produceRetrySleep | 生产消息重试延迟，单位：秒 | `0.1` |
 
 **默认分区策略：**
 
