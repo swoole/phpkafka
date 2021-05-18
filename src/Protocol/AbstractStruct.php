@@ -139,6 +139,9 @@ abstract class AbstractStruct implements \JsonSerializable
             $arrayType = $this->getArrayType($apiVersion, $protocolField);
             $type = $this->getType($apiVersion, $protocolField);
             $value = $arrayType::unpack($data, $tmpSize, $type, $apiVersion);
+            if (null === $value && !$protocolField->getNullableVersions()) {
+                $value = [];
+            }
         } else {
             $type = $this->getType($apiVersion, $protocolField);
             if (is_subclass_of($type, AbstractType::class)) {

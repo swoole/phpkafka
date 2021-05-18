@@ -180,7 +180,7 @@ class OffsetManager
     public function getFetchOffset(int $partition): int
     {
         if (!isset($this->offsets[$partition])) {
-            throw new \RuntimeException(sprintf('Partition %s doses not exists', $partition));
+            throw new \RuntimeException(sprintf('Partition %s does not exists', $partition));
         }
 
         return $this->offsets[$partition];
@@ -189,7 +189,7 @@ class OffsetManager
     public function addFetchOffset(int $partition, int $offset = 1): void
     {
         if (!isset($this->offsets[$partition])) {
-            throw new \RuntimeException(sprintf('Partition %s doses not exists', $partition));
+            throw new \RuntimeException(sprintf('Partition %s does not exists', $partition));
         }
         $this->offsets[$partition] += $offset;
     }
