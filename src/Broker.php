@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Consumer\ConsumerConfig;
 use longlang\phpkafka\Producer\ProducerConfig;
+use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequestTopic;
 use longlang\phpkafka\Protocol\Metadata\MetadataResponse;
@@ -109,7 +110,22 @@ class Broker
         $request->setAllowAutoTopicCreation($config->getAutoCreateTopic());
         /** @var MetadataResponse $response */
         $response = $client->sendRecv($request);
-        $topicsMeta = $response->getTopics();
+        $topicsMeta = [];
+        $retryTopics = [];
+        foreach ($response->getTopics() as $topicItem) {
+            $errorCode = $topicItem->getErrorCode();
+            if (ErrorCode::success($errorCode)) {
+                $topicsMeta[] = $topicItem;
+            } else {
+                switch ($topicItem->getErrorCode()) {
+                    case ErrorCode::LEADER_NOT_AVAILABLE:
+                        $retryTopics[] = $topicItem->getName();
+                        break;
+                    default:
+                        ErrorCode::check($errorCode);
+                }
+            }
+        }
         if ($this->topicsMeta) {
             $this->topicsMeta = array_values(array_merge($this->topicsMeta, $topicsMeta));
         } else {
@@ -119,6 +135,10 @@ class Broker
             $this->metaUpdatedTopics = array_values(array_merge($this->metaUpdatedTopics, $topics));
         } else {
             $this->metaUpdatedTopics = $topics;
+        }
+
+        if ($retryTopics) {
+            return $this->updateMetadata($retryTopics, $client);
         }
 
         return $response;
@@ -186,10 +206,24 @@ class Broker
     }
 
     /**
+     * @param string|string[]|null $topics
+     *
      * @return MetadataResponseTopic[]
      */
-    public function getTopicsMeta(): array
+    public function getTopicsMeta($topics = null): array
     {
+        if ($topics) {
+            $notFoundTopics = [];
+            foreach ((array) $topics as $topic) {
+                if (!\in_array($topic, $this->metaUpdatedTopics)) {
+                    $notFoundTopics[] = $topic;
+                }
+            }
+            if ($notFoundTopics) {
+                $this->updateMetadata($notFoundTopics);
+            }
+        }
+
         return $this->topicsMeta;
     }
 

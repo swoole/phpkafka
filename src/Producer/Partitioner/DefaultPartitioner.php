@@ -56,13 +56,9 @@ class DefaultPartitioner implements PartitionerInterface
     {
         foreach ($topicsMeta as $item) {
             if ($topic === $item->getName()) {
-                $partitionCount = \count($item->getPartitions());
+                return \count($item->getPartitions());
             }
         }
-        if (!isset($partitionCount)) {
-            throw new \RuntimeException(sprintf('Get topic %s partitions count failed', $topic));
-        }
-
-        return $partitionCount;
+        throw new \RuntimeException(sprintf('Get topic %s partitions count failed', $topic));
     }
 }

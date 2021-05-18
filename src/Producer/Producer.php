@@ -49,7 +49,7 @@ class Producer
         $config = $this->config;
         $broker = $this->broker;
         if (null === $partitionIndex) {
-            $partitionIndex = $this->partitioner->partition($topic, $value, $key, $broker->getTopicsMeta());
+            $partitionIndex = $this->partitioner->partition($topic, $value, $key, $broker->getTopicsMeta($topic));
         }
         $request = new ProduceRequest();
         $request->setAcks($acks = $config->getAcks());
@@ -115,7 +115,11 @@ class Producer
         $timestamp = (int) (microtime(true) * 1000);
         $topicsMap = [];
         $partitionsMap = [];
-        $topicsMeta = $broker->getTopicsMeta();
+        $topics = [];
+        foreach ($messages as $message) {
+            $topics[] = $message->getTopic();
+        }
+        $topicsMeta = $broker->getTopicsMeta($topics);
         foreach ($messages as $message) {
             $topicName = $message->getTopic();
             $value = $message->getValue();

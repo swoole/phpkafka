@@ -20,6 +20,8 @@ class ProducerTest extends TestCase
         $producer->send('test', (string) microtime(true), uniqid('', true), [], 0);
         $producer->send('test', (string) microtime(true), uniqid('', true));
         $producer->send('test', (string) microtime(true), null);
+        // uncreated topic
+        $producer->send('test_' . mt_rand(), (string) microtime(true));
         $producer->close();
         $this->assertTrue(true);
     }
@@ -34,6 +36,12 @@ class ProducerTest extends TestCase
             new ProduceMessage('test', 'v1', 'k1', [], 0),
             new ProduceMessage('test', 'v2', 'k2'),
             new ProduceMessage('test', 'v3', null),
+        ]);
+        // uncreated topic
+        $producer->sendBatch([
+            new ProduceMessage('test' . mt_rand(), 'v1', 'k1', [], 0),
+            new ProduceMessage('test' . mt_rand(), 'v2', 'k2'),
+            new ProduceMessage('test' . mt_rand(), 'v3', null),
         ]);
         $producer->close();
         $this->assertTrue(true);
