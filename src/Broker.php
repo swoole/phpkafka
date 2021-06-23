@@ -7,6 +7,7 @@ namespace longlang\phpkafka;
 use InvalidArgumentException;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Consumer\ConsumerConfig;
+use longlang\phpkafka\Exception\NoAliveBrokerException;
 use longlang\phpkafka\Producer\ProducerConfig;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
@@ -92,6 +93,11 @@ class Broker
         foreach ($response->getBrokers() as $broker) {
             $brokers[$broker->getNodeId()] = $broker->getHost() . ':' . $broker->getPort();
         }
+
+        if (empty($brokers)) {
+            throw new NoAliveBrokerException('No brokers are available');
+        }
+
         $this->setBrokers($brokers);
     }
 
