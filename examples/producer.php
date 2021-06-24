@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use longlang\phpkafka\Producer\Producer;
 use longlang\phpkafka\Producer\ProducerConfig;
 

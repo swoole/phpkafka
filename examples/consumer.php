@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use longlang\phpkafka\Consumer\ConsumeMessage;
 use longlang\phpkafka\Consumer\Consumer;
 use longlang\phpkafka\Consumer\ConsumerConfig;
