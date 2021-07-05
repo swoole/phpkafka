@@ -44,17 +44,17 @@ class Producer
         $this->partitioner = new $class();
     }
 
-    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null, ?int $brokerId = null): void
+    public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null): void
     {
         $message = new ProduceMessage($topic, $value, $key, $headers, $partitionIndex);
         $messages = [$message];
-        $this->sendBatch($messages, $brokerId);
+        $this->sendBatch($messages);
     }
 
     /**
      * @param ProduceMessage[] $messages
      */
-    public function sendBatch(array $messages, ?int $brokerId = null): void
+    public function sendBatch(array $messages): void
     {
         $config = $this->config;
         $broker = $this->broker;
