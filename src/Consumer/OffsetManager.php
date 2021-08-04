@@ -131,8 +131,8 @@ class OffsetManager
                         foreach ($topicMeta->getPartitions() as $partitionObject) {
                             if ($partition === $partitionObject->getPartitionIndex()) {
                                 $listOffsetPartition->setCurrentLeaderEpoch($partitionObject->getLeaderEpoch());
+                                break;
                             }
-                            break;
                         }
                         break;
                     }
