@@ -147,7 +147,7 @@ class Producer
                 $client = $broker->getClient($brokerId);
                 $correlationId = $client->send($request, null, $hasResponse);
                 if (!$hasResponse) {
-                    continue;
+                    break;
                 }
                 /** @var ProduceResponse $response */
                 $response = $client->recv($correlationId);
