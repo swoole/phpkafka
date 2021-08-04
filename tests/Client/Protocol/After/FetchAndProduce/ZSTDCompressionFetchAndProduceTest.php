@@ -22,7 +22,7 @@ class ZSTDCompressionFetchAndProduceTest extends BaseFetchAndProduceTest
         } else {
             $kafkaVersion = $list[0];
         }
-        if (!\extension_loaded('zstd') || version_compare($kafkaVersion, '2.1', '<')) {
+        if (!\extension_loaded('zstd') || version_compare($kafkaVersion, '2.1', '<') || version_compare($kafkaVersion, '2.7', '>=')) {
             $this->markTestSkipped();
         }
     }
