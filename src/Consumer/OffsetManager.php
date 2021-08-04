@@ -120,11 +120,23 @@ class OffsetManager
         foreach ($partitions as $partition) {
             $brokerPartitionMap[$broker->getBrokerIdByTopic($topicName, $partition)][] = $partition;
         }
+        $topicsMeta = $broker->getTopicsMeta($topicName);
         foreach ($brokerPartitionMap as $brokerId => $partitions) {
             $request = new ListOffsetRequest();
             $topicPartitions = [];
             foreach ($partitions as $partition) {
                 $topicPartitions[] = $listOffsetPartition = new ListOffsetPartition();
+                foreach ($topicsMeta as $topicMeta) {
+                    if ($topicMeta->getName() === $topicName) {
+                        foreach ($topicMeta->getPartitions() as $partitionObject) {
+                            if ($partition === $partitionObject->getPartitionIndex()) {
+                                $listOffsetPartition->setCurrentLeaderEpoch($partitionObject->getLeaderEpoch());
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
                 $listOffsetPartition->setPartitionIndex($partition)->setTimestamp(-1);
             }
             $request->setTopics([
@@ -135,7 +147,7 @@ class OffsetManager
             $response = KafkaUtil::retry($client, $request, $retry, 0);
             foreach ($response->getTopics() as $topic) {
                 foreach ($topic->getPartitions() as $partition) {
-                    $this->offsets[$partition->getPartitionIndex()] = $partition->getOffset();
+                    $this->offsets[$partition->getPartitionIndex()] = $partition->getOffset() - 1;
                 }
             }
         }
