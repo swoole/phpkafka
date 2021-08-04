@@ -70,7 +70,7 @@ class Broker
             if (\is_array($brokers)) {
                 $url = parse_url($brokers[array_rand($brokers)]);
             } elseif (\is_string($brokers)) {
-                $url = parse_url(explode(',', $config->getBroker())[0]);
+                $url = parse_url(explode(',', $brokers)[0]);
             }
         }
         if (!$url) {

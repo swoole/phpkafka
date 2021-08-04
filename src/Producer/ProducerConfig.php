@@ -24,7 +24,7 @@ class ProducerConfig extends CommonConfig
     protected $socket;
 
     /**
-     * @var string|string[]
+     * @var string|string[]|null
      */
     protected $brokers;
 
@@ -85,7 +85,7 @@ class ProducerConfig extends CommonConfig
     }
 
     /**
-     * @return string|string[]
+     * @return string|string[]|null
      */
     public function getBrokers()
     {
@@ -93,7 +93,7 @@ class ProducerConfig extends CommonConfig
     }
 
     /**
-     * @param string|string[] $brokers
+     * @param string|string[]|null $brokers
      */
     public function setBrokers($brokers): self
     {
