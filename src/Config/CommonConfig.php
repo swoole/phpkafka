@@ -54,6 +54,11 @@ class CommonConfig extends AbstractConfig
      */
     protected $exceptionCallback = null;
 
+    /**
+     * @var array
+     */
+    protected $sasl = [];
+
     public function getConnectTimeout(): float
     {
         return $this->connectTimeout;
@@ -170,5 +175,15 @@ class CommonConfig extends AbstractConfig
         $this->exceptionCallback = $exceptionCallback;
 
         return $this;
+    }
+
+    public function getSasl(): array
+    {
+        return $this->sasl;
+    }
+
+    public function setSasl(array $sasl): void
+    {
+        $this->sasl = $sasl;
     }
 }

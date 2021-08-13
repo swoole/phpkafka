@@ -24,7 +24,14 @@ class TestUtil
 
     public static function getPort(): int
     {
-        return (int) (getenv('KAFKA_PORT') ?: 9092);
+        return (int) (getenv('KAFKA_PORT') ?: 9090);
+    }
+
+    public static function getSasl(): array
+    {
+        $result = getenv('KAFKA_SASL') ?: '{}';
+
+        return json_decode($result, true);
     }
 
     public static function createKafkaClient(string $class = null): ClientInterface
@@ -32,6 +39,7 @@ class TestUtil
         $config = new CommonConfig();
         $config->setSendTimeout(10);
         $config->setRecvTimeout(10);
+        $config->setSasl(self::getSasl());
         if (null === $class) {
             $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
         }
@@ -42,6 +50,8 @@ class TestUtil
     public static function getControllerClient(): ClientInterface
     {
         $client = self::createKafkaClient();
+        //$client->getConfig()->setSa
+        //sl([]);
         $client->connect();
         $request = new MetadataRequest();
         /** @var MetadataResponse $response */
@@ -51,6 +61,7 @@ class TestUtil
         $config = new CommonConfig();
         $config->setSendTimeout(10);
         $config->setRecvTimeout(10);
+        $config->setSasl(self::getSasl());
         $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
         $nodeId = $response->getControllerId();
         foreach ($response->getBrokers() as $broker) {
@@ -80,6 +91,7 @@ class TestUtil
                         $config = new CommonConfig();
                         $config->setSendTimeout(10);
                         $config->setRecvTimeout(10);
+                        $config->setSasl(self::getSasl());
                         $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
                         $nodeId = $partitionItem->getLeaderId();
                         foreach ($response->getBrokers() as $broker) {
