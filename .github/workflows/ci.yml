@@ -18,6 +18,7 @@ jobs:
       SWOOLE_VERSION: "4.5"
       KAFKA_HOST: kafka1
       KAFKA_PORT: 9092
+      KAFKA_SASL_PORT: 9093
       KAFKA_SASL: '{"type":"longlang\\phpkafka\\Sasl\\PlainSasl","username":"admin","password":"admin-secret"}'
 
     steps:
@@ -38,7 +39,13 @@ jobs:
           docker exec kafka1 /opt/kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --create --partitions 3 --replication-factor 1 --topic test
 
       - name: php-test
-        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" -e KAFKA_SASL="$KAFKA_SASL" swoole composer test
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" swoole composer test
 
       - name: swoole-test
-        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION"  -e KAFKA_SASL="$KAFKA_SASL" swoole composer swoole-test
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_PORT" -e KAFKA_VERSION="$KAFKA_VERSION"  swoole composer swoole-test
+
+      - name: php-test-sasl
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_SASL_PORT" -e KAFKA_VERSION="$KAFKA_VERSION" -e KAFKA_SASL="$KAFKA_SASL" swoole composer test
+
+      - name: swoole-test-sasl
+        run: docker exec -e KAFKA_HOST="$KAFKA_HOST" -e KAFKA_PORT="$KAFKA_SASL_PORT" -e KAFKA_VERSION="$KAFKA_VERSION"  -e KAFKA_SASL="$KAFKA_SASL" swoole composer swoole-test
