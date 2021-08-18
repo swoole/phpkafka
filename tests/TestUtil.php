@@ -24,7 +24,7 @@ class TestUtil
 
     public static function getPort(): int
     {
-        return (int) (getenv('KAFKA_PORT') ?: 9090);
+        return (int) (getenv('KAFKA_PORT') ?: 9092);
     }
 
     public static function getSasl(): array
@@ -50,8 +50,6 @@ class TestUtil
     public static function getControllerClient(): ClientInterface
     {
         $client = self::createKafkaClient();
-        //$client->getConfig()->setSa
-        //sl([]);
         $client->connect();
         $request = new MetadataRequest();
         /** @var MetadataResponse $response */

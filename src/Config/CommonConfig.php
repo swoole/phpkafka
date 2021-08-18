@@ -182,8 +182,10 @@ class CommonConfig extends AbstractConfig
         return $this->sasl;
     }
 
-    public function setSasl(array $sasl): void
+    public function setSasl(array $sasl): self
     {
         $this->sasl = $sasl;
+
+        return $this;
     }
 }

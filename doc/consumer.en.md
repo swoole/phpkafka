@@ -40,6 +40,7 @@ Class `longlang\phpkafka\Consumer\ConsumerConfig`
 | minBytes | Min bytes | `1` |
 | maxBytes | Max bytes | `128 * 1024 * 1024` |
 | maxWait | The maximum time. (unit: second, decimal) | `1` |
+| sasl |  SASL authentication Info. If the field is null, it will not authenticate with SASL [detail](#SASL-Support) | `[]`|
 
 ## Asynchronous (callback)
 
@@ -90,3 +91,28 @@ while(true) {
     sleep(1);
 }
 ```
+
+## SASL Support
+### Configuration
+| Key | Description | Default |
+| - | - | - |
+| type | SASL Authentication Type. PLAIN is ``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
+| username | username  | '' |
+| password | password  | '' |
+
+**Example**
+```php
+use longlang\phpkafka\Consumer\Consumer;
+use longlang\phpkafka\Consumer\ConsumerConfig;
+
+$config = new ConsumerConfig();
+// .... Your Othor Config
+$config->setSasl([
+    "type"=>\longlang\phpkafka\Sasl\PlainSasl::class,
+    "username"=>"admin",
+    "password"=>"admin-secret"
+]);
+$consumer = new Consumer($config);
+// ....  Your Business Code
+```
+

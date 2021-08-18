@@ -29,6 +29,7 @@ Class `longlang\phpkafka\Producer\ProducerConfig`
 | partitioner | Partitioning strategy |  Default: `\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
 | produceRetry | Produce message retries allowed if matching an error code. | `3` |
 | produceRetrySleep | Produce message retry sleep time. (unit: second) | `0.1` |
+| sasl |  SASL authentication Info. If the field is null, it will not authenticate with SASL [detail](#SASL-Support) | `[]`|
 
 **Default partitioning strategy：**
 
@@ -78,4 +79,27 @@ $producer->sendBatch([
     new ProduceMessage($topic, 'v1', 'k1', $partition0),
     new ProduceMessage($topic, 'v2', 'k2', $partition1),
 ]);
+```
+
+## SASL Support
+### Configuration
+| Key | Description | Default |
+| - | - | - |
+| type | SASL Authentication Type. PLAIN is ``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
+| username | username  | '' |
+| password | password  | '' |
+
+**Example**
+```php
+use longlang\phpkafka\Producer\ProducerConfig;
+
+$config = new ProducerConfig();
+// .... Your Other Config
+$config->setSasl([
+    "type"=>\longlang\phpkafka\Sasl\PlainSasl::class,
+    "username"=>"admin",
+    "password"=>"admin-secret"
+]);
+$producer = new Producer($config);
+// ....  Your Business Code
 ```
