@@ -40,6 +40,7 @@
 | minBytes | 最小字节数 | `1` |
 | maxBytes | 最大字节数 | `128 * 1024 * 1024` |
 | maxWait | 最大等待时间，单位：秒 | `1` |
+| sasl | SASL身份认证信息。为空则不发送身份认证信息 [详情](#SASL支持) | `[]`|
 
 ## 异步消费（回调）
 
@@ -89,4 +90,28 @@ while(true) {
     }
     sleep(1);
 }
+```
+
+## SASL支持
+### 相关配置
+|参数名|说明|默认值|
+| - | - | - |
+| type | SASL授权对应的类。PLAIN为``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
+| username | 账号 | '' |
+| password | 密码 | '' |
+
+**代码示例：**
+```php
+use longlang\phpkafka\Consumer\Consumer;
+use longlang\phpkafka\Consumer\ConsumerConfig;
+
+$config = new ConsumerConfig();
+// .... 你的其他配置
+$config->setSasl([
+    "type"=>\longlang\phpkafka\Sasl\PlainSasl::class,
+    "username"=>"admin",
+    "password"=>"admin-secret"
+]);
+$consumer = new Consumer($config);
+// ....  你的业务代码
 ```

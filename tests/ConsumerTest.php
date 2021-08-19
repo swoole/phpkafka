@@ -15,6 +15,7 @@ class ConsumerTest extends TestCase
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setSasl(TestUtil::getSasl());
         $config->setTopic('test');
         $config->setGroupId('testGroup');
         $config->setClientId('testConsumeWithRangeAssignor');
@@ -34,6 +35,7 @@ class ConsumerTest extends TestCase
     {
         $config = new ConsumerConfig();
         $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setSasl(TestUtil::getSasl());
         $config->setTopic('test');
         $config->setGroupId('testGroup');
         $config->setClientId('testConsumeWithRoundRobinAssignor');
@@ -53,6 +55,7 @@ class ConsumerTest extends TestCase
     {
         $config = new ConsumerConfig();
         $config->setBroker([TestUtil::getHost() . ':' . TestUtil::getPort()]);
+        $config->setSasl(TestUtil::getSasl());
         $config->setTopic('test');
         $config->setGroupId('testGroup');
         $config->setClientId('testConsumeWithStickyAssignor');

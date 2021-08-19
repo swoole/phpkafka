@@ -15,6 +15,7 @@ class ProducerTest extends TestCase
     {
         $config = new ProducerConfig();
         $config->setBootstrapServer(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setSasl(TestUtil::getSasl());
         $config->setAcks(-1);
         $producer = new Producer($config);
         $producer->send('test', (string) microtime(true), uniqid('', true), [], 0);
@@ -30,6 +31,7 @@ class ProducerTest extends TestCase
     {
         $config = new ProducerConfig();
         $config->setBootstrapServer(TestUtil::getHost() . ':' . TestUtil::getPort());
+        $config->setSasl(TestUtil::getSasl());
         $config->setAcks(-1);
         $producer = new Producer($config);
         $producer->sendBatch([

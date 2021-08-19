@@ -29,6 +29,7 @@
 | partitioner | 分区策略 |  默认策略：`\longlang\phpkafka\Producer\Partitioner\DefaultPartitioner` |
 | produceRetry | 生产消息，匹配预设的错误码时，自动重试次数 | `3` |
 | produceRetrySleep | 生产消息重试延迟，单位：秒 | `0.1` |
+| sasl | SASL身份认证信息。为空则不发送身份认证信息 [详情](#SASL支持) | `[]`|
 
 **默认分区策略：**
 
@@ -78,4 +79,29 @@ $producer->sendBatch([
     new ProduceMessage($topic, 'v1', 'k1', $partition0),
     new ProduceMessage($topic, 'v2', 'k2', $partition1),
 ]);
+```
+
+
+
+## SASL支持
+### 相关配置
+|参数名|说明|默认值|
+| - | - | - |
+| type | SASL授权对应的类。PLAIN为``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
+| username | 账号 | '' |
+| password | 密码 | '' |
+
+**代码示例：**
+```php
+use longlang\phpkafka\Producer\ProducerConfig;
+
+$config = new ProducerConfig();
+// .... 你的其他配置
+$config->setSasl([
+    "type"=>\longlang\phpkafka\Sasl\PlainSasl::class,
+    "username"=>"admin",
+    "password"=>"admin-secret"
+]);
+$producer = new Producer($config);
+// ....  你的业务代码
 ```

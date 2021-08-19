@@ -21,8 +21,8 @@ PHP Kafka 客户端，支持 PHP-FPM、Swoole 环境使用。
 - [x] PHP-FPM、Swoole 智能环境识别兼容
 - [x] 生产者类
 - [x] 消费者类
+- [x] SASL 鉴权
 - [ ] SSL 加密通信
-- [ ] SASL 鉴权
 - [ ] 更多功能的封装及测试用例编写
 
 ## 环境要求
