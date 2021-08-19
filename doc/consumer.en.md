@@ -41,6 +41,7 @@ Class `longlang\phpkafka\Consumer\ConsumerConfig`
 | maxBytes | Max bytes | `128 * 1024 * 1024` |
 | maxWait | The maximum time. (unit: second, decimal) | `1` |
 | sasl |  SASL authentication Info. If the field is null, it will not authenticate with SASL [detail](#SASL-Support) | `[]`|
+| ssl |  SSL Connect Info. If the field is null, it will not use SSL [detail](#SSL-Support) | `null`|
 
 ## Asynchronous (callback)
 
@@ -116,3 +117,43 @@ $consumer = new Consumer($config);
 // ....  Your Business Code
 ```
 
+
+## SSL Support
+Class `longlang\phpkafka\Config\SslConfig`
+
+> You can pass an array to a constructor.
+
+### Configuration keys
+| Key | Description | Default |
+| - | - | - |
+| open  | Enable SSL  | `false` |
+| compression | TLS compression. | `true`  |
+| certFile |Path to local certificate file on filesystem. |`''`|
+| keyFile |Path to local private key file on filesystem|`''`|
+| passphrase |  Passphrase with which your ``certFile`` file was encoded. | `''`|
+| peerName |  Peer name to be used. If this value is not set, then the name is remote Host | `''`|
+| verifyPeer |Require verification of SSL certificate used. | `false` |
+| verifyPeerName |Require verification of peer name.| `false` |
+| verifyDepth | Abort if the certificate chain is too deep. | `0`|
+| allowSelfSigned | Allow self-signed certificates. | `false` | 
+| cafile | Location of Certificate Authority file on local filesystem which should be used  | `''`|
+| capath  | If cafile is not specified or if the certificate is not found there, the directory pointed to by capath is searched for a suitable certificate. capath must be a correctly hashed certificate directory. | `''`|
+
+**Example**
+
+```php
+use longlang\phpkafka\Consumer\Consumer;
+use longlang\phpkafka\Consumer\ConsumerConfig;
+use longlang\phpkafka\Config\SslConfig;
+
+$config = new ConsumerConfig();
+// .... Your Othor Config
+$sslConfig = new SslConfig();
+$sslConfig->setOpen(true);
+$sslConfig->setVerifyPeer(true);
+$sslConfig->setAllowSelfSigned(true);
+$sslConfig->setCafile("/kafka-client/.github/kafka/cert/ca-cert");
+$config->setSsl($sslConfig);
+$consumer = new Consumer($config);
+// ....  Your Business Code
+```

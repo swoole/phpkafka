@@ -76,13 +76,14 @@ class StreamSocket implements SocketInterface
 
     public function connect(): void
     {
-        $uri = sprintf('tcp://%s:%s', $this->host, $this->port);
+        $uri = $this->getURI();
         $socket = stream_socket_client(
             $uri,
             $errno,
             $errstr,
             $this->config->getConnectTimeout(),
-            \STREAM_CLIENT_CONNECT
+            \STREAM_CLIENT_CONNECT,
+            $this->getContext()
         );
 
         if (!\is_resource($socket)) {
@@ -238,5 +239,26 @@ class StreamSocket implements SocketInterface
     protected function getMetaData(): array
     {
         return stream_get_meta_data($this->socket);
+    }
+
+    /**
+     * @return resource
+     */
+    protected function getContext()
+    {
+        return stream_context_create([
+            'ssl' => $this->config->getSsl()->getStreamConfig($this->getHost()),
+        ]);
+    }
+
+    protected function getURI(): string
+    {
+        $protocol = 'tcp';
+        $ssl = $this->getConfig()->getSsl();
+        if ($ssl->getOpen()) {
+            $protocol = 'ssl';
+        }
+
+        return sprintf('%s://%s:%s', $protocol, $this->host, $this->port);
     }
 }

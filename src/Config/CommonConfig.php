@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Config;
 
 use InvalidArgumentException;
+use longlang\phpkafka\Exception\ConfigErrorException;
 
 class CommonConfig extends AbstractConfig
 {
@@ -58,6 +59,11 @@ class CommonConfig extends AbstractConfig
      * @var array
      */
     protected $sasl = [];
+
+    /**
+     * @var SslConfig|null
+     */
+    protected $ssl = null;
 
     public function getConnectTimeout(): float
     {
@@ -185,6 +191,35 @@ class CommonConfig extends AbstractConfig
     public function setSasl(array $sasl): self
     {
         $this->sasl = $sasl;
+
+        return $this;
+    }
+
+    public function getSsl(): SslConfig
+    {
+        if (null == $this->ssl) {
+            return new SslConfig([]);
+        }
+
+        return $this->ssl;
+    }
+
+    /**
+     * @param SslConfig|array $ssl
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     */
+    public function setSsl($ssl): self
+    {
+        if (\is_array($ssl)) {
+            $ssl = new SslConfig($ssl);
+        }
+        if (!$ssl instanceof SslConfig) {
+            throw new ConfigErrorException('The configuration must be an array or SslConfig class ');
+        }
+        $this->ssl = $ssl;
 
         return $this;
     }
