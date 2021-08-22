@@ -1,0 +1,11 @@
+# Exclude non-essential files from dist
+/.github export-ignore
+/bin export-ignore
+/doc export-ignore
+/examples export-ignore
+/res export-ignore
+/tests export-ignore
+.php_cs.dist export-ignore
+phpstan.neon export-ignore
+phpunit.xml.dist export-ignore
+swoole-phpunit export-ignore
