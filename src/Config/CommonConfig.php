@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Config;
 
 use InvalidArgumentException;
-use longlang\phpkafka\Exception\ConfigErrorException;
 
 class CommonConfig extends AbstractConfig
 {
@@ -206,20 +205,16 @@ class CommonConfig extends AbstractConfig
 
     /**
      * @param SslConfig|array $ssl
-     *
-     * @return $this
-     *
-     * @throws \Exception
      */
     public function setSsl($ssl): self
     {
         if (\is_array($ssl)) {
-            $ssl = new SslConfig($ssl);
+            $this->ssl = new SslConfig($ssl);
+        } elseif ($ssl instanceof SslConfig) {
+            $this->ssl = $ssl;
+        } else {
+            throw new InvalidArgumentException(sprintf('The ssl must be array or SslConfig, and the current type is %s', \gettype($ssl)));
         }
-        if (!$ssl instanceof SslConfig) {
-            throw new ConfigErrorException('The configuration must be an array or SslConfig class ');
-        }
-        $this->ssl = $ssl;
 
         return $this;
     }
