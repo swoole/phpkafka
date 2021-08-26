@@ -7,6 +7,7 @@ namespace longlang\phpkafka\Test;
 use longlang\phpkafka\Client\ClientInterface;
 use longlang\phpkafka\Client\SyncClient;
 use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Config\SslConfig;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequest;
 use longlang\phpkafka\Protocol\Metadata\MetadataRequestTopic;
 use longlang\phpkafka\Protocol\Metadata\MetadataResponse;
@@ -34,12 +35,27 @@ class TestUtil
         return json_decode($result, true);
     }
 
+    public static function getSsl(): SslConfig
+    {
+        $result = getenv('KAFKA_SSL') ?: '{}';
+
+        return new SslConfig(json_decode($result, true));
+    }
+
+    public static function addConfigInfo(CommonConfig $config): CommonConfig
+    {
+        $config->setSasl(self::getSasl());
+        $config->setSsl(self::getSsl());
+
+        return $config;
+    }
+
     public static function createKafkaClient(string $class = null): ClientInterface
     {
         $config = new CommonConfig();
         $config->setSendTimeout(10);
         $config->setRecvTimeout(10);
-        $config->setSasl(self::getSasl());
+        self::addConfigInfo($config);
         if (null === $class) {
             $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
         }
@@ -59,7 +75,7 @@ class TestUtil
         $config = new CommonConfig();
         $config->setSendTimeout(10);
         $config->setRecvTimeout(10);
-        $config->setSasl(self::getSasl());
+        self::addConfigInfo($config);
         $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
         $nodeId = $response->getControllerId();
         foreach ($response->getBrokers() as $broker) {
@@ -89,7 +105,7 @@ class TestUtil
                         $config = new CommonConfig();
                         $config->setSendTimeout(10);
                         $config->setRecvTimeout(10);
-                        $config->setSasl(self::getSasl());
+                        self::addConfigInfo($config);
                         $class = getenv('KAFKA_CLIENT_CLASS') ?: SyncClient::class;
                         $nodeId = $partitionItem->getLeaderId();
                         foreach ($response->getBrokers() as $broker) {

@@ -59,6 +59,11 @@ class CommonConfig extends AbstractConfig
      */
     protected $sasl = [];
 
+    /**
+     * @var SslConfig|null
+     */
+    protected $ssl = null;
+
     public function getConnectTimeout(): float
     {
         return $this->connectTimeout;
@@ -185,6 +190,31 @@ class CommonConfig extends AbstractConfig
     public function setSasl(array $sasl): self
     {
         $this->sasl = $sasl;
+
+        return $this;
+    }
+
+    public function getSsl(): SslConfig
+    {
+        if (null == $this->ssl) {
+            return new SslConfig([]);
+        }
+
+        return $this->ssl;
+    }
+
+    /**
+     * @param SslConfig|array $ssl
+     */
+    public function setSsl($ssl): self
+    {
+        if (\is_array($ssl)) {
+            $this->ssl = new SslConfig($ssl);
+        } elseif ($ssl instanceof SslConfig) {
+            $this->ssl = $ssl;
+        } else {
+            throw new InvalidArgumentException(sprintf('The ssl must be array or SslConfig, and the current type is %s', \gettype($ssl)));
+        }
 
         return $this;
     }

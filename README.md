@@ -22,7 +22,7 @@ The communication protocol is based on the JSON file in Java. PHP Kafka client s
 - [x] Producer
 - [x] Consumer
 - [x] SASL
-- [ ] SSL
+- [x] SSL
 - [ ] More features and test cases
 
 ## Environment

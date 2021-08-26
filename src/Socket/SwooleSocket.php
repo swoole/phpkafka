@@ -83,12 +83,8 @@ class SwooleSocket implements SocketInterface
     public function connect(): void
     {
         $config = $this->config;
-        $client = new Client(\SWOOLE_SOCK_TCP);
-        $client->set([
-            'connect_timeout' => $config->getConnectTimeout(),
-            'read_timeout'    => $config->getRecvTimeout(),
-            'write_timeout'   => $config->getSendTimeout(),
-        ]);
+        $client = new Client($this->getClientType());
+        $client->set($this->getClientConfig());
         if ($client->connect($this->host, $this->port)) {
             $this->socket = $client;
         } else {
@@ -149,5 +145,28 @@ class SwooleSocket implements SocketInterface
         }
 
         return '';
+    }
+
+    protected function getClientType(): int
+    {
+        $clientType = \SWOOLE_SOCK_TCP;
+        $ssl = $this->getConfig()->getSsl();
+        if ($ssl->getOpen()) {
+            $clientType = $clientType | \SWOOLE_SSL;
+        }
+
+        return $clientType;
+    }
+
+    protected function getClientConfig(): array
+    {
+        $config = $this->getConfig();
+        $clientConfig = [
+            'connect_timeout' => $config->getConnectTimeout(),
+            'read_timeout'    => $config->getRecvTimeout(),
+            'write_timeout'   => $config->getSendTimeout(),
+        ];
+
+        return array_merge($clientConfig, $config->getSsl()->getSwooleConfig($this->getHost()));
     }
 }
