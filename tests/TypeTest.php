@@ -240,7 +240,7 @@ class TypeTest extends TestCase
     {
         $exceptedArray = [1, 2, 3];
         $encodeResult = VarIntCompactArray::pack($exceptedArray, Int32::class);
-        $this->assertEquals('08000000010000000200000003', bin2hex($encodeResult));
+        $this->assertEquals('06000000010000000200000003', bin2hex($encodeResult));
         $this->assertEquals($exceptedArray, VarIntCompactArray::unpack($encodeResult, $size, Int32::class));
         $this->assertEquals(13, $size);
     }

@@ -18,7 +18,7 @@ class VarIntCompactArray extends AbstractType
         if (null === $array) {
             $result = VarInt::pack(0);
         } else {
-            $length = \count($array) + 1;
+            $length = \count($array);
             $result = VarInt::pack($length);
             foreach ($array as $item) {
                 if (null === $elementType) {
@@ -46,7 +46,7 @@ class VarIntCompactArray extends AbstractType
 
     public static function unpack(string $value, ?int &$size, string $elementType, int $apiVersion = 0): ?array
     {
-        $length = VarInt::unpack($value, $tmpSize) - 1;
+        $length = VarInt::unpack($value, $tmpSize);
         if ($length > 0) {
             $array = [];
             $size = 0;
