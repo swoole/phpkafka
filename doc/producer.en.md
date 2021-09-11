@@ -47,6 +47,7 @@ If partition === null && key === null, then use Round Robin to select partition
 ```php
 use longlang\phpkafka\Producer\Producer;
 use longlang\phpkafka\Producer\ProducerConfig;
+use longlang\phpkafka\Protocol\RecordBatch\RecordHeader;
 
 $config = new ProducerConfig();
 $config->setBootstrapServer('127.0.0.1:9092');
@@ -57,6 +58,14 @@ $topic = 'test';
 $value = (string) microtime(true);
 $key = uniqid('', true);
 $producer->send('test', $value, $key);
+
+// set headers
+// key-value or use RecordHeader
+$headers = [
+    'key1' => 'value1',
+    (new RecordHeader())->setHeaderKey('key2')->setValue('value2'),
+];
+$producer->send('test', $value, $key, $headers);
 ```
 
 ## Send batch messages
@@ -83,7 +92,9 @@ $producer->sendBatch([
 ```
 
 ## SASL Support
+
 ### Configuration
+
 | Key | Description | Default |
 | - | - | - |
 | type | SASL Authentication Type. PLAIN is ``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
@@ -91,6 +102,7 @@ $producer->sendBatch([
 | password | password  | '' |
 
 **Example**
+
 ```php
 use longlang\phpkafka\Producer\ProducerConfig;
 use longlang\phpkafka\Producer\Producer;
@@ -106,13 +118,14 @@ $producer = new Producer($config);
 // ....  Your Business Code
 ```
 
-
 ## SSL Support
+
 Class `longlang\phpkafka\Config\SslConfig`
 
 > You can pass an array to a constructor.
 
 ### Configuration keys
+
 | Key | Description | Default |
 | - | - | - |
 | open  | Enable SSL  | `false` |

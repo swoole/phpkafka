@@ -70,4 +70,29 @@ class ConsumerTest extends TestCase
         $consumer->start();
         $consumer->close();
     }
+
+    public function testConsumeWithHeader(): void
+    {
+        $config = new ConsumerConfig();
+        $config->setBroker(TestUtil::getHost() . ':' . TestUtil::getPort());
+        TestUtil::addConfigInfo($config);
+        $config->setTopic('test-header');
+        $config->setGroupId('testGroup');
+        $config->setClientId('testConsumeWithHeader');
+        $config->setGroupInstanceId('testConsumeWithHeader');
+        $config->setInterval(0.1);
+        $consumer = new Consumer($config, function (ConsumeMessage $message) {
+            $consumer = $message->getConsumer();
+            $this->assertNotEmpty($message->getValue());
+            $headers = $message->getHeaders();
+            $this->assertCount(2, $headers);
+            $this->assertEquals('key1', $headers[0]->getHeaderKey());
+            $this->assertEquals('value1', $headers[0]->getValue());
+            $this->assertEquals('key2', $headers[1]->getHeaderKey());
+            $this->assertEquals('value2', $headers[1]->getValue());
+            $consumer->stop();
+        });
+        $consumer->start();
+        $consumer->close();
+    }
 }

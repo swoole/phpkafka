@@ -7,6 +7,7 @@ namespace longlang\phpkafka\Test;
 use longlang\phpkafka\Producer\ProduceMessage;
 use longlang\phpkafka\Producer\Producer;
 use longlang\phpkafka\Producer\ProducerConfig;
+use longlang\phpkafka\Protocol\RecordBatch\RecordHeader;
 use PHPUnit\Framework\TestCase;
 
 class ProducerTest extends TestCase
@@ -45,6 +46,23 @@ class ProducerTest extends TestCase
             new ProduceMessage('test' . mt_rand(), 'v2', 'k2'),
             new ProduceMessage('test' . mt_rand(), 'v3', null),
         ]);
+        $producer->close();
+        $this->assertTrue(true);
+    }
+
+    public function testSendWithHeader(): void
+    {
+        $config = new ProducerConfig();
+        $config->setBootstrapServer(TestUtil::getHost() . ':' . TestUtil::getPort());
+        TestUtil::addConfigInfo($config);
+        $config->setAcks(-1);
+        $producer = new Producer($config);
+        $headers = [
+            'key1' => 'value1',
+            (new RecordHeader())->setHeaderKey('key2')->setValue('value2'),
+        ];
+        // @phpstan-ignore-next-line
+        $producer->send('test-header', (string) microtime(true), uniqid('', true), $headers);
         $producer->close();
         $this->assertTrue(true);
     }
