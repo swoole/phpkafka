@@ -47,6 +47,7 @@
 ```php
 use longlang\phpkafka\Producer\Producer;
 use longlang\phpkafka\Producer\ProducerConfig;
+use longlang\phpkafka\Protocol\RecordBatch\RecordHeader;
 
 $config = new ProducerConfig();
 $config->setBootstrapServer('127.0.0.1:9092');
@@ -57,6 +58,14 @@ $topic = 'test';
 $value = (string) microtime(true);
 $key = uniqid('', true);
 $producer->send('test', $value, $key);
+
+// 指定 headers
+// key-value或使用 RecordHeader 对象，都可以
+$headers = [
+    'key1' => 'value1',
+    (new RecordHeader())->setHeaderKey('key2')->setValue('value2'),
+];
+$producer->send('test', $value, $key, $headers);
 ```
 
 ## 批量发送消息
@@ -82,10 +91,10 @@ $producer->sendBatch([
 ]);
 ```
 
-
-
 ## SASL支持
+
 ### 相关配置
+
 |参数名|说明|默认值|
 | - | - | - |
 | type | SASL授权对应的类。PLAIN为``\longlang\phpkafka\Sasl\PlainSasl::class``| ''|
@@ -93,6 +102,7 @@ $producer->sendBatch([
 | password | 密码 | '' |
 
 **代码示例：**
+
 ```php
 use longlang\phpkafka\Producer\ProducerConfig;
 
@@ -107,11 +117,12 @@ $producer = new Producer($config);
 // ....  你的业务代码
 ```
 
-
 ## SSL支持
+
 类名：`longlang\phpkafka\Config\SslConfig`
 
 > 支持构造方法传入数组赋值
+
 ### 配置参数
 
 |参数名|说明|默认值|

@@ -85,9 +85,11 @@ class ConsumerTest extends TestCase
             $consumer = $message->getConsumer();
             $this->assertNotEmpty($message->getValue());
             $headers = $message->getHeaders();
-            $this->assertEquals(1, count($headers));
-            $this->assertEquals('key', $headers[0]->getHeaderKey());
-            $this->assertEquals('value', $headers[0]->getValue());
+            $this->assertCount(2, $headers);
+            $this->assertEquals('key1', $headers[0]->getHeaderKey());
+            $this->assertEquals('value1', $headers[0]->getValue());
+            $this->assertEquals('key2', $headers[1]->getHeaderKey());
+            $this->assertEquals('value2', $headers[1]->getValue());
             $consumer->stop();
         });
         $consumer->start();

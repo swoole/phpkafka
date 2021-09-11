@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace longlang\phpkafka\Producer;
 
+use longlang\phpkafka\Protocol\RecordBatch\RecordHeader;
+
 class ProduceMessage
 {
     /**
@@ -22,7 +24,7 @@ class ProduceMessage
     protected $key;
 
     /**
-     * @var array
+     * @var RecordHeader[]|array
      */
     protected $headers;
 
@@ -31,6 +33,9 @@ class ProduceMessage
      */
     protected $partitionIndex;
 
+    /**
+     * @param RecordHeader[]|array $headers
+     */
     public function __construct(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null)
     {
         $this->topic = $topic;
@@ -55,6 +60,9 @@ class ProduceMessage
         return $this->key;
     }
 
+    /**
+     * @return RecordHeader[]|array
+     */
     public function getHeaders(): array
     {
         return $this->headers;

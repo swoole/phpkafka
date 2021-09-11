@@ -58,9 +58,10 @@ class ProducerTest extends TestCase
         $config->setAcks(-1);
         $producer = new Producer($config);
         $headers = [
-            (new RecordHeader)->setHeaderKey('key')->setValue('value'),
+            'key1' => 'value1',
+            (new RecordHeader())->setHeaderKey('key2')->setValue('value2'),
         ];
-        $producer->send('test-header', (string) microtime(true), uniqid('', true), $headers, 0);
+        $producer->send('test-header', (string) microtime(true), uniqid('', true), $headers);
         $producer->close();
         $this->assertTrue(true);
     }

@@ -38,6 +38,9 @@ class ConsumeMessage
      */
     protected $headers;
 
+    /**
+     * @param RecordHeader[] $headers
+     */
     public function __construct(Consumer $consumer, string $topic, int $partition, ?string $key, ?string $value, array $headers)
     {
         $this->consumer = $consumer;

@@ -13,6 +13,7 @@ use longlang\phpkafka\Protocol\Produce\ProduceResponse;
 use longlang\phpkafka\Protocol\Produce\TopicProduceData;
 use longlang\phpkafka\Protocol\RecordBatch\Record;
 use longlang\phpkafka\Protocol\RecordBatch\RecordBatch;
+use longlang\phpkafka\Protocol\RecordBatch\RecordHeader;
 
 class Producer
 {
@@ -44,6 +45,9 @@ class Producer
         $this->partitioner = new $class();
     }
 
+    /**
+     * @param RecordHeader[]|array $headers
+     */
     public function send(string $topic, ?string $value, ?string $key = null, array $headers = [], ?int $partitionIndex = null): void
     {
         $message = new ProduceMessage($topic, $value, $key, $headers, $partitionIndex);
@@ -113,7 +117,15 @@ class Producer
             $record = $records[] = new Record();
             $record->setKey($key);
             $record->setValue($value);
-            $record->setHeaders($message->getHeaders());
+            $headers = [];
+            foreach ($message->getHeaders() as $key => $value) {
+                if ($value instanceof RecordHeader) {
+                    $headers[] = $value;
+                } else {
+                    $headers[] = (new RecordHeader())->setHeaderKey($key)->setValue($value);
+                }
+            }
+            $record->setHeaders($headers);
             $record->setOffsetDelta($offsetDelta);
             $record->setTimestampDelta(((int) (microtime(true) * 1000)) - $timestamp);
             $recordBatch->setRecords($records);
