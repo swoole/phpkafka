@@ -121,7 +121,7 @@ class Producer
             foreach ($message->getHeaders() as $key => $value) {
                 if ($value instanceof RecordHeader) {
                     $headers[] = $value;
-                    // @phpstan-ignore-next-line
+                // @phpstan-ignore-next-line
                 } else {
                     $headers[] = (new RecordHeader())->setHeaderKey($key)->setValue($value);
                 }
