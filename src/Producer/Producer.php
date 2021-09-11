@@ -119,9 +119,9 @@ class Producer
             $record->setValue($value);
             $headers = [];
             foreach ($message->getHeaders() as $key => $value) {
-                // @phpstan-ignore-next-line
                 if ($value instanceof RecordHeader) {
                     $headers[] = $value;
+                    // @phpstan-ignore-next-line
                 } else {
                     $headers[] = (new RecordHeader())->setHeaderKey($key)->setValue($value);
                 }
