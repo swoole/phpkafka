@@ -61,6 +61,7 @@ class ProducerTest extends TestCase
             'key1' => 'value1',
             (new RecordHeader())->setHeaderKey('key2')->setValue('value2'),
         ];
+        // @phpstan-ignore-next-line
         $producer->send('test-header', (string) microtime(true), uniqid('', true), $headers);
         $producer->close();
         $this->assertTrue(true);
