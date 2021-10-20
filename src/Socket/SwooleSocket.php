@@ -85,7 +85,7 @@ class SwooleSocket implements SocketInterface
         $config = $this->config;
         $client = new Client($this->getClientType());
         $client->set($this->getClientConfig());
-        if ($client->connect($this->host, $this->port)) {
+        if ($client->connect($this->host, $this->port, $config->getConnectTimeout())) {
             $this->socket = $client;
         } else {
             throw new ConnectionException(sprintf('Could not connect to tcp://%s:%s (%s [%d])', $this->host, $this->port, $client->errMsg, $client->errCode));
