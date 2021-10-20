@@ -121,11 +121,13 @@ class StreamSocket implements SocketInterface
             $writable = $this->select([$this->socket], $timeout, false);
 
             if (false === $writable) {
+                $this->close();
                 throw new SocketException('Could not write ' . $bytesToWrite . ' bytes to stream');
             }
 
             if (0 === $writable) {
                 $res = $this->getMetaData();
+                $this->close();
                 if (!empty($res['timed_out'])) {
                     throw new SocketException('Timed out writing ' . $bytesToWrite . ' bytes to stream after writing ' . $bytesWritten . ' bytes');
                 }
@@ -142,6 +144,7 @@ class StreamSocket implements SocketInterface
             }
 
             if (-1 === $wrote || false === $wrote) {
+                $this->close();
                 throw new SocketException('Could not write ' . \strlen($data) . ' bytes to stream, completed writing only ' . $bytesWritten . ' bytes');
             }
 
@@ -150,6 +153,7 @@ class StreamSocket implements SocketInterface
                 ++$failedAttempts;
 
                 if ($failedAttempts > $this->config->getMaxWriteAttempts()) {
+                    $this->close();
                     throw new SocketException('After ' . $failedAttempts . ' attempts could not write ' . \strlen($data) . ' bytes to stream, completed writing only ' . $bytesWritten . ' bytes');
                 }
             } else {
@@ -181,6 +185,7 @@ class StreamSocket implements SocketInterface
 
         if (0 === $readable) { // select timeout
             $res = $this->getMetaData();
+            $this->close();
 
             if (!empty($res['timed_out'])) {
                 throw new SocketException(sprintf('Timed out reading %d bytes from stream', $length));
@@ -204,6 +209,7 @@ class StreamSocket implements SocketInterface
                 // Otherwise wait for bytes
                 $readable = $this->select([$this->socket], $timeout);
                 if (1 !== $readable) {
+                    $this->close();
                     throw new SocketException(sprintf('Timed out while reading %d bytes from stream, %d bytes are still needed', $length, $remainingBytes));
                 }
 
