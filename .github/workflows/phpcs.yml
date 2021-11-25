@@ -33,4 +33,4 @@ jobs:
           docker exec swoole composer update
 
       - name: Test
-        run: docker exec swoole ./vendor/bin/php-cs-fixer fix --dry-run
+        run: docker exec swoole ./vendor/bin/php-cs-fixer fix --dry-run --diff
