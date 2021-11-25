@@ -9,13 +9,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.1, 7.2, 7.3, 7.4, "8.0"]
+        swoole: [
+          4.5-php7.1,
+          4.5-php7.2,
+          4.5-php7.3,
+          4.5-php7.4,
+          4.5-php8.0,
+          php8.1,
+        ]
         kafka: [1.0.0, 2.11-1.1.1, 2.13-2.6.0, 2.13-2.7.0]
 
     env:
-      PHP_VERSION: ${{ matrix.php }}
+      SWOOLE_VERSION: ${{ matrix.swoole }}
       KAFKA_VERSION: ${{ matrix.kafka }}
-      SWOOLE_VERSION: "4.5"
       KAFKA_HOST: kafka1
       KAFKA_PLAINTEXT_PORT: 9092
       KAFKA_SASL_PLAINTEXT_PORT: 9093

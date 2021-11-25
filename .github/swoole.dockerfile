@@ -1,6 +1,5 @@
 ARG SWOOLE_VERSION
-ARG PHP_VERSION
-FROM phpswoole/swoole:${SWOOLE_VERSION}-php${PHP_VERSION}
+FROM phpswoole/swoole:${SWOOLE_VERSION}
 
 # apt
 RUN apt update
