@@ -77,7 +77,7 @@ class SwooleSocket implements SocketInterface
 
     public function isConnected(): bool
     {
-        return null !== $this->socket;
+        return $this->socket && $this->socket->isConnected();
     }
 
     public function connect(): void
@@ -85,7 +85,7 @@ class SwooleSocket implements SocketInterface
         $config = $this->config;
         $client = new Client($this->getClientType());
         $client->set($this->getClientConfig());
-        if ($client->connect($this->host, $this->port)) {
+        if ($client->connect($this->host, $this->port, $config->getConnectTimeout())) {
             $this->socket = $client;
         } else {
             throw new ConnectionException(sprintf('Could not connect to tcp://%s:%s (%s [%d])', $this->host, $this->port, $client->errMsg, $client->errCode));
@@ -96,7 +96,6 @@ class SwooleSocket implements SocketInterface
     {
         if ($this->socket) {
             $this->socket->close();
-            $this->socket = null;
             $this->receivedBuffer = '';
 
             return true;
@@ -109,6 +108,7 @@ class SwooleSocket implements SocketInterface
     {
         $result = $this->socket->send($data);
         if (false === $result) {
+            $this->close();
             throw new SocketException(sprintf('Could not write data to stream, %s [%d]', $this->socket->errMsg, $this->socket->errCode));
         }
 
@@ -125,6 +125,7 @@ class SwooleSocket implements SocketInterface
         while ($this->socket && !isset($this->receivedBuffer[$length - 1]) && (-1 == $timeout || $leftTime > 0)) {
             $buffer = $this->socket->recv($timeout);
             if ('' === $buffer || false === $buffer) {
+                $this->close();
                 throw new SocketException(sprintf('Could not recv data from stream, %s [%d]', $this->socket->errMsg, $this->socket->errCode));
             }
             $this->receivedBuffer .= $buffer;
@@ -140,7 +141,8 @@ class SwooleSocket implements SocketInterface
             return $result;
         }
 
-        if ($this->socket) {
+        if ($this->socket->isConnected()) {
+            $this->close();
             throw new SocketException('Could not recv data from stream');
         }
 

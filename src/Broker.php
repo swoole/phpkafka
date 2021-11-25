@@ -168,7 +168,12 @@ class Broker
         }
 
         $config = $this->config;
-        if (!isset($this->clients[$brokerId])) {
+        if (isset($this->clients[$brokerId])) {
+            $client = $this->clients[$brokerId];
+            if (!$client->getSocket()->isConnected()) {
+                $client->connect();
+            }
+        } else {
             $clientClass = KafkaUtil::getClientClass($config->getClient());
 
             /** @var ClientInterface $client */
@@ -177,7 +182,7 @@ class Broker
             $this->clients[$brokerId] = $client;
         }
 
-        return $this->clients[$brokerId];
+        return $client;
     }
 
     /**
