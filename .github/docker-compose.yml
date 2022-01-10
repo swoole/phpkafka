@@ -75,7 +75,6 @@ services:
       dockerfile: ./swoole.dockerfile
       args:
         SWOOLE_VERSION: ${SWOOLE_VERSION}
-        PHP_VERSION: ${PHP_VERSION}
     depends_on:
       - zookeeper
       - kafka1
