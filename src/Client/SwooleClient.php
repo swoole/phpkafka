@@ -149,6 +149,7 @@ class SwooleClient extends SyncClient
                     $callback = $this->getConfig()->getExceptionCallback();
                     if ($callback) {
                         $callback($e);
+                        return;
                     } else {
                         throw $e;
                     }
