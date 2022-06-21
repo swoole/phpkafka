@@ -76,7 +76,9 @@ class AwsMskIamSasl implements SaslInterface
 
         $signer = new SignatureV4(self::SIGN_SERVICE, $region);
         $signedReq = $signer->presign($req, $credentials, $expiry);
-        $headers = $signedReq->getHeaders();
+        $signedUri =  $signedReq->getUri();
+        $url_components = parse_url((string)$signedUri);
+        parse_str($url_components['query'], $params);
 
         $signedMap = Array(
             self::SIGN_VERSION_KEY => self::SIGN_VERSION,
@@ -85,8 +87,8 @@ class AwsMskIamSasl implements SaslInterface
             self::SIGN_ACTION_KEY => self::SIGN_ACTION
         );
 
-        foreach (array_keys($headers) as $key) {
-            $signedMap[strtolower($key)] = $headers[$key];
+        foreach (array_keys($params) as $key) {
+            $signedMap[strtolower($key)] = $params[$key];
         }
 
         $signedMap[strtolower(self::QUERY_ACTION_KEY)] = self::SIGN_ACTION;
