@@ -23,6 +23,7 @@ use longlang\phpkafka\Protocol\SaslAuthenticate\SaslAuthenticateResponse;
 use longlang\phpkafka\Protocol\SaslHandshake\SaslHandshakeRequest;
 use longlang\phpkafka\Protocol\SaslHandshake\SaslHandshakeResponse;
 use longlang\phpkafka\Protocol\Type\Int32;
+use longlang\phpkafka\Sasl\AwsMskIamSasl;
 use longlang\phpkafka\Sasl\SaslInterface;
 use longlang\phpkafka\Socket\SocketInterface;
 use longlang\phpkafka\Socket\StreamSocket;
@@ -101,7 +102,15 @@ class SyncClient implements ClientInterface
         $this->socket->connect();
         $this->waitResponseMaps = [];
         $this->updateApiVersions();
-        $this->sendAuthInfo();
+        $class = $this->getSaslConfig();
+        if (!$class instanceof SaslInterface) {
+            return;
+        } else {
+            if ($class instanceof AwsMskIamSasl) {
+                $class->setHost($this->socket->getHost());
+            }
+            $this->sendAuthInfo($class);
+        }
     }
 
     public function close(): bool
@@ -152,8 +161,8 @@ class SyncClient implements ClientInterface
 
         if ($hasResponse) {
             $this->waitResponseMaps[$correlationId] = [
-                'apiKey'           => $apiKey,
-                'apiVersion'       => $header->getRequestApiVersion(),
+                'apiKey' => $apiKey,
+                'apiVersion' => $header->getRequestApiVersion(),
                 'flexibleVersions' => $request->getFlexibleVersions(),
             ];
         }
@@ -197,16 +206,8 @@ class SyncClient implements ClientInterface
         $this->setApiKeys($response->getApiKeys());
     }
 
-    protected function sendAuthInfo(): void
+    protected function sendAuthInfo(SaslInterface $class): void
     {
-        $config = $this->getConfig()->getSasl();
-        if (!isset($config['type']) || empty($config['type'])) {
-            return;
-        }
-        $class = new $config['type']($this->getConfig());
-        if (!$class instanceof SaslInterface) {
-            return;
-        }
         $handshakeRequest = new SaslHandshakeRequest();
         $handshakeRequest->setMechanism($class->getName());
         $correlationId = $this->send($handshakeRequest);
@@ -220,5 +221,15 @@ class SyncClient implements ClientInterface
         /** @var SaslAuthenticateResponse $authenticateResponse */
         $authenticateResponse = $this->recv($correlationId);
         ErrorCode::check($authenticateResponse->getErrorCode());
+    }
+
+    private function getSaslConfig()
+    {
+        $config = $this->getConfig()->getSasl();
+        if (!isset($config['type']) || empty($config['type'])) {
+            return null;
+        }
+        $class = new $config['type']($this->getConfig());
+        return $class;
     }
 }
