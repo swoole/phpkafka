@@ -101,8 +101,9 @@ class AwsMskIamSasl implements SaslInterface
         }
 
         foreach ($headers as $header_key => $header_value) {
-            if (strtolower($header_key) != strtolower(self::SIGN_HOST_KEY)) {
-                $signedMap[strtolower($header_key)] = $header_value;
+            $header_key = strtolower($header_key);
+            if ($header_key !== self::SIGN_HOST_KEY) {
+                $signedMap[$header_key] = $header_value;
             }
         }
         return json_encode($signedMap);
