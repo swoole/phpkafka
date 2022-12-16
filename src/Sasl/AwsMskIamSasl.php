@@ -85,8 +85,7 @@ class AwsMskIamSasl implements SaslInterface
         $signedReq = $signer->presign($req, $creds, $expiration);
         $signedUri = $signedReq->getUri();
 
-        $url_components = parse_url((string)$signedUri);
-        parse_str($url_components['query'], $params);
+        parse_str($signedUri->getQuery(), $params);
 
         $headers = $signedReq->getHeaders();
 
