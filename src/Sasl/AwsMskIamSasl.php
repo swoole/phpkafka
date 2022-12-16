@@ -91,7 +91,7 @@ class AwsMskIamSasl implements SaslInterface
 
         $signedMap = array(
             self::SIGN_VERSION_KEY => self::SIGN_VERSION,
-            self::SIGN_USER_AGENT_KEY => "php-kafka/sasl/aws_msk_iam/" . phpversion(),
+            self::SIGN_USER_AGENT_KEY => "php-kafka/sasl/aws_msk_iam/" . PHP_VERSION,
             self::SIGN_ACTION_KEY => self::SIGN_ACTION,
             self::SIGN_HOST_KEY => $this->host
         );
