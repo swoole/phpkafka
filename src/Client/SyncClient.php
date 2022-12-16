@@ -223,7 +223,10 @@ class SyncClient implements ClientInterface
         ErrorCode::check($authenticateResponse->getErrorCode());
     }
 
-    private function getSaslConfig()
+/**
+ * @return SaslInterface|null
+ */
+protected function getSaslConnector()
     {
         $config = $this->getConfig()->getSasl();
         if (!isset($config['type']) || empty($config['type'])) {
