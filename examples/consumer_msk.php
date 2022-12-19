@@ -22,8 +22,8 @@ $config->setGroupInstanceId('test'); // 分组实例ID
 $config->setInterval(0.1);
 $config->setSasl([
     "type"=> AwsMskIamSasl::class,
-    "host"=>"localhost",
-    "region"=>"eu-west-1"
+    "region"=>"eu-west-1",
+    "expiration" => "+5 minutes"
 ]);
 $consumer = new Consumer($config, 'consume');
 $consumer->start();
