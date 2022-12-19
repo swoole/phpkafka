@@ -23,7 +23,6 @@ use longlang\phpkafka\Protocol\SaslAuthenticate\SaslAuthenticateResponse;
 use longlang\phpkafka\Protocol\SaslHandshake\SaslHandshakeRequest;
 use longlang\phpkafka\Protocol\SaslHandshake\SaslHandshakeResponse;
 use longlang\phpkafka\Protocol\Type\Int32;
-use longlang\phpkafka\Sasl\AwsMskIamSasl;
 use longlang\phpkafka\Sasl\SaslInterface;
 use longlang\phpkafka\Socket\SocketInterface;
 use longlang\phpkafka\Socket\StreamSocket;
@@ -102,15 +101,13 @@ class SyncClient implements ClientInterface
         $this->socket->connect();
         $this->waitResponseMaps = [];
         $this->updateApiVersions();
-        $class = $this->getSaslConfig();
-        if (!$class instanceof SaslInterface) {
+        $connector = $this->getSaslConnector();
+        if (!$connector instanceof SaslInterface) {
             return;
-        } else {
-            if ($class instanceof AwsMskIamSasl) {
-                $class->setHost($this->socket->getHost());
-            }
-            $this->sendAuthInfo($class);
         }
+
+        $connector->setSocket($this->socket);
+        $this->sendAuthInfo($connector);
     }
 
     public function close(): bool
