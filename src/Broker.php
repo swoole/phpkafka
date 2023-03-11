@@ -44,6 +44,16 @@ class Broker
     protected $metaUpdatedTopics = [];
 
     /**
+     * @var int
+     */
+    protected $retryTopicsCount = 10;
+
+    /**
+     * @var int
+     */
+    protected $currRetryTopicCount = 0;
+
+    /**
      * @param ProducerConfig|ConsumerConfig $config
      */
     public function __construct($config)
@@ -126,6 +136,9 @@ class Broker
                 switch ($topicItem->getErrorCode()) {
                     case ErrorCode::UNKNOWN_TOPIC_OR_PARTITION:
                     case ErrorCode::LEADER_NOT_AVAILABLE:
+                        if ($this->currRetryTopicCount > $this->retryTopicsCount) {
+                            ErrorCode::check($errorCode);
+                        }
                         $retryTopics[] = $topicItem->getName();
                         break;
                     default:
@@ -145,6 +158,7 @@ class Broker
         }
 
         if ($retryTopics) {
+            $this->currRetryTopicCount++;
             return $this->updateMetadata($retryTopics, $client);
         }
 
