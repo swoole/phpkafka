@@ -125,8 +125,10 @@ class SwooleSocket implements SocketInterface
         while ($this->socket && !isset($this->receivedBuffer[$length - 1]) && (-1 == $timeout || $leftTime > 0)) {
             $buffer = $this->socket->recv($timeout);
             if ('' === $buffer || false === $buffer) {
+                $code = $this->socket->errCode;
+                $msg = $this->socket->errMsg;
                 $this->close();
-                throw new SocketException(sprintf('Could not recv data from stream, %s [%d]', $this->socket->errMsg, $this->socket->errCode));
+                throw new SocketException(sprintf('Could not recv data from stream, %s [%d]', $msg, $code));
             }
             $this->receivedBuffer .= $buffer;
             if ($timeout > 0) {
