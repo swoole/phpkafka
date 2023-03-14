@@ -56,6 +56,10 @@ class SwooleClient extends SyncClient
     public function close(): bool
     {
         $this->connected = false;
+        foreach ($this->recvChannels as $channel) {
+            $channel->close();
+        }
+
         $this->recvChannels = [];
 
         return $this->socket->close();

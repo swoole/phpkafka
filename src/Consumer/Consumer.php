@@ -297,6 +297,10 @@ class Consumer
         }
         $nodeId = key($this->fetchOptions);
         next($this->fetchOptions);
+        if (empty($this->fetchOptions)) {
+            // avoid dead cycle.
+            sleep(1);
+        }
         if (!$currentList) {
             return;
         }
