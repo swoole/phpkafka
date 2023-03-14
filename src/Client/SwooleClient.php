@@ -150,12 +150,13 @@ class SwooleClient extends SyncClient
                     if ($e instanceof SocketException && !$this->connected) {
                         return;
                     }
+
                     $callback = $this->getConfig()->getExceptionCallback();
                     if ($callback) {
                         $callback($e);
-                    } else {
-                        throw $e;
                     }
+
+                    $this->close();
                 }
             }
         });
