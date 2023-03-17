@@ -77,11 +77,13 @@ class StreamSocket implements SocketInterface
     public function connect(): void
     {
         $uri = $this->getURI();
+        $timeout = $this->config->getConnectTimeout();
+        if ($timeout < 0) $timeout = null;
         $socket = stream_socket_client(
             $uri,
             $errno,
             $errstr,
-            $this->config->getConnectTimeout(),
+            $timeout,
             \STREAM_CLIENT_CONNECT,
             $this->getContext()
         );
