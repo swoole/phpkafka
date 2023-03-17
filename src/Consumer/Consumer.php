@@ -23,7 +23,6 @@ use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
 use longlang\phpkafka\Timer\SwooleTimer;
 use longlang\phpkafka\Timer\TimerInterface;
 use longlang\phpkafka\Util\KafkaUtil;
-use Swoole\Timer;
 
 class Consumer
 {
