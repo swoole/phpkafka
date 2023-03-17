@@ -20,6 +20,8 @@ use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
+use longlang\phpkafka\Timer\SwooleTimer;
+use longlang\phpkafka\Timer\TimerInterface;
 use longlang\phpkafka\Util\KafkaUtil;
 use Swoole\Timer;
 
@@ -110,10 +112,18 @@ class Consumer
      */
     protected $emptyMessageCountInLoop = 0;
 
+    /**
+     * @var TimerInterface
+     */
+    protected $timer;
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
         $this->consumeCallback = $consumeCallback;
+
+        $timerClass = $config->getTimer() ?? SwooleTimer::class;
+        $this->timer = new $timerClass;
 
         $this->broker = $broker = new Broker($config);
         if ($config->getUpdateBrokers()) {
@@ -379,7 +389,7 @@ class Consumer
 
     protected function startHeartbeat(): void
     {
-        $this->heartbeatTimerId = Timer::tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
+        $this->heartbeatTimerId = $this->timer->tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
             $this->heartbeat();
         });
     }
@@ -387,7 +397,7 @@ class Consumer
     protected function stopHeartbeat(): void
     {
         if ($this->heartbeatTimerId) {
-            Timer::clear($this->heartbeatTimerId);
+            $this->timer->clear($this->heartbeatTimerId);
             $this->heartbeatTimerId = null;
         }
     }

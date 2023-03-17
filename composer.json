@@ -14,7 +14,8 @@
         "colinodell/json5": "^2.1",
         "swoole/ide-helper": "^4.5",
         "friendsofphp/php-cs-fixer": "^2.18",
-        "phpstan/phpstan": "^0.12.81"
+        "phpstan/phpstan": "^0.12.81",
+        "swow/swow": "dev-develop"
     },
     "autoload": {
         "psr-4": {
