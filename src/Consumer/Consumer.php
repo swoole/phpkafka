@@ -105,6 +105,11 @@ class Consumer
      */
     protected $fetchOptions = [];
 
+    /**
+     * @var int
+     */
+    protected $emptyMessageCountInLoop = 0;
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
@@ -214,7 +219,9 @@ class Consumer
         while ($this->started) {
             $message = $this->consume();
             if (null === $message) {
-                if ($interval > 0) {
+                if ($interval > 0 && $this->emptyMessageCountInLoop === \count($this->fetchOptions)) {
+                    // When the empty message count is equal with the count of fetch options,
+                    // We must sleep some micro seconds to avoid dead cycle.
                     usleep($interval);
                 }
             } else {
@@ -294,6 +301,7 @@ class Consumer
         $currentList = current($this->fetchOptions);
         if (false === $currentList) {
             $currentList = reset($this->fetchOptions);
+            $this->emptyMessageCountInLoop = 0;
         }
         $nodeId = key($this->fetchOptions);
         next($this->fetchOptions);
@@ -354,6 +362,9 @@ class Consumer
             }
         }
         $this->messages = $messages;
+        if (empty($messages)) {
+            ++$this->emptyMessageCountInLoop;
+        }
     }
 
     public function getConfig(): ConsumerConfig
