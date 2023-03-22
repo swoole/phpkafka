@@ -20,8 +20,8 @@ use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
+use longlang\phpkafka\Timer\TimerInterface;
 use longlang\phpkafka\Util\KafkaUtil;
-use Swoole\Timer;
 
 class Consumer
 {
@@ -110,10 +110,18 @@ class Consumer
      */
     protected $emptyMessageCountInLoop = 0;
 
+    /**
+     * @var TimerInterface
+     */
+    protected $timer;
+
     public function __construct(ConsumerConfig $config, ?callable $consumeCallback = null)
     {
         $this->config = $config;
         $this->consumeCallback = $consumeCallback;
+
+        $timerClass = KafkaUtil::getTimerClass($config->getTimer());
+        $this->timer = new $timerClass();
 
         $this->broker = $broker = new Broker($config);
         if ($config->getUpdateBrokers()) {
@@ -137,9 +145,8 @@ class Consumer
     {
         rejoinBegin:
         try {
-            if ($this->swooleHeartbeat) {
-                $this->stopHeartbeat();
-            }
+            $this->stopHeartbeat();
+
             $config = $this->config;
             $groupManager = $this->groupManager;
             $groupId = $config->getGroupId();
@@ -182,10 +189,7 @@ class Consumer
                 $offsetManager->updateOffsets($config->getOffsetRetry());
             }
 
-            $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
-            if ($this->swooleHeartbeat) {
-                $this->startHeartbeat();
-            }
+            $this->startHeartbeat();
         } catch (KafkaErrorException $ke) {
             switch ($ke->getCode()) {
                 case ErrorCode::REBALANCE_IN_PROGRESS:
@@ -287,9 +291,8 @@ class Consumer
 
     protected function fetchMessages(): void
     {
-        if (!$this->swooleHeartbeat) {
-            $this->checkBeartbeat();
-        }
+        $this->checkBeartbeat();
+
         $config = $this->config;
         $request = new FetchRequest();
         $request->setReplicaId($config->getReplicaId());
@@ -379,7 +382,7 @@ class Consumer
 
     protected function startHeartbeat(): void
     {
-        $this->heartbeatTimerId = Timer::tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
+        $this->heartbeatTimerId = $this->timer->tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
             $this->heartbeat();
         });
     }
@@ -387,7 +390,7 @@ class Consumer
     protected function stopHeartbeat(): void
     {
         if ($this->heartbeatTimerId) {
-            Timer::clear($this->heartbeatTimerId);
+            $this->timer->clear($this->heartbeatTimerId);
             $this->heartbeatTimerId = null;
         }
     }

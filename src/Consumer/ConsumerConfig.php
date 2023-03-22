@@ -16,6 +16,13 @@ class ConsumerConfig extends CommonConfig
     protected $client;
 
     /**
+     * Timer class.
+     *
+     * @var string|null
+     */
+    protected $timer;
+
+    /**
      * Socket class.
      *
      * @var string|null
@@ -130,6 +137,18 @@ class ConsumerConfig extends CommonConfig
     public function setClient(?string $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getTimer(): ?string
+    {
+        return $this->timer;
+    }
+
+    public function setTimer(?string $timer): self
+    {
+        $this->timer = $timer;
 
         return $this;
     }

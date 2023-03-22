@@ -77,11 +77,15 @@ class StreamSocket implements SocketInterface
     public function connect(): void
     {
         $uri = $this->getURI();
+        $timeout = $this->config->getConnectTimeout();
+        if (\PHP_VERSION_ID > 80000 && $timeout < 0) {
+            $timeout = null;
+        }
         $socket = stream_socket_client(
             $uri,
             $errno,
             $errstr,
-            $this->config->getConnectTimeout(),
+            $timeout,
             \STREAM_CLIENT_CONNECT,
             $this->getContext()
         );
@@ -230,10 +234,18 @@ class StreamSocket implements SocketInterface
     {
         $null = [];
         $timeoutSec = (int) $timeout;
-        if ($timeoutSec < 0) {
-            $timeoutSec = null;
+
+        if (\PHP_VERSION_ID > 80000) {
+            if ($timeoutSec < 0) {
+                $timeoutSec = $timeoutUsec = null;
+            }
+        } else {
+            if ($timeout <= 0) {
+                $timeoutSec = 2;
+            }
+
+            $timeoutUsec = max((int) $timeoutSec * 100000, 1);
         }
-        $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
 
         if ($isRead) {
             return stream_select($sockets, $null, $null, $timeoutSec, $timeoutUsec);
