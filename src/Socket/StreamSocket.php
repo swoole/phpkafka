@@ -238,7 +238,7 @@ class StreamSocket implements SocketInterface
         if (\PHP_VERSION_ID > 80000 && $timeoutSec < 0) {
             $timeoutSec = $timeoutUsec = null;
         } else {
-            if (\PHP_VERSION_ID <= 80000 && 0 == $timeout) {
+            if (0 == $timeout) {
                 $timeoutSec = 2;
             } else {
                 $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
