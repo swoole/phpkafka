@@ -89,6 +89,6 @@ class KafkaUtil
 
     public static function inSwooleCoroutine(): bool
     {
-        return method_exists(Coroutine::class, 'getCid') && -1 !== Coroutine::getCid();
+        return extension_loaded('swoole') && method_exists(Coroutine::class, 'getCid') && -1 !== Coroutine::getCid();
     }
 }

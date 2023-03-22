@@ -235,9 +235,10 @@ class StreamSocket implements SocketInterface
         $null = [];
         $timeoutSec = (int) $timeout;
         if ($timeoutSec < 0) {
-            $timeoutSec = null;
+            $timeoutSec = $timeoutUsec = null;
+        } else {
+            $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
         }
-        $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
 
         if ($isRead) {
             return stream_select($sockets, $null, $null, $timeoutSec, $timeoutUsec);
