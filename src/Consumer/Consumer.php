@@ -20,7 +20,6 @@ use longlang\phpkafka\Protocol\Fetch\FetchRequest;
 use longlang\phpkafka\Protocol\Fetch\FetchResponse;
 use longlang\phpkafka\Protocol\FindCoordinator\FindCoordinatorResponse;
 use longlang\phpkafka\Protocol\JoinGroup\JoinGroupRequestProtocol;
-use longlang\phpkafka\Timer\SwooleTimer;
 use longlang\phpkafka\Timer\TimerInterface;
 use longlang\phpkafka\Util\KafkaUtil;
 
