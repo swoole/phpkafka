@@ -8,7 +8,7 @@ use Swoole\Timer;
 
 class SwooleTimer implements TimerInterface
 {
-    public function tick(float $interval, callable $callback, ...$params): int
+    public function tick(int $interval, callable $callback, ...$params): int
     {
         return Timer::tick($interval, $callback, ...$params);
     }
