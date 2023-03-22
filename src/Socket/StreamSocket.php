@@ -240,9 +240,9 @@ class StreamSocket implements SocketInterface
         } else {
             if (\PHP_VERSION_ID <= 80000 && 0 == $timeout) {
                 $timeoutSec = 2;
+            } else {
+                $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
             }
-
-            $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
         }
 
         if ($isRead) {
