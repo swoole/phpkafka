@@ -13,6 +13,7 @@ use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Socket\StreamSocket;
 use longlang\phpkafka\Socket\SwooleSocket;
 use longlang\phpkafka\Timer\NoopTimer;
+use longlang\phpkafka\Timer\SwooleTimer;
 use Swoole\Coroutine;
 
 class KafkaUtil
@@ -48,7 +49,7 @@ class KafkaUtil
         }
 
         if (self::inSwooleCoroutine()) {
-            return SwooleSocket::class;
+            return SwooleTimer::class;
         }
         
         return NoopTimer::class;
