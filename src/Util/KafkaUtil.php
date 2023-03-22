@@ -12,6 +12,7 @@ use longlang\phpkafka\Protocol\AbstractResponse;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Socket\StreamSocket;
 use longlang\phpkafka\Socket\SwooleSocket;
+use longlang\phpkafka\Timer\NoopTimer;
 use Swoole\Coroutine;
 
 class KafkaUtil
@@ -38,6 +39,19 @@ class KafkaUtil
         } else {
             return StreamSocket::class;
         }
+    }
+
+    public static function getTimerClass(?string $timerClass = null): string
+    {
+        if (null !== $timerClass) {
+            return $timerClass;
+        }
+
+        if (self::inSwooleCoroutine()) {
+            return SwooleSocket::class;
+        }
+        
+        return NoopTimer::class;
     }
 
     /**
