@@ -242,9 +242,10 @@ class StreamSocket implements SocketInterface
         } else {
             if (0 == $timeout) {
                 $timeoutSec = 2;
-            } else {
-                $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
             }
+            
+            // $timeoutUsec = max((int) (1000000 * ($timeout - $timeoutSec)), 0);
+            $timeoutUsec = $timeoutSec * 1000000;
         }
 
         if ($isRead) {
