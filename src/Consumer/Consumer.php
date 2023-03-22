@@ -121,7 +121,7 @@ class Consumer
         $this->config = $config;
         $this->consumeCallback = $consumeCallback;
 
-        $timerClass = $config->getTimer() ?? SwooleTimer::class;
+        $timerClass = KafkaUtil::getTimerClass($config->getTimer());
         $this->timer = new $timerClass;
 
         $this->broker = $broker = new Broker($config);
@@ -146,9 +146,8 @@ class Consumer
     {
         rejoinBegin:
         try {
-            if ($this->swooleHeartbeat) {
-                $this->stopHeartbeat();
-            }
+            $this->stopHeartbeat();
+
             $config = $this->config;
             $groupManager = $this->groupManager;
             $groupId = $config->getGroupId();
@@ -191,10 +190,7 @@ class Consumer
                 $offsetManager->updateOffsets($config->getOffsetRetry());
             }
 
-            $this->swooleHeartbeat = KafkaUtil::inSwooleCoroutine();
-            if ($this->swooleHeartbeat) {
-                $this->startHeartbeat();
-            }
+            $this->startHeartbeat();
         } catch (KafkaErrorException $ke) {
             switch ($ke->getCode()) {
                 case ErrorCode::REBALANCE_IN_PROGRESS:
@@ -296,9 +292,8 @@ class Consumer
 
     protected function fetchMessages(): void
     {
-        if (!$this->swooleHeartbeat) {
-            $this->checkBeartbeat();
-        }
+        $this->checkBeartbeat();
+
         $config = $this->config;
         $request = new FetchRequest();
         $request->setReplicaId($config->getReplicaId());
