@@ -78,7 +78,9 @@ class StreamSocket implements SocketInterface
     {
         $uri = $this->getURI();
         $timeout = $this->config->getConnectTimeout();
-        if ($timeout < 0) $timeout = null;
+        if ($timeout < 0) {
+            $timeout = null;
+        }
         $socket = stream_socket_client(
             $uri,
             $errno,

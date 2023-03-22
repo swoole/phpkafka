@@ -51,7 +51,7 @@ class KafkaUtil
         if (self::inSwooleCoroutine()) {
             return SwooleTimer::class;
         }
-        
+
         return NoopTimer::class;
     }
 

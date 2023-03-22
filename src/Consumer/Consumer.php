@@ -121,7 +121,7 @@ class Consumer
         $this->consumeCallback = $consumeCallback;
 
         $timerClass = KafkaUtil::getTimerClass($config->getTimer());
-        $this->timer = new $timerClass;
+        $this->timer = new $timerClass();
 
         $this->broker = $broker = new Broker($config);
         if ($config->getUpdateBrokers()) {
