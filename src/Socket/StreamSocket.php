@@ -240,7 +240,7 @@ class StreamSocket implements SocketInterface
                 $timeoutSec = $timeoutUsec = null;
             }
         } else {
-            if (0 == $timeout) {
+            if ($timeout <= 0) {
                 $timeoutSec = 2;
             }
 
