@@ -249,7 +249,6 @@ class StreamSocket implements SocketInterface
             $microSeconds = max((int) $seconds * 100000, 1);
         }
 
-
         if ($isRead) {
             return stream_select($sockets, $null, $null, $seconds, $microSeconds);
         }

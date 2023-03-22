@@ -10,3 +10,4 @@ vendor/
 /coverage.txt
 /.php_cs.cache
 *.cache
+.bashrc
