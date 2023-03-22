@@ -235,7 +235,7 @@ class StreamSocket implements SocketInterface
         $null = [];
         $seconds = (int) $timeout;
 
-        if (\PHP_VERSION_ID > 80000) {
+        if (\PHP_VERSION_ID >= 80100) {
             if ($seconds < 0) {
                 $seconds = $microSeconds = null;
             } else {
