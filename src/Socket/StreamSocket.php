@@ -233,26 +233,28 @@ class StreamSocket implements SocketInterface
     protected function select(array $sockets, float $timeout, bool $isRead = true)
     {
         $null = [];
-        $timeoutSec = (int) $timeout;
+        $seconds = (int) $timeout;
 
         if (\PHP_VERSION_ID > 80000) {
-            if ($timeoutSec < 0) {
-                $timeoutSec = $timeoutUsec = null;
+            if ($seconds < 0) {
+                $seconds = $microSeconds = null;
+            } else {
+                $microSeconds = max((int) $seconds * 100000, 1);
             }
         } else {
             if ($timeout <= 0) {
-                $timeoutSec = 2;
+                $seconds = 2;
             }
 
+            $microSeconds = max((int) $seconds * 100000, 1);
         }
 
-        $timeoutUsec = max((int) $timeoutSec * 100000, 1);
 
         if ($isRead) {
-            return stream_select($sockets, $null, $null, $timeoutSec, $timeoutUsec);
+            return stream_select($sockets, $null, $null, $seconds, $microSeconds);
         }
 
-        return stream_select($null, $sockets, $null, $timeoutSec, $timeoutUsec);
+        return stream_select($null, $sockets, $null, $seconds, $microSeconds);
     }
 
     protected function getMetaData(): array
