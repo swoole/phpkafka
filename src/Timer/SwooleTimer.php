@@ -8,9 +8,9 @@ use Swoole\Timer;
 
 class SwooleTimer implements TimerInterface
 {
-    public function tick(int $interval, callable $callback, ...$params): int
+    public function tick(int $interval, callable $callback): int
     {
-        return Timer::tick($interval, $callback, ...$params);
+        return Timer::tick($interval, $callback);
     }
 
     public function clear(int $timerId): void

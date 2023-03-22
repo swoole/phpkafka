@@ -6,7 +6,7 @@ namespace longlang\phpkafka\Timer;
 
 interface TimerInterface
 {
-    public function tick(int $interval, callable $callback, ...$params): int;
+    public function tick(int $interval, callable $callback): int;
 
     public function clear(int $timerId): void;
 }

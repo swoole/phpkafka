@@ -6,7 +6,7 @@ namespace longlang\phpkafka\Timer;
 
 class NoopTimer implements TimerInterface
 {
-    public function tick(int $interval, callable $callback, ...$params): int
+    public function tick(int $interval, callable $callback): int
     {
         return 0;
     }
