@@ -170,10 +170,10 @@ class Broker
         if (isset($this->clients[$brokerId])) {
             $client = $this->clients[$brokerId];
             if (!$client->getSocket()->isConnected()) {
-                $this->setClientConnection($brokerId,$client);
+                $client = $this->setClientConnection($brokerId);
             }
         } else {
-            $this->setClientConnection($brokerId,$client);
+            $client = $this->setClientConnection($brokerId);
         }
 
         return $client;
@@ -254,11 +254,10 @@ class Broker
     /**
      * Set the Kafka Client Connection
      *
-     * @param $brokerId
-     * @param $client
-     * @return void
+     * @param int|null $brokerId
+     * @return ClientInterface
      */
-    private function setClientConnection($brokerId,&$client) : void
+    private function setClientConnection(?int $brokerId): ClientInterface
     {
         $url = parse_url($this->brokers[$brokerId]);
         $clientClass = KafkaUtil::getClientClass($this->config->getClient());
@@ -266,5 +265,6 @@ class Broker
         $client = new $clientClass($url['host'], $url['port'] ?? 9092, $this->config, KafkaUtil::getSocketClass($this->config->getSocket()));
         $client->connect();
         $this->clients[$brokerId] = $client;
+        return $client;
     }
 }
