@@ -167,19 +167,13 @@ class Broker
             throw new InvalidArgumentException(sprintf('Invalid bootstrapServer %s', $this->brokers[$brokerId]));
         }
 
-        $config = $this->config;
         if (isset($this->clients[$brokerId])) {
             $client = $this->clients[$brokerId];
             if (!$client->getSocket()->isConnected()) {
-                $client->connect();
+                $client = $this->setClientConnection($brokerId);
             }
         } else {
-            $clientClass = KafkaUtil::getClientClass($config->getClient());
-
-            /** @var ClientInterface $client */
-            $client = new $clientClass($url['host'], $url['port'] ?? 9092, $config, KafkaUtil::getSocketClass($config->getSocket()));
-            $client->connect();
-            $this->clients[$brokerId] = $client;
+            $client = $this->setClientConnection($brokerId);
         }
 
         return $client;
@@ -255,5 +249,22 @@ class Broker
         }
 
         return null;
+    }
+
+    /**
+     * Set the Kafka Client Connection
+     *
+     * @param int|null $brokerId
+     * @return ClientInterface
+     */
+    private function setClientConnection(?int $brokerId): ClientInterface
+    {
+        $url = parse_url($this->brokers[$brokerId]);
+        $clientClass = KafkaUtil::getClientClass($this->config->getClient());
+        /** @var ClientInterface $client */
+        $client = new $clientClass($url['host'], $url['port'] ?? 9092, $this->config, KafkaUtil::getSocketClass($this->config->getSocket()));
+        $client->connect();
+        $this->clients[$brokerId] = $client;
+        return $client;
     }
 }
