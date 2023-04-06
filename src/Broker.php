@@ -252,10 +252,7 @@ class Broker
     }
 
     /**
-     * Set the Kafka Client Connection
-     *
-     * @param int|null $brokerId
-     * @return ClientInterface
+     * Set the Kafka Client Connection.
      */
     private function setClientConnection(?int $brokerId): ClientInterface
     {
@@ -265,6 +262,7 @@ class Broker
         $client = new $clientClass($url['host'], $url['port'] ?? 9092, $this->config, KafkaUtil::getSocketClass($this->config->getSocket()));
         $client->connect();
         $this->clients[$brokerId] = $client;
+
         return $client;
     }
 }
