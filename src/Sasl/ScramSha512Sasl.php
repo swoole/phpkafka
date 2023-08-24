@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace longlang\phpkafka\Sasl;
 
 use longlang\phpkafka\Config\CommonConfig;
+use longlang\phpkafka\Exception\KafkaErrorException;
 use longlang\phpkafka\Protocol\ErrorCode;
 use longlang\phpkafka\Sasl\SaslInterface;
 
