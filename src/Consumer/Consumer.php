@@ -383,7 +383,14 @@ class Consumer
     protected function startHeartbeat(): void
     {
         $this->heartbeatTimerId = $this->timer->tick((int) ($this->config->getGroupHeartbeat() * 1000), function () {
-            $this->heartbeat();
+            try {
+                $this->heartbeat();
+            } catch (KafkaErrorException $e) {
+                $callback = $this->getConfig()->getExceptionCallback();
+                if ($callback) {
+                    $callback($e);
+                }
+            }
         });
     }
 
