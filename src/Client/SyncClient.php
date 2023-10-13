@@ -101,7 +101,13 @@ class SyncClient implements ClientInterface
         $this->socket->connect();
         $this->waitResponseMaps = [];
         $this->updateApiVersions();
-        $this->sendAuthInfo();
+        $connector = $this->getSaslConnector();
+        if (!$connector instanceof SaslInterface) {
+            return;
+        }
+
+        $connector->setSocket($this->socket);
+        $this->sendAuthInfo($connector);
     }
 
     public function close(): bool
@@ -152,8 +158,8 @@ class SyncClient implements ClientInterface
 
         if ($hasResponse) {
             $this->waitResponseMaps[$correlationId] = [
-                'apiKey'           => $apiKey,
-                'apiVersion'       => $header->getRequestApiVersion(),
+                'apiKey' => $apiKey,
+                'apiVersion' => $header->getRequestApiVersion(),
                 'flexibleVersions' => $request->getFlexibleVersions(),
             ];
         }
@@ -197,16 +203,8 @@ class SyncClient implements ClientInterface
         $this->setApiKeys($response->getApiKeys());
     }
 
-    protected function sendAuthInfo(): void
+    protected function sendAuthInfo(SaslInterface $class): void
     {
-        $config = $this->getConfig()->getSasl();
-        if (!isset($config['type']) || empty($config['type'])) {
-            return;
-        }
-        $class = new $config['type']($this->getConfig());
-        if (!$class instanceof SaslInterface) {
-            return;
-        }
         $handshakeRequest = new SaslHandshakeRequest();
         $handshakeRequest->setMechanism($class->getName());
         $correlationId = $this->send($handshakeRequest);
@@ -220,5 +218,18 @@ class SyncClient implements ClientInterface
         /** @var SaslAuthenticateResponse $authenticateResponse */
         $authenticateResponse = $this->recv($correlationId);
         ErrorCode::check($authenticateResponse->getErrorCode());
+    }
+
+/**
+ * @return SaslInterface|null
+ */
+protected function getSaslConnector()
+    {
+        $config = $this->getConfig()->getSasl();
+        if (!isset($config['type']) || empty($config['type'])) {
+            return null;
+        }
+        $class = new $config['type']($this->getConfig());
+        return $class;
     }
 }

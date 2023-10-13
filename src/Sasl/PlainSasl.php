@@ -6,6 +6,7 @@ namespace longlang\phpkafka\Sasl;
 
 use longlang\phpkafka\Config\CommonConfig;
 use longlang\phpkafka\Exception\KafkaErrorException;
+use longlang\phpkafka\Socket\SocketInterface;
 
 class PlainSasl implements SaslInterface
 {
@@ -39,5 +40,10 @@ class PlainSasl implements SaslInterface
         }
 
         return sprintf("\x00%s\x00%s", $config['username'], $config['password']);
+    }
+
+    public function setSocket(SocketInterface $socket): void
+    {
+        // we do nothing here
     }
 }
