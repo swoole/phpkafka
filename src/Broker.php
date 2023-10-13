@@ -124,7 +124,6 @@ class Broker
                 $topicsMeta[] = $topicItem;
             } else {
                 switch ($topicItem->getErrorCode()) {
-                    case ErrorCode::UNKNOWN_TOPIC_OR_PARTITION:
                     case ErrorCode::LEADER_NOT_AVAILABLE:
                         $retryTopics[] = $topicItem->getName();
                         break;
