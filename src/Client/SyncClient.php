@@ -244,7 +244,7 @@ class SyncClient implements ClientInterface
     {
         /** @var \longlang\phpkafka\Sasl\ScramSha512Sasl $class */
 
-        // 发送第一次验证信息
+        // Send first verification message
         $handshakeRequest = new SaslHandshakeRequest();
         $handshakeRequest->setMechanism($class->getName());
         $correlationId = $this->send($handshakeRequest);
@@ -252,7 +252,7 @@ class SyncClient implements ClientInterface
         $handshakeResponse = $this->recv($correlationId);
         ErrorCode::check($handshakeResponse->getErrorCode());
 
-        // 第一次握手
+        // First handshake
         $authenticateRequest = new SaslAuthenticateRequest();
         $authenticateRequest->setAuthBytes($class->getAuthBytes());
         $correlationId = $this->send($authenticateRequest);
@@ -260,7 +260,7 @@ class SyncClient implements ClientInterface
         $authenticateResponse = $this->recv($correlationId);
         ErrorCode::check($authenticateResponse->getErrorCode());
 
-        // 第二次握手
+        // Second handshake
         $authenticateRequest = new SaslAuthenticateRequest();
         $authenticateRequest->setAuthBytes($class->getFinalMessage($authenticateResponse->getAuthBytes()));
         $correlationId = $this->send($authenticateRequest);
@@ -268,7 +268,7 @@ class SyncClient implements ClientInterface
         $authenticateResponse = $this->recv($correlationId);
         ErrorCode::check($authenticateResponse->getErrorCode());
 
-        // 校验第二次服务器响应消息
+        // Verify the second server response
         if ($class->enableFinalSignatureVerification()) {
             $class->verifyFinalMessage($authenticateResponse->getAuthBytes());
         }

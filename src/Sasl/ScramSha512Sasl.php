@@ -35,7 +35,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * SCRAM-SHA-512 第一次握手信息
+     * SCRAM-SHA-512 first handshake
      *
      * @return string
      */
@@ -50,7 +50,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 获取第一次握手信息
+     * Get first handshake information of SCRAM-SHA-512
      *
      * @return string
      */
@@ -60,7 +60,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 获取 SASL 所有配置
+     * Get all SASL configurations
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 获取 SASL 配置
+     * Get SASL simple configuration
      *
      * @param string $key
      * @return mixed
@@ -81,7 +81,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 获取 SASL 密码
+     * Get SASL password
      *
      * @return string
      */
@@ -91,22 +91,22 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 计算第二次握手信息
+     * Second handshake of SCRAM-SHA-512
      *
      * @param string $response
      * @return string
      */
     public function getFinalMessage(string $response): string
     {
-        // 拆分第一次握手后的响应
+        // Split the response after the first handshake
         [$r, $s, $i] = explode(',', $response);
 
-        // 提取随机数、盐和迭代次数
+        // Extract the random number, salt, and number of iterations
         $serverNonce = $this->ltrimMessage($r);
         $salt = base64_decode($this->ltrimMessage($s));
         $iterations = (int) $this->ltrimMessage($i);
 
-        // 计算第二次握手的参数
+        // Calculate the parameters for the second handshake
         $this->saltedPassword = $saltedPassword = $this->calculateSaltedPassword($this->getPassword(), $salt, $iterations);
 
         $clientKey = $this->calculateClientKey($saltedPassword);
@@ -123,8 +123,8 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 计算盐化密码
-     * 使用 PBKDF2 函数和服务器提供的盐和迭代次数来计算盐化密码
+     * Compute salted password
+     * Using PBKDF2 function and the salt and iteration count provided by the server
      *
      * @param string $password
      * @param string $salt
@@ -137,21 +137,22 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 计算客户端密钥
-     * 使用盐化密码和 HMAC 函数来计算客户端密钥
+     * Compute client key
+     * Using salted password and HMAC function to calculate client key
      *
      * @param string $saltedPassword
      * @return string
      */
     private function calculateClientKey(string $saltedPassword): string
     {
-        // 在 SCRAM-SHA-512 中需要用盐化密码来加密计算密，密钥钥固定是 Client Key
+        // In SCRAM-SHA-512, a salted password is required to encrypt the calculation secret
+        // and the key is fixed to "Client Key"
         return $this->hmac('Client Key', $saltedPassword);
     }
 
     /**
-     * 计算存储密钥
-     * 使用客户端密钥和 SHA-256 函数来计算存储密钥
+     * Compute stored key
+     * Using client key and SHA-256 function to calculate stored key
      *
      * @param string $clientKey
      * @return string
@@ -162,7 +163,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 获取不带证明的消息
+     * Get message without proof
      *
      * @param string $nonce
      * @return string
@@ -173,7 +174,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * sha512 加密
+     * SHA-512 encryption
      *
      * @param string $data
      * @param string $key
@@ -185,7 +186,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 删除服务响应信息的前两个字符
+     * Remove the first two characters of the server response message
      *
      * @param string $param
      * @return string
@@ -196,7 +197,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 是否启用最终签名验证
+     * Whether to enable final signature verification
      *
      * @return boolean
      */
@@ -206,7 +207,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * 验证最终签名
+     * Verify final signature
      *
      * @param string $message
      * @return void
