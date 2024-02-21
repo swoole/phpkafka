@@ -202,21 +202,19 @@ class SyncClient implements ClientInterface
     protected function sendAuthInfo(): void
     {
         $config = $this->getConfig()->getSasl();
-        if (! isset($config['type']) || empty($config['type'])) {
+        if (!isset($config['type']) || empty($config['type'])) {
             return;
         }
         $class = new $config['type']($this->getConfig());
-        if (! $class instanceof SaslInterface) {
+        if (!$class instanceof SaslInterface) {
             return;
         }
 
         if ($class instanceof PlainSasl) {
             $this->sendPlainAuthInfo($class);
-        }
-        elseif ($class instanceof ScramSha512Sasl) {
+        } elseif ($class instanceof ScramSha512Sasl) {
             $this->sendScramSha512AuthInfo($class);
-        }
-        else {
+        } else {
             return;
         }
     }
@@ -224,7 +222,6 @@ class SyncClient implements ClientInterface
     private function sendPlainAuthInfo(SaslInterface $class): void
     {
         /** @var \longlang\phpkafka\Sasl\PlainSasl $class */
-
         $handshakeRequest = new SaslHandshakeRequest();
         $handshakeRequest->setMechanism($class->getName());
         $correlationId = $this->send($handshakeRequest);
@@ -243,7 +240,6 @@ class SyncClient implements ClientInterface
     private function sendScramSha512AuthInfo(SaslInterface $class): void
     {
         /** @var \longlang\phpkafka\Sasl\ScramSha512Sasl $class */
-
         // Send first verification message
         $handshakeRequest = new SaslHandshakeRequest();
         $handshakeRequest->setMechanism($class->getName());

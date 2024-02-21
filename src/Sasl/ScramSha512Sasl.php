@@ -75,7 +75,7 @@ class ScramSha512Sasl implements SaslInterface
      * @param string $key
      * @return mixed
      */
-    public function getSaslConfig(string $key): mixed
+    public function getSaslConfig(string $key)
     {
         return $this->getSaslConfigs()[$key] ?? null;
     }
