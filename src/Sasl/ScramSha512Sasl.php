@@ -7,7 +7,6 @@ namespace longlang\phpkafka\Sasl;
 use longlang\phpkafka\Config\CommonConfig;
 use longlang\phpkafka\Exception\KafkaErrorException;
 use longlang\phpkafka\Protocol\ErrorCode;
-use longlang\phpkafka\Sasl\SaslInterface;
 
 class ScramSha512Sasl implements SaslInterface
 {
@@ -35,9 +34,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * SCRAM-SHA-512 first handshake
-     *
-     * @return string
+     * SCRAM-SHA-512 first handshake.
      */
     public function getAuthBytes(): string
     {
@@ -50,9 +47,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Get first handshake information of SCRAM-SHA-512
-     *
-     * @return string
+     * Get first handshake information of SCRAM-SHA-512.
      */
     private function getFirstMessageBare(): string
     {
@@ -60,9 +55,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Get all SASL configurations
-     *
-     * @return array
+     * Get all SASL configurations.
      */
     public function getSaslConfigs(): array
     {
@@ -70,31 +63,23 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Get SASL simple configuration
-     *
-     * @param string $key
-     * @return mixed
+     * Get SASL simple configuration.
      */
-    public function getSaslConfig(string $key)
+    public function getSaslConfig(string $key): mixed
     {
         return $this->getSaslConfigs()[$key] ?? null;
     }
 
     /**
-     * Get SASL password
-     *
-     * @return string
+     * Get SASL password.
      */
     private function getPassword(): string
     {
-        return $this->getSaslConfig('password') ?: '';
+        return $this->getSaslConfigs()['password'] ?? '';
     }
 
     /**
-     * Second handshake of SCRAM-SHA-512
-     *
-     * @param string $response
-     * @return string
+     * Second handshake of SCRAM-SHA-512.
      */
     public function getFinalMessage(string $response): string
     {
@@ -123,13 +108,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Compute salted password
-     * Using PBKDF2 function and the salt and iteration count provided by the server
-     *
-     * @param string $password
-     * @param string $salt
-     * @param integer $iterations
-     * @return string
+     * Compute salted password using PBKDF2 function and the salt and iteration count provided by the server.
      */
     private function calculateSaltedPassword(string $password, string $salt, int $iterations): string
     {
@@ -137,11 +116,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Compute client key
-     * Using salted password and HMAC function to calculate client key
-     *
-     * @param string $saltedPassword
-     * @return string
+     * Compute client key using salted password and HMAC function to calculate client key.
      */
     private function calculateClientKey(string $saltedPassword): string
     {
@@ -151,11 +126,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Compute stored key
-     * Using client key and SHA-256 function to calculate stored key
-     *
-     * @param string $clientKey
-     * @return string
+     * Compute stored key using client key and SHA-256 function to calculate stored key.
      */
     private function calculateStoredKey(string $clientKey): string
     {
@@ -163,10 +134,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Get message without proof
-     *
-     * @param string $nonce
-     * @return string
+     * Get message without proof.
      */
     private function getMessageWithoutProof(string $nonce): string
     {
@@ -174,11 +142,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * SHA-512 encryption
-     *
-     * @param string $data
-     * @param string $key
-     * @return string
+     * SHA-512 encryption.
      */
     public function hmac(string $data, string $key): string
     {
@@ -186,10 +150,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Remove the first two characters of the server response message
-     *
-     * @param string $param
-     * @return string
+     * Remove the first two characters of the server response message.
      */
     public function ltrimMessage(string $param): string
     {
@@ -197,9 +158,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Whether to enable final signature verification
-     *
-     * @return boolean
+     * Whether to enable final signature verification.
      */
     public function enableFinalSignatureVerification(): bool
     {
@@ -207,10 +166,7 @@ class ScramSha512Sasl implements SaslInterface
     }
 
     /**
-     * Verify final signature
-     *
-     * @param string $message
-     * @return void
+     * Verify final signature.
      */
     public function verifyFinalMessage(string $message): void
     {
@@ -219,8 +175,8 @@ class ScramSha512Sasl implements SaslInterface
 
         $serverKey = $this->hmac('Server Key', $this->saltedPassword);
         $expectedSignature = $this->hmac($this->authMessage, $serverKey);
-        
-        if (! hash_equals($receivedSignature, $expectedSignature)) {
+
+        if (!hash_equals($receivedSignature, $expectedSignature)) {
             ErrorCode::check(ErrorCode::SASL_AUTHENTICATION_FAILED);
         }
     }
