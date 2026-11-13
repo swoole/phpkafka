@@ -1,5 +1,18 @@
 # longlang/phpkafka
 
+**This project has moved to [swoole/library](https://github.com/swoole/library) and this repository will be archived.**
+
+The client now lives in the `Swoole\Kafka` namespace. It is loaded through Composer and is not compiled into the Swoole extension.
+
+```bash
+composer require swoole/library
+```
+
+Documentation: [consumer](https://github.com/swoole/library/blob/master/docs/kafka/consumer.en.md), [producer](https://github.com/swoole/library/blob/master/docs/kafka/producer.en.md). Examples: [examples/kafka](https://github.com/swoole/library/tree/master/examples/kafka).
+
+Replace `longlang\phpkafka\` with `Swoole\Kafka\`. The code below is the last version published from this repository.
+
+
 [![Latest Version](https://poser.pugx.org/longlang/phpkafka/v/stable)](https://packagist.org/packages/longlang/phpkafka)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://secure.php.net/)
 [![License](https://img.shields.io/github/license/longyan/phpkafka.svg)](https://github.com/longyan/phpkafka/blob/master/LICENSE)

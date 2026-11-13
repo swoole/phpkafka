@@ -1,5 +1,17 @@
 # longlang/phpkafka
 
+**本项目已迁移到 [swoole/library](https://github.com/swoole/library)，此仓库将存档，不再更新。**
+
+客户端命名空间现为 `Swoole\Kafka`。类通过 Composer 加载，不会编译进 Swoole 扩展。
+
+```bash
+composer require swoole/library
+```
+
+文档：[消费者](https://github.com/swoole/library/blob/master/docs/kafka/consumer.md)、[生产者](https://github.com/swoole/library/blob/master/docs/kafka/producer.md)。示例：[examples/kafka](https://github.com/swoole/library/tree/master/examples/kafka)。
+
+请把 `longlang\phpkafka\` 替换为 `Swoole\Kafka\`。下文是本仓库发布的最后一版说明。
+
 [![Latest Version](https://poser.pugx.org/longlang/phpkafka/v/stable)](https://packagist.org/packages/longlang/phpkafka)
 [![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://secure.php.net/)
 [![License](https://img.shields.io/github/license/longyan/phpkafka.svg)](https://github.com/longyan/phpkafka/blob/master/LICENSE)
